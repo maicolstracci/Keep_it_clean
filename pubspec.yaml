@@ -1,0 +1,85 @@
+name: keep_it_clean
+description: Keep it clean. Trova il cestino per la raccolta differenziata più vicino a te.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  intl: ^0.15.8
+  cupertino_icons: ^0.1.2
+  firebase_auth: ^0.14.0+8
+  google_maps_flutter: ^0.5.21+8
+  permission_handler: ^4.0.0
+  firebase_core: ^0.4.0+9
+  cloud_firestore: ^0.12.9+5
+  location: ^2.3.5
+  firebase_storage: ^3.0.8
+  url_launcher: ^5.2.5
+  auto_animated: any
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# The following section is specific to Flutter.
+flutter:
+  assets:
+    - assets/locale/localization_it.json
+    - assets/locale/localization_en.json
+    - assets/locale/localization_de.json
+    - assets/profileTest.jpeg
+    - assets/trees.png
+    - assets/gallery-icon.png
+    - assets/loading.gif
+    - assets/paper.png
+    - assets/plastic_bottle.png
+    - assets/badge.png
+    - assets/glass_bottle.png
+    - assets/indifferenziata.png
+    - assets/italy.png
+    - assets/germany.png
+    - assets/united-kingdom.png
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+
+
+
+
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf
+
+
+    - family: Montserrat
+      fonts:
+        - asset: fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: fonts/Montserrat-Light.ttf
+        - asset: fonts/Montserrat-Medium.ttf
+        - asset: fonts/Montserrat-SemiBold.ttf
+
