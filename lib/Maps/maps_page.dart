@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Maps/marker_dialog.dart';
+import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -203,10 +204,10 @@ class _MapsState extends State<Maps> {
               left: 10,
               child: GestureDetector(
                 onTap: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(builder: (context) => ProfilePage()),
-//                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
                 },
                 child: Hero(
                   tag: "profilePic",

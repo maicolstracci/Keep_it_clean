@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 

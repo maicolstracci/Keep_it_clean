@@ -3,5 +3,7 @@
   "plastic_string" : "Plastica",
   "glass_string" : "Vetro",
   "paper_string" : "Carta",
-  "other_string" : "Altro"
+  "other_string" : "Altro",
+  "report_string" : "Segnalazioni",
+  "select_language" : "Seleziona una lingua"
 }

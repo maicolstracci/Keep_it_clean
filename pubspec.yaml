@@ -14,7 +14,7 @@ description: Keep it clean. Trova il cestino per la raccolta differenziata più 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -33,6 +33,7 @@ dependencies:
   firebase_storage: ^3.0.8
   url_launcher: ^5.2.5
   auto_animated: any
+  flutter_swiper:
 
 
 
