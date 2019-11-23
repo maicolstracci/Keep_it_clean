@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/AddBin/add_bin_page.dart';
 import 'package:keep_it_clean/Maps/marker_dialog.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:location/location.dart';
@@ -252,10 +253,10 @@ class _MapsState extends State<Maps> {
                 child: RawMaterialButton(
                   shape: CircleBorder(),
                   onPressed: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute(builder: (context) => AddBin(addBin)),
-//                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddBin(addBin)),
+                    );
                   },
                   child: Icon(
                     Icons.add,

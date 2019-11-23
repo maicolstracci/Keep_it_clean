@@ -5,5 +5,9 @@
   "paper_string" : "Carta",
   "other_string" : "Altro",
   "report_string" : "Segnalazioni",
-  "select_language" : "Seleziona una lingua"
+  "select_language" : "Seleziona una lingua",
+  "type_string" : "Tipologia",
+  "send_string" : "Invia",
+  "other_type_string" : "Altre tipologie presto disponibili.",
+  "send_photo_string" : "Vuoi inviare questa foto?"
 }
