@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:771633064594:android:1e097a9128d1dc5a13144b",
+        "mobilesdk_app_id": "1:771633064594:android:a0c1e1abd371dc3413144b",
         "android_client_info": {
           "package_name": "it.maicolstracci.keep_it_clean"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "771633064594-cp41n1f6dn0p8787jl00jsuvkf7pclv3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.maicolstracci.keep_it_clean",
+            "certificate_hash": "2d43c6e0a3be079c890dd4fdc73739e489d8e9eb"
+          }
+        },
         {
           "client_id": "771633064594-m5vg1canknft57jj3esha4sjdhu6inph.apps.googleusercontent.com",
           "client_type": 3

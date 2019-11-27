@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Maps/marker_dialog.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:location/location.dart';
@@ -26,6 +27,7 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng _lastPosition;
   Completer<GoogleMapController> _controller = Completer();
   // Two sets of markers are needed to perform the markers filtering on screen
@@ -82,14 +84,14 @@ class _MapsState extends State<Maps> {
           showDialog(
               context: context,
               builder: (context) {
-                return createDialog(img,_pos);
+                return createDialog(context,img,_pos,ds['type']);
               });
         });
       } else {
         showDialog(
             context: context,
             builder: (context) {
-              return createDialog(null,_pos);
+              return createDialog(context,null,_pos,ds['type']);
             });
       }
     });
@@ -183,10 +185,17 @@ class _MapsState extends State<Maps> {
     });
   }
 
+  void _showSnackBar(BuildContext context){
+    final snackBar = SnackBar(content: Text(AppTranslations.of(context).text("you_are_guest_string")));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         body: Stack(
           children: <Widget>[
             GoogleMap(
@@ -205,10 +214,13 @@ class _MapsState extends State<Maps> {
               left: 10,
               child: GestureDetector(
                 onTap: () {
+                  if(widget.user != null){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
-                  );
+                    MaterialPageRoute(builder: (context) => ProfilePage(widget.user)),
+                  );} else {
+                    _showSnackBar(context);
+                  }
                 },
                 child: Hero(
                   tag: "profilePic",
@@ -225,7 +237,7 @@ class _MapsState extends State<Maps> {
                           ),
                         ]),
                     child: CircleAvatar(
-                      backgroundImage: ExactAssetImage('assets/profileTest.jpeg'),
+                    backgroundImage: (widget.user != null) ? NetworkImage(widget.user.photoUrl,scale: 1 ) : ExactAssetImage('assets/trees.jpeg'),
                       maxRadius: 40,
                     ),
                   ),

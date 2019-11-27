@@ -31,15 +31,14 @@ dependencies:
   cloud_firestore: ^0.12.9+5
   location: ^2.3.5
   firebase_storage: ^3.0.8
+  google_sign_in:
   url_launcher: ^5.2.5
   auto_animated: any
   flutter_swiper:
   camera: ^0.5.6+3
   path_provider:
-
-
-
-
+  flutter_facebook_login: ^2.0.1
+  http:
 
 
 dev_dependencies:

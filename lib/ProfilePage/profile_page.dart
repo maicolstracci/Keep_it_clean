@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -8,6 +9,10 @@ import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'language_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
+  final FirebaseUser user;
+
+  ProfilePage(this.user,{Key key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -18,9 +23,13 @@ class _ProfilePageState extends State<ProfilePage>
   double angle = 0;
   Animation<double> animation;
   AnimationController controller;
+  List<String> userName;
 
   @override
   void initState() {
+    if(widget.user != null) {
+      userName = widget.user.displayName.split(" ");
+    }
     super.initState();
     // init badge animation
     controller = AnimationController(
@@ -186,16 +195,16 @@ class _ProfilePageState extends State<ProfilePage>
                       child: Hero(
                         tag: "profilePic",
                         child: CircleAvatar(
-                          backgroundImage:
-                              ExactAssetImage('assets/profileTest.jpeg'),
-                          maxRadius: 40,
+                          backgroundImage: (widget.user != null) ? NetworkImage(widget.user.photoUrl,scale: 1 ) : ExactAssetImage('assets/trees.jpeg'),
+
+                        maxRadius: 40,
                         ),
                       ),
                     ),
                     Positioned(
                       top: 15,
                       left: 70,
-                      child: Text("Maicol",
+                      child: Text(userName != null ? userName[0] : "N/A",
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -205,7 +214,7 @@ class _ProfilePageState extends State<ProfilePage>
                     Positioned(
                       top: 50,
                       left: 90,
-                      child: Text("Stracci",
+                      child: Text(userName != null ? userName[1] : "N/A",
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
