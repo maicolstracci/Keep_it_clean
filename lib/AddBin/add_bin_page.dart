@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
-
+import 'dialogs.dart';
 import 'camera_functions.dart';
 
 class AddBin extends StatefulWidget {
@@ -17,9 +16,10 @@ class AddBin extends StatefulWidget {
 }
 
 class _AddBinState extends State<AddBin> {
-  int _selected = 0;
+  List<int> _selected = [];
   String imgPath;
   bool imgUploaded = false;
+  bool _uploadInProgress = false;
 
   Future<void> takePicture() async {
     // Obtain a list of the available cameras on the device.
@@ -51,8 +51,53 @@ class _AddBinState extends State<AddBin> {
     //TODO: check for other results
     StorageUploadTask uploadTask = storageReference.putFile(File(imgPath));
     await uploadTask.onComplete;
+    _uploadInProgress = false;
 
     return _imgName;
+  }
+
+  GestureDetector _buildButton(String imgButton, String nameButton, int type) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (_selected.contains(type)) {
+            _selected.remove(type);
+          } else {
+            _selected.add(type);
+          }
+        });
+      },
+      child: Column(
+        children: <Widget>[
+          AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            width: 60,
+            height: 60,
+            decoration: new BoxDecoration(
+              shape: BoxShape.circle,
+              border: new Border.all(
+                width: 2.0,
+                color: _selected.contains(type)
+                    ? Colors.green
+                    : Colors.transparent,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Image.asset(
+                imgButton,
+              ),
+            ),
+          ),
+          Text(AppTranslations.of(context).text(nameButton),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Montserrat",
+              )),
+        ],
+      ),
+    );
   }
 
   @override
@@ -97,177 +142,25 @@ class _AddBinState extends State<AddBin> {
                             fontSize: 30),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    Wrap(
+                      spacing: 15,
+                      runSpacing: 30,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selected = 1;
-                            });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width: 60,
-                                height: 60,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: new Border.all(
-                                    width: 2.0,
-                                    color: _selected == 1
-                                        ? Colors.green
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Image.asset(
-                                    "assets/plastic_bottle.png",
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  AppTranslations.of(context)
-                                      .text("plastic_string"),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat",
-                                  )),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selected = 2;
-                            });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width: 60,
-                                height: 60,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: new Border.all(
-                                    width: 2.0,
-                                    color: _selected == 2
-                                        ? Colors.green
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Image.asset(
-                                    "assets/glass_bottle.png",
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  AppTranslations.of(context)
-                                      .text("glass_string"),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat",
-                                  )),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selected = 3;
-                            });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width: 60,
-                                height: 60,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: new Border.all(
-                                    width: 2.0,
-                                    color: _selected == 3
-                                        ? Colors.green
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    "assets/paper.png",
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  AppTranslations.of(context)
-                                      .text("paper_string"),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat",
-                                  )),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selected = 4;
-                            });
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width: 60,
-                                height: 60,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: new Border.all(
-                                    width: 2.0,
-                                    color: _selected == 4
-                                        ? Colors.green
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Image.asset(
-                                    "assets/indifferenziata.png",
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  AppTranslations.of(context)
-                                      .text("other_string"),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat",
-                                  )),
-                            ],
-                          ),
-                        ),
+                        _buildButton(
+                            "assets/plastic_bottle.png", "plastic_string", 1),
+                        _buildButton(
+                            "assets/glass_bottle.png", "glass_string", 2),
+                        _buildButton("assets/paper.png", "paper_string", 3),
+                        _buildButton(
+                            "assets/indifferenziata.png", "other_string", 4),
+                        _buildButton("assets/battery.png", "battery_string", 5),
+                        _buildButton("assets/drugs.png", "drugs_string", 6),
+                        _buildButton("assets/leaf.png", "leaf_string", 7),
+                        _buildButton(
+                            "assets/clothing.png", "clothing_string", 8),
+
+
                       ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50.0),
-                      child: Text(
-                        AppTranslations.of(context).text("other_type_string"),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.normal,
-                            fontSize: 24),
-                      ),
                     ),
                   ],
                 ),
@@ -321,10 +214,29 @@ class _AddBinState extends State<AddBin> {
             left: MediaQuery.of(context).size.width * 0.075,
             child: RawMaterialButton(
               onPressed: () {
-                _uploadImage(imgPath).then((imgName) {
-                  widget.createBin(_selected != 0 ? _selected : 1, imgName);
-                  Navigator.pop(context);
-                });
+                if (imgPath != null && _selected.isNotEmpty) {
+                  setState(() {
+                    _uploadInProgress = true;
+                  });
+                  _uploadImage(imgPath).then((imgName) {
+                    widget.createBin(_selected, imgName);
+                    Navigator.pop(context);
+                  });
+                } else {
+                  if (imgPath == null) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return showNoImageDialog(context);
+                        });
+                  } else if (_selected.isEmpty) {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return showNoSelectedTypeDialog(context);
+                        });
+                  }
+                }
               },
               fillColor: Colors.white,
               splashColor: Colors.green[400],
@@ -345,6 +257,44 @@ class _AddBinState extends State<AddBin> {
                 ),
               ),
             ),
+          ),
+          Center(
+            child: Visibility(
+                visible: _uploadInProgress,
+                child: Container(
+                    height: 300,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(color: Colors.black12, blurRadius: 40),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.black12,width: 2)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Houston...\n richiediamo contatto al server, mi sentite?\n\nSperiamo vada tutto bene!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        CircularProgressIndicator(),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Text(
+                          "Stiamo caricando la tua segnalazione online.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ))),
           )
         ],
       ),

@@ -42,6 +42,7 @@ class _KeepItCleanState extends State<KeepItClean> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
+        fontFamily: 'Montserrat',
       ),
       home: LoginPage(),
       localizationsDelegates: [
@@ -131,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         ]),
                     child: CircleAvatar(
                       backgroundImage:
-                          ExactAssetImage('assets/profileTest.jpeg'),
+                          ExactAssetImage('assets/keep_it_clean_logo.jpg'),
                       maxRadius: 40,
                     ),
                   ),

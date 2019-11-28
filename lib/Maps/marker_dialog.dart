@@ -3,7 +3,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-SimpleDialog createDialog(BuildContext context, String img, LatLng pos, int type) {
+SimpleDialog createDialog(
+  BuildContext context,
+  String img,
+  LatLng pos,
+  int type,
+) {
   String name;
   switch (type) {
     case 1:
@@ -17,50 +22,88 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos, int type
       break;
     case 4:
       name = AppTranslations.of(context).text("other_string");
+      break;
+    case 5:
+      name = AppTranslations.of(context).text("battery_string");
+      break;
+    case 6:
+      name = AppTranslations.of(context).text("drugs_string");
+      break;
+    case 7:
+      name = AppTranslations.of(context).text("leaf_string");
+      break;
+    case 8:
+      name = AppTranslations.of(context).text("clothing_string");
+      break;
   }
 
-
-
   return SimpleDialog(
+    titlePadding: EdgeInsets.only(left: 10, right: 5),
     backgroundColor: Colors.white,
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    title: Column(
       children: <Widget>[
-        Text(
-          name,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w600, fontSize: 24),
-        ),
-        Column(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontFamily: "Montserrat",
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24),
+              ),
+            ),
             IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return createAlertDialog(context);
+                    });
+              },
               icon: Icon(
                 Icons.error_outline,
                 color: Colors.red,
               ),
-            ),Text(
-              "SEGNALA",
-              textAlign: TextAlign.center,
-              style: TextStyle(color:Colors.red,fontFamily: "Montserrat", fontWeight: FontWeight.w600, fontSize: 12),
-            ),
+            )
           ],
-        )
+        ),
       ],
     ),
     children: <Widget>[
-
       Padding(
-        padding: const EdgeInsets.only(bottom:20.0, left: 20, right: 20),
+        padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
         child: Container(
           height: 300,
           decoration: BoxDecoration(shape: BoxShape.circle),
-          child: img != null ? FadeInImage.assetNetwork(placeholder: 'assets/loading.gif', image: img, fit: BoxFit.fitWidth, ) : Image.asset('assets/trees.png',fit: BoxFit.fitWidth),
+          child: img != null
+              ? FadeInImage.assetNetwork(
+                  placeholder: 'assets/loading.gif',
+                  image: img,
+                  fit: BoxFit.fitWidth,
+                )
+              : Image.asset('assets/trees.png', fit: BoxFit.fitWidth),
         ),
       ),
       Center(
+        child: Text(
+          "Segnalato da Maicol\nIn data: 27/11/19",
+          style: TextStyle(
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w600,
+              fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      Center(
         child: FlatButton(
-
-          padding: const EdgeInsets.all(10) ,
+          padding: const EdgeInsets.all(10),
           onPressed: () {
             _launchMapsUrl(pos.latitude, pos.longitude);
           },
@@ -68,7 +111,10 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos, int type
           textColor: Colors.white,
           child: Text(
             AppTranslations.of(context).text("take_me_there_string"),
-            style: TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w600, fontSize: 22),
+            style: TextStyle(
+                fontFamily: "Montserrat",
+                fontWeight: FontWeight.w600,
+                fontSize: 22),
           ),
         ),
       )
@@ -76,6 +122,32 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos, int type
   );
 }
 
+AlertDialog createAlertDialog(BuildContext context) {
+  return AlertDialog(
+    elevation: 20,
+    title: new Text(
+      AppTranslations.of(context).text("report_bin_string"),
+    ),
+    actions: <Widget>[
+      FlatButton(
+        child: new Text(AppTranslations.of(context).text("no")),
+        color: Colors.green,
+        textColor: Colors.white,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      FlatButton(
+        child: new Text(AppTranslations.of(context).text("yes")),
+        color: Colors.red,
+        textColor: Colors.black,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    ],
+  );
+}
 
 void _launchMapsUrl(double lat, double lon) async {
   final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lon';

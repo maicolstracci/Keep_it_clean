@@ -14,22 +14,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'search_widget.dart';
 
-
-
 class Maps extends StatefulWidget {
   final FirebaseUser user;
 
-  const Maps({Key key, this.user}) : super(key:key);
+  const Maps({Key key, this.user}) : super(key: key);
 
   @override
   _MapsState createState() => _MapsState();
 }
 
 class _MapsState extends State<Maps> {
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng _lastPosition;
   Completer<GoogleMapController> _controller = Completer();
+
   // Two sets of markers are needed to perform the markers filtering on screen
   Set<Marker> markers = Set.from([]);
   Set<Marker> notFilteredMarkers = Set.from([]);
@@ -46,8 +44,8 @@ class _MapsState extends State<Maps> {
   // Request permission method from permissions_handlers plugin
   void requestPermission() async {
     Map<PermissionGroup, PermissionStatus> permissions =
-    await PermissionHandler()
-        .requestPermissions([PermissionGroup.location]);
+        await PermissionHandler()
+            .requestPermissions([PermissionGroup.location]);
   }
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
@@ -61,9 +59,9 @@ class _MapsState extends State<Maps> {
         .collection('cestini')
         .snapshots()
         .listen((data) => data.documents.forEach((cestino) {
-      LatLng l = new LatLng(cestino['lat'], cestino['lng']);
-      _addMarker(cestino.documentID, l, cestino['type']);
-    }));
+              LatLng l = new LatLng(cestino['lat'], cestino['lng']);
+              _addMarker(cestino.documentID, l, cestino['type']);
+            }));
   }
 
   void _onMarkerTapped(MarkerId markerId) {
@@ -75,29 +73,40 @@ class _MapsState extends State<Maps> {
         .document(markerId.value)
         .get()
         .then((DocumentSnapshot ds) {
-      _pos =  new LatLng(ds['lat'], ds['lng']);
+      _pos = new LatLng(ds['lat'], ds['lng']);
       // if photoUrl is not null then we recover the photo from Firebase Storage
       if (ds['photoUrl'] != null) {
         final StorageReference storageReference =
-        FirebaseStorage().ref().child(ds['photoUrl']);
+            FirebaseStorage().ref().child(ds['photoUrl']);
         storageReference.getDownloadURL().then((img) {
           showDialog(
               context: context,
               builder: (context) {
-                return createDialog(context,img,_pos,ds['type']);
+                return createDialog(
+                  context,
+                  img,
+                  _pos,
+                  ds['type'],
+                );
               });
         });
       } else {
         showDialog(
             context: context,
             builder: (context) {
-              return createDialog(context,null,_pos,ds['type']);
+              return createDialog(
+                context,
+                null,
+                _pos,
+                ds['type'],
+              );
             });
       }
     });
   }
 
 
+  //TODO: Stop stacking markers find a way to move them a bit or just dont draw them stacked...
   void _addMarker(String id, LatLng latLng, int type) {
     var markerColor;
     switch (type) {
@@ -109,6 +118,21 @@ class _MapsState extends State<Maps> {
         break;
       case 3:
         markerColor = BitmapDescriptor.hueYellow;
+        break;
+      case 4:
+        markerColor = BitmapDescriptor.hueOrange;
+        break;
+      case 5:
+        markerColor = BitmapDescriptor.hueBlue;
+        break;
+      case 6:
+        markerColor = BitmapDescriptor.hueRose;
+        break;
+      case 7:
+        markerColor = BitmapDescriptor.hueMagenta;
+        break;
+      case 8:
+        markerColor = BitmapDescriptor.hueViolet;
         break;
     }
 
@@ -153,28 +177,29 @@ class _MapsState extends State<Maps> {
           .where("type", isEqualTo: type)
           .snapshots()
           .listen((data) => data.documents.forEach((doc) {
-        LatLng l = new LatLng(doc['lat'], doc['lng']);
-        _addMarker(doc.documentID, l, doc['type']);
-      }));
+                LatLng l = new LatLng(doc['lat'], doc['lng']);
+                _addMarker(doc.documentID, l, doc['type']);
+              }));
     }
     setState(() {});
   }
 
-  void addBin(int type, String imgName) async {
+  void addBin(List<int> types, String imgName) async {
     LocationData currentLocation;
 
     var location = new Location();
 
     currentLocation = await location.getLocation();
-
-    await Firestore.instance.collection("cestini").add({
-      'lat': _lastPosition.latitude,
-      'lng': _lastPosition.longitude,
-      'type': type,
-      'photoUrl': imgName
-    }).then((doc) {
-      doc.get().then((c) {
-        _addMarker(doc.documentID, LatLng(c['lat'], c['lng']), c['type']);
+    types.forEach((type) async {
+      await Firestore.instance.collection("cestini").add({
+        'lat': _lastPosition.latitude,
+        'lng': _lastPosition.longitude,
+        'type': type,
+        'photoUrl': imgName
+      }).then((doc) {
+        doc.get().then((c) {
+          _addMarker(doc.documentID, LatLng(c['lat'], c['lng']), c['type']);
+        });
       });
     });
   }
@@ -185,10 +210,11 @@ class _MapsState extends State<Maps> {
     });
   }
 
-  void _showSnackBar(BuildContext context){
-    final snackBar = SnackBar(content: Text(AppTranslations.of(context).text("you_are_guest_string")));
+  void _showSnackBar(BuildContext context, int variant) {
+    final snackBar = SnackBar(
+        content:
+            Text(AppTranslations.of(context).text(variant == 1 ? "you_are_guest_profile_string" : "you_are_guest_add_string")));
     _scaffoldKey.currentState.showSnackBar(snackBar);
-
   }
 
   @override
@@ -214,12 +240,14 @@ class _MapsState extends State<Maps> {
               left: 10,
               child: GestureDetector(
                 onTap: () {
-                  if(widget.user != null){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage(widget.user)),
-                  );} else {
-                    _showSnackBar(context);
+                  if (widget.user != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfilePage(widget.user)),
+                    );
+                  } else {
+                    _showSnackBar(context,1);
                   }
                 },
                 child: Hero(
@@ -237,7 +265,9 @@ class _MapsState extends State<Maps> {
                           ),
                         ]),
                     child: CircleAvatar(
-                    backgroundImage: (widget.user != null) ? NetworkImage(widget.user.photoUrl,scale: 1 ) : ExactAssetImage('assets/trees.jpeg'),
+                      backgroundImage: (widget.user != null)
+                          ? NetworkImage(widget.user.photoUrl, scale: 1)
+                          : ExactAssetImage('assets/trees.jpeg'),
                       maxRadius: 40,
                     ),
                   ),
@@ -265,10 +295,14 @@ class _MapsState extends State<Maps> {
                 child: RawMaterialButton(
                   shape: CircleBorder(),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddBin(addBin)),
-                    );
+                    if (widget.user != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddBin(addBin)),
+                      );
+                    } else {
+                      _showSnackBar(context,2);
+                    }
                   },
                   child: Icon(
                     Icons.add,

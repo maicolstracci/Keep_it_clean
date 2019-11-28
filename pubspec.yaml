@@ -39,7 +39,13 @@ dependencies:
   path_provider:
   flutter_facebook_login: ^2.0.1
   http:
+  flutter_launcher_icons: ^0.7.3
 
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/keep_it_clean_logo.jpg"
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +69,11 @@ flutter:
     - assets/italy.png
     - assets/germany.png
     - assets/united-kingdom.png
+    - assets/battery.png
+    - assets/keep_it_clean_logo.jpg
+    - assets/drugs.png
+    - assets/leaf.png
+    - assets/clothing.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
