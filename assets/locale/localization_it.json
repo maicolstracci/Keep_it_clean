@@ -8,7 +8,7 @@
   "drugs_string": "Farmaci",
   "leaf_string": "Verde",
   "clothing_string": "Vestiti",
-  "other_string": "Altro",
+  "other_string": "Secco",
   "report_string": "Segnalazioni",
   "error_string" : "Errore",
   "no_image_string" : "Immagine obbligatoria.\nCaricane una.",
@@ -21,9 +21,15 @@
   "take_me_there_string": "Portamici!",
   "login_string": "Entra come ospite",
   "google_login_string": "Login con Google",
+  "facebook_login_string": "Login con Facebook",
   "find_bin_string": "Trova il cestino della differenziata più vicino a te!",
   "you_are_guest_profile_string": "Gli utenti ospiti non possono accedere alla pagina del profilo",
   "you_are_guest_add_string": "Gli utenti ospiti non possono segnalare centri di raccolta",
   "more_string": "Altri filtri",
-  "report_bin_string" : "Vuoi segnalare questo bidone?"
+  "report_bin_string" : "Vuoi segnalare questo bidone?",
+  "reported_by" : "Segnalato da ",
+  "date_string" : "In data: ",
+  "position_string" : "Abbiamo rilevato questa tua posizione attuale.",
+  "move_cursor_string" : "Sposta il cursore sulla mappa nel caso in cui la posizione non sia corretta",
+  "confirm_position_string" : "Conferma posizione"
 }

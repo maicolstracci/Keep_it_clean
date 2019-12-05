@@ -2,9 +2,24 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/AddBin/select_position.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'dialogs.dart';
 import 'camera_functions.dart';
+
+/*
+      Type  name
+      1 plastic
+      2 glass
+      3 paper
+      4 dry
+      5 battery
+      6 drugs
+      7 leaf
+      8 clothing
+
+ */
 
 class AddBin extends StatefulWidget {
   final Function createBin;
@@ -158,8 +173,6 @@ class _AddBinState extends State<AddBin> {
                         _buildButton("assets/leaf.png", "leaf_string", 7),
                         _buildButton(
                             "assets/clothing.png", "clothing_string", 8),
-
-
                       ],
                     ),
                   ],
@@ -213,13 +226,19 @@ class _AddBinState extends State<AddBin> {
             bottom: 20,
             left: MediaQuery.of(context).size.width * 0.075,
             child: RawMaterialButton(
-              onPressed: () {
+              onPressed: () async {
                 if (imgPath != null && _selected.isNotEmpty) {
+                  // Ask the user if position is correct otherwise let them change it
+                  LatLng lat = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SelectPosition()),
+                  );
                   setState(() {
                     _uploadInProgress = true;
                   });
                   _uploadImage(imgPath).then((imgName) {
-                    widget.createBin(_selected, imgName);
+                    widget.createBin(_selected, imgName, lat);
                     Navigator.pop(context);
                   });
                 } else {
@@ -270,7 +289,7 @@ class _AddBinState extends State<AddBin> {
                         ],
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black12,width: 2)),
+                        border: Border.all(color: Colors.black12, width: 2)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

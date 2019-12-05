@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -5,8 +6,9 @@ import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'dart:convert';
 import 'Maps/maps_page.dart';
 
 void main() => runApp(KeepItClean());
@@ -20,6 +22,7 @@ class KeepItClean extends StatefulWidget {
 
 class _KeepItCleanState extends State<KeepItClean> {
   AppTranslationsDelegate _newLocaleDelegate;
+
 
   @override
   void initState() {
@@ -43,6 +46,12 @@ class _KeepItCleanState extends State<KeepItClean> {
       theme: ThemeData(
         primarySwatch: Colors.green,
         fontFamily: 'Montserrat',
+        textTheme: TextTheme(
+          body1: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.w100,
+              color: Colors.black87),
+        ),
       ),
       home: LoginPage(),
       localizationsDelegates: [
@@ -74,20 +83,40 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String fbUserProfilePic;
 
-  void _fbLogin() async {
+
+  Future<FirebaseUser> _fbLogin() async {
     final facebookLogin = FacebookLogin();
-    final result = await facebookLogin.logInWithReadPermissions(['email']);
+    //facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+
+    final result = await facebookLogin
+        .logInWithReadPermissions(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         print("Logged");
+        final token = result.accessToken.token;
+
+        final AuthCredential cred =
+            FacebookAuthProvider.getCredential(accessToken: token);
+
+        final FirebaseUser user = (await _auth.signInWithCredential(cred)).user;
+
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=${token}');
+        Map<String, dynamic> pic = jsonDecode(graphResponse.body);
+        fbUserProfilePic = pic['picture']['data']['url'];
+        setupUser(user);
+        return user;
         break;
       case FacebookLoginStatus.cancelledByUser:
         print("Cancelled");
+        return null;
         break;
       case FacebookLoginStatus.error:
         print("Error");
+        return null;
         break;
     }
   }
@@ -104,7 +133,29 @@ class _LoginPageState extends State<LoginPage> {
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
+    setupUser(user);
+
     return user;
+  }
+
+  void setupUser(FirebaseUser user) {
+    // Check if user already in firestore db, if not create an entry and initialize keys
+    DocumentReference ref =
+        Firestore.instance.collection('users').document(user.uid);
+    ref.get().then((ds) {
+      if (!ds.exists) {
+        ref.setData({
+          '1': 0,
+          '2': 0,
+          '3': 0,
+          '4': 0,
+          '5': 0,
+          '6': 0,
+          '7': 0,
+          '8': 0,
+        });
+      }
+    });
   }
 
   @override
@@ -112,11 +163,14 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           color: Colors.green[400],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Container(
                     width: 80,
@@ -183,15 +237,61 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        _googleLogin()
-                            .then((FirebaseUser user) {
+                        _fbLogin().then((FirebaseUser user) {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Maps(user: user)),
+                            MaterialPageRoute(
+                                builder: (context) => Maps(user: user, fbPic: fbUserProfilePic)),
                           );
-                        })
-                            .catchError((e) => print(e));
-
+                        }).catchError((e) => print(e));
+                      },
+                      child: Container(
+                        height: 70,
+                        width: 250,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.blueAccent,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10.0,
+                              ),
+                            ]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Icon(
+                                IconData(0xe901, fontFamily: "CustomIcons"),
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              AppTranslations.of(context)
+                                  .text("facebook_login_string"),
+                              style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _googleLogin().then((FirebaseUser user) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Maps(user: user)),
+                          );
+                        }).catchError((e) => print(e));
                       },
                       child: Container(
                         height: 70,
@@ -229,7 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 15,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -287,45 +387,3 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-//child: GestureDetector(
-//onTap: () {
-////                _fbLogin();
-////                _googleLogin()
-////                    .then((FirebaseUser user) => print(user))
-////                    .catchError((e) => print(e));
-//Navigator.push(
-//context,
-//MaterialPageRoute(builder: (context) => Maps()),
-//);
-//},
-//child: Container(
-//height: 70,
-//width: 250,
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.circular(15),
-//color: Colors.blueGrey[500]),
-//child: Row(
-//mainAxisAlignment: MainAxisAlignment.start,
-//children: <Widget>[
-//Padding(
-//padding: EdgeInsets.symmetric(horizontal: 15),
-//child: Icon(
-//Icons.arrow_forward,
-//color: Colors.white,
-//),
-//),
-//Center(
-//child: Text(
-//"Login as a guest",
-//textAlign: TextAlign.left,
-//style: TextStyle(
-//fontFamily: "Montserrat",
-//fontWeight: FontWeight.w600,
-//fontSize: 16,
-//color: Colors.white),
-//),
-//),
-//],
-//),
-//),
-//),

@@ -3,12 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-SimpleDialog createDialog(
-  BuildContext context,
-  String img,
-  LatLng pos,
-  int type,
-) {
+SimpleDialog createDialog(BuildContext context, String img, LatLng pos,
+    int type, String username, String date) {
   String name;
   switch (type) {
     case 1:
@@ -88,14 +84,26 @@ SimpleDialog createDialog(
               : Image.asset('assets/trees.png', fit: BoxFit.fitWidth),
         ),
       ),
-      Center(
-        child: Text(
-          "Segnalato da Maicol\nIn data: 27/11/19",
-          style: TextStyle(
-              fontFamily: "Montserrat",
-              fontWeight: FontWeight.w600,
-              fontSize: 20),
-          textAlign: TextAlign.center,
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+                style: Theme.of(context).textTheme.body1,
+                text: AppTranslations.of(context).text("reported_by"),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: username + '\n',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: AppTranslations.of(context).text("date_string"),
+                      style: Theme.of(context).textTheme.body1),
+                  TextSpan(
+                      text: date.substring(0, 10),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ]),
+          ),
         ),
       ),
       SizedBox(

@@ -5,19 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
+import 'package:keep_it_clean/AddBin/select_position.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Maps/marker_dialog.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'dart:math';
 import 'search_widget.dart';
 
 class Maps extends StatefulWidget {
   final FirebaseUser user;
+  final String fbPic;
 
-  const Maps({Key key, this.user}) : super(key: key);
+  const Maps({Key key, this.user, this.fbPic}) : super(key: key);
 
   @override
   _MapsState createState() => _MapsState();
@@ -87,6 +89,8 @@ class _MapsState extends State<Maps> {
                   img,
                   _pos,
                   ds['type'],
+                  ds['username'],
+                  ds['reportDate'],
                 );
               });
         });
@@ -99,15 +103,18 @@ class _MapsState extends State<Maps> {
                 null,
                 _pos,
                 ds['type'],
+                ds['username'],
+                ds['reportDate'],
               );
             });
       }
     });
   }
 
-
-  //TODO: Stop stacking markers find a way to move them a bit or just dont draw them stacked...
   void _addMarker(String id, LatLng latLng, int type) {
+    bool positionChanged = false;
+    LatLng alteredPos;
+
     var markerColor;
     switch (type) {
       case 1:
@@ -138,10 +145,39 @@ class _MapsState extends State<Maps> {
 
     final MarkerId markerId = MarkerId(id);
 
+    // Offset marker position to avoid stacking
+    markers.forEach((marker) {
+      if (marker.position == latLng) {
+        int rng = Random().nextInt(5);
+        if (rng == 0) rng = 1;
+        double offset = (rng / 100000);
+
+        switch (rng) {
+          case 1:
+            alteredPos =
+                new LatLng(latLng.latitude + offset, latLng.longitude + offset);
+            break;
+          case 2:
+            alteredPos =
+                new LatLng(latLng.latitude + offset, latLng.longitude - offset);
+            break;
+          case 3:
+            alteredPos =
+                new LatLng(latLng.latitude - offset, latLng.longitude + offset);
+            break;
+          case 4:
+            alteredPos =
+                new LatLng(latLng.latitude - offset, latLng.longitude - offset);
+            break;
+        }
+        positionChanged = true;
+      }
+    });
+
     // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
-      position: latLng,
+      position: positionChanged ? alteredPos : latLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
       onTap: () {
         // markerId is used as a reference to the marker in the Firebase db
@@ -154,8 +190,6 @@ class _MapsState extends State<Maps> {
       markers.add(marker);
     });
   }
-
-  //TODO: change way of saving and filtering markers, need to refactor to avoid querying the db each time
 
   void showAllMarkers() {
     notFilteredMarkers.addAll(markers);
@@ -184,23 +218,32 @@ class _MapsState extends State<Maps> {
     setState(() {});
   }
 
-  void addBin(List<int> types, String imgName) async {
-    LocationData currentLocation;
-
-    var location = new Location();
-
-    currentLocation = await location.getLocation();
+  void addBin(List<int> types, String imgName, LatLng binPos) async {
     types.forEach((type) async {
       await Firestore.instance.collection("cestini").add({
-        'lat': _lastPosition.latitude,
-        'lng': _lastPosition.longitude,
+        'lat': binPos.latitude,
+        'lng': binPos.longitude,
         'type': type,
-        'photoUrl': imgName
+        'photoUrl': imgName,
+        'username': widget.user.displayName,
+        'reportDate': new DateTime.now().toString()
       }).then((doc) {
         doc.get().then((c) {
           _addMarker(doc.documentID, LatLng(c['lat'], c['lng']), c['type']);
         });
       });
+    });
+
+    final DocumentReference postRef =
+        Firestore.instance.collection("users").document(widget.user.uid);
+    Firestore.instance.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      if (postSnapshot.exists) {
+        types.forEach((type) async {
+          await tx.update(postRef,
+              <String, dynamic>{'$type': postSnapshot.data['$type'] + 1});
+        });
+      }
     });
   }
 
@@ -212,106 +255,127 @@ class _MapsState extends State<Maps> {
 
   void _showSnackBar(BuildContext context, int variant) {
     final snackBar = SnackBar(
-        content:
-            Text(AppTranslations.of(context).text(variant == 1 ? "you_are_guest_profile_string" : "you_are_guest_add_string")));
+        content: Text(AppTranslations.of(context).text(variant == 1
+            ? "you_are_guest_profile_string"
+            : "you_are_guest_add_string")),
+      action: SnackBarAction(
+        label: "LOGIN",
+        onPressed: (){
+          Navigator.of(context).pop();
+        },
+      ),
+      behavior: SnackBarBehavior.floating,
+
+    );
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        body: Stack(
-          children: <Widget>[
-            GoogleMap(
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              mapToolbarEnabled: false,
-              initialCameraPosition: _kGooglePlex,
-              markers: markers,
-              onMapCreated: (controller) {
-                _controller.complete(controller);
-              },
-              onCameraMove: _onCameraMove,
-            ),
-            Positioned(
-              top: 10,
-              left: 10,
-              child: GestureDetector(
-                onTap: () {
-                  if (widget.user != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfilePage(widget.user)),
-                    );
-                  } else {
-                    _showSnackBar(context,1);
-                  }
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          key: _scaffoldKey,
+          body: Stack(
+            children: <Widget>[
+              GoogleMap(
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                mapToolbarEnabled: false,
+                initialCameraPosition: _kGooglePlex,
+                markers: markers,
+                onMapCreated: (controller) {
+                  _controller.complete(controller);
                 },
-                child: Hero(
-                  tag: "profilePic",
-                  child: new Container(
-                    width: 60,
-                    height: 60,
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 10.0,
-                          ),
-                        ]),
-                    child: CircleAvatar(
-                      backgroundImage: (widget.user != null)
-                          ? NetworkImage(widget.user.photoUrl, scale: 1)
-                          : ExactAssetImage('assets/trees.jpeg'),
-                      maxRadius: 40,
+                onCameraMove: _onCameraMove,
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    if (widget.user != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProfilePage(widget.user, widget.fbPic)),
+                      );
+                    } else {
+                      _showSnackBar(context, 1);
+                    }
+                  },
+                  child: Hero(
+                    tag: "profilePic",
+                    child: new Container(
+                      width: 60,
+                      height: 60,
+                      decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10.0,
+                            ),
+                          ]),
+                      child: CircleAvatar(
+                        backgroundImage: (widget.user != null)
+                            ? NetworkImage(
+                                widget.fbPic == null
+                                    ? widget.user.photoUrl
+                                    : widget.fbPic,
+                                scale: 1)
+                            : ExactAssetImage('assets/no-avatar.jpg'),
+                        maxRadius: 40,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 30,
-              right: 10,
-              child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: SearchWidget(showFilteredMarkers)),
-            ),
-            Positioned(
-              bottom: 30,
-              left: 10,
-              child: Container(
-                width: 60.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.green[300],
-                ),
-                child: RawMaterialButton(
-                  shape: CircleBorder(),
-                  onPressed: () {
-                    if (widget.user != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddBin(addBin)),
-                      );
-                    } else {
-                      _showSnackBar(context,2);
-                    }
-                  },
-                  child: Icon(
-                    Icons.add,
-                    size: 32,
+              Positioned(
+                bottom: 30,
+                right: 10,
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: SearchWidget(showFilteredMarkers)),
+              ),
+              Positioned(
+                bottom: 30,
+                left: 10,
+                child: Container(
+                  width: 60.0,
+                  height: 60.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.green[300],
+                  ),
+                  child: RawMaterialButton(
+                    shape: CircleBorder(),
+                    onPressed: () {
+                      if (widget.user != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+//                                builder: (context) => AddBin(addBin)
+                            builder:  (context) => SelectPosition()
+                            ));
+
+                      } else {
+                        _showSnackBar(context, 2);
+                      }
+                    },
+                    child: Icon(
+                      Icons.add,
+                      size: 32,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
