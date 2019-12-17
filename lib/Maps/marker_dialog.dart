@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-SimpleDialog createDialog(BuildContext context, String img, LatLng pos,
+SimpleDialog createDialog(BuildContext context, String documentID, String img, LatLng pos,
     int type, String username, String date) {
   String name;
   switch (type) {
@@ -40,6 +40,7 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos,
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -70,18 +71,22 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos,
       ],
     ),
     children: <Widget>[
+
       Padding(
         padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
-        child: Container(
-          height: 300,
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: img != null
-              ? FadeInImage.assetNetwork(
-                  placeholder: 'assets/loading.gif',
-                  image: img,
-                  fit: BoxFit.fitWidth,
-                )
-              : Image.asset('assets/trees.png', fit: BoxFit.fitWidth),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: img != null
+                ? FadeInImage.assetNetwork(
+                    placeholder: 'assets/loading.gif',
+                    image: img,
+                    fit: BoxFit.fitWidth,
+                  )
+                : Image.asset('assets/trees.png', fit: BoxFit.fitWidth),
+          ),
         ),
       ),
       Padding(
@@ -131,10 +136,17 @@ SimpleDialog createDialog(BuildContext context, String img, LatLng pos,
 }
 
 AlertDialog createAlertDialog(BuildContext context) {
+  int pressed = 0;
+
   return AlertDialog(
     elevation: 20,
-    title: new Text(
-      AppTranslations.of(context).text("report_bin_string"),
+    title: GestureDetector(
+      onLongPressUp: (){
+        pressed++;
+      },
+      child: new Text(
+        AppTranslations.of(context).text("report_bin_string"),
+      ),
     ),
     actions: <Widget>[
       FlatButton(
@@ -150,6 +162,12 @@ AlertDialog createAlertDialog(BuildContext context) {
         color: Colors.red,
         textColor: Colors.black,
         onPressed: () {
+          if(pressed == 2){
+            print("delete");
+            //TODO: add fast delete option
+
+            return;
+          }
           Navigator.of(context).pop();
         },
       ),

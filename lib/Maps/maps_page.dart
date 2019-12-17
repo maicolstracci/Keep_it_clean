@@ -33,8 +33,9 @@ class _MapsState extends State<Maps> {
   // Two sets of markers are needed to perform the markers filtering on screen
   Set<Marker> markers = Set.from([]);
   Set<Marker> notFilteredMarkers = Set.from([]);
-
   GoogleMapController controller;
+
+  Map<PermissionGroup, PermissionStatus> permissions;
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _MapsState extends State<Maps> {
 
   // Request permission method from permissions_handlers plugin
   void requestPermission() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
+    permissions =
         await PermissionHandler()
             .requestPermissions([PermissionGroup.location]);
   }
@@ -86,6 +87,7 @@ class _MapsState extends State<Maps> {
               builder: (context) {
                 return createDialog(
                   context,
+                  ds.documentID,
                   img,
                   _pos,
                   ds['type'],
@@ -254,17 +256,27 @@ class _MapsState extends State<Maps> {
   }
 
   void _showSnackBar(BuildContext context, int variant) {
+    String s;
+    switch(variant){
+      case 1: s = "you_are_guest_profile_string"; break;
+      case 2: s = "you_are_guest_add_string"; break;
+      case 3: s = "location_requested_string"; break;
+    }
+
     final snackBar = SnackBar(
-        content: Text(AppTranslations.of(context).text(variant == 1
-            ? "you_are_guest_profile_string"
-            : "you_are_guest_add_string")),
-      action: SnackBarAction(
+        content: Text(AppTranslations.of(context).text(s)),
+      action: (variant == 1 || variant == 2) ? SnackBarAction(
         label: "LOGIN",
         onPressed: (){
           Navigator.of(context).pop();
         },
+      ) : SnackBarAction(
+        label: AppTranslations.of(context).text("settings_string"),
+        onPressed: (){
+          PermissionHandler().openAppSettings();
+        },
       ),
-      behavior: SnackBarBehavior.floating,
+      behavior: SnackBarBehavior.fixed,
 
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
@@ -356,12 +368,18 @@ class _MapsState extends State<Maps> {
                     shape: CircleBorder(),
                     onPressed: () {
                       if (widget.user != null) {
-                        Navigator.push(
+                        //TODO: check location permission
+                        PermissionHandler().checkPermissionStatus(PermissionGroup.location).then((permission){
+                          if(permission == PermissionStatus.granted){
+                            Navigator.push(
                             context,
                             MaterialPageRoute(
-//                                builder: (context) => AddBin(addBin)
-                            builder:  (context) => SelectPosition()
+                                builder: (context) => AddBin(addBin)
                             ));
+                          } else{
+                            _showSnackBar(context, 3);
+                          }
+                        });
 
                       } else {
                         _showSnackBar(context, 2);

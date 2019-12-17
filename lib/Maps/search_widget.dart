@@ -15,6 +15,7 @@ class SearchWidget extends StatefulWidget {
 class _SearchWidgetState extends State<SearchWidget> {
   double bottom = 0, right = 0, bottomR = 0;
   bool open = false, openMore = false;
+  int buttonTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +23,14 @@ class _SearchWidgetState extends State<SearchWidget> {
       children: <Widget>[
         _buildButton(65, 65, 5, Colors.lightBlue[400], horizontalButton: true),
         _buildButton(65, 130, 6, Colors.pink[300], horizontalButton: true),
-        _buildButton(65, 195, 7, Colors.yellow[400],  horizontalButton: true),
-        _buildButton(65, 260, 8, Colors.deepPurpleAccent[100],  horizontalButton: true),
-        _buildButton(65, 0, 0, Colors.green[700],  horizontalButton: false),
-        _buildButton(145, 0, 2, Colors.green[400],  horizontalButton: false),
-        _buildButton(225, 0, 3, Colors.amber[400],  horizontalButton: false),
-        _buildButton(300, 0, 1, Colors.red[400],  horizontalButton: false),
-        _buildButton(380, 0, 4, Colors.grey[400],  horizontalButton: false),
+        _buildButton(65, 195, 7, Colors.yellow[400], horizontalButton: true),
+        _buildButton(65, 260, 8, Colors.deepPurpleAccent[100],
+            horizontalButton: true),
+        _buildButton(65, 0, 0, Colors.green[700], horizontalButton: false),
+        _buildButton(145, 0, 2, Colors.green[400], horizontalButton: false),
+        _buildButton(225, 0, 3, Colors.amber[400], horizontalButton: false),
+        _buildButton(300, 0, 1, Colors.red[400], horizontalButton: false),
+        _buildButton(380, 0, 4, Colors.grey[400], horizontalButton: false),
         Positioned(
           bottom: 0,
           right: 0,
@@ -46,7 +48,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                     bottomR = 0;
                     right = 0;
                     openMore = false;
-                    widget.showFilteredMarkers(0);
+
                   } else {
                     _openButton();
                   }
@@ -60,8 +62,8 @@ class _SearchWidgetState extends State<SearchWidget> {
     );
   }
 
-  Widget _buildButton(
-      double max, double right, int type, Color color1, {bool horizontalButton}) {
+  Widget _buildButton(double max, double right, int type, Color color1,
+      {bool horizontalButton}) {
     String icon, name;
 
     switch (type) {
@@ -111,7 +113,8 @@ class _SearchWidgetState extends State<SearchWidget> {
       child: AnimatedOpacity(
         curve: Curves.easeInQuart,
         duration: Duration(milliseconds: 400),
-        opacity: !horizontalButton ? (open ? 1.0 : 0.0) : (openMore ? 1.0 : 0.0),
+        opacity:
+            !horizontalButton ? (open ? 1.0 : 0.0) : (openMore ? 1.0 : 0.0),
         child: GestureDetector(
           onTap: () {
             if (type == 0) {
@@ -124,27 +127,61 @@ class _SearchWidgetState extends State<SearchWidget> {
                 openMore = !openMore;
               });
             } else {
+              if(buttonTapped == type){
+                buttonTapped = null;
+                widget.showFilteredMarkers(0);
+              }
+              else{
               widget.showFilteredMarkers(type);
+              buttonTapped = type;}
             }
           },
           child: Column(
             children: <Widget>[
-              Container(
-                width: 60.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  color: color1,
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: icon == "icon_back"
-                      ? Icon(
-                          Icons.arrow_back,
-                          size: 32,
-                        )
-                      : Image.asset(icon),
-                ),
+              Stack(
+                children: <Widget>[
+                  Container(
+                    width: 60.0,
+                    height: 60.0,
+                    decoration: BoxDecoration(
+                      color: color1,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: icon == "icon_back"
+                          ? Icon(
+                              Icons.arrow_back,
+                              size: 32,
+                            )
+                          : Image.asset(icon),
+                    ),
+                  ),
+                  Visibility(
+                    visible: buttonTapped == type ? true : false,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.white, width: 2),
+                              borderRadius: BorderRadius.circular(60)),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                              decoration: BoxDecoration(color: Colors.green,
+
+                              borderRadius: BorderRadius.circular(40)),
+                              child: Icon(Icons.done, color: Colors.white,)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               Text(
                 name,

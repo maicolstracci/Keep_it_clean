@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
+import 'package:keep_it_clean/ProfilePage/who_am_I_page.dart';
 
 import 'language_dialog.dart';
 
@@ -190,26 +191,13 @@ class _ProfilePageState extends State<ProfilePage>
                                 size: 32,
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return languageDialog(context);
-                                    });
-                              },
-                              child: Image.asset(
-                                "assets/italy.png",
-                                width: 30,
-                              ),
-                            ),
                             IconButton(
                               padding: EdgeInsets.all(0),
                               onPressed: () => {
-//                        Navigator.push(
-//                          context,
-//                          MaterialPageRoute(builder: (context) => WhoAmIPage()),
-//                        )
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WhoAmIPage()),
+                        )
                               },
                               icon: Icon(
                                 Icons.info_outline,
@@ -219,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage>
                           ],
                         ),
                         SizedBox(
-                          height: 25,
+                          height: 10,
                         ),
                         Stack(
                           overflow: Overflow.visible,
@@ -245,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   backgroundImage: (widget.user != null)
                                       ? NetworkImage(widget.fbPic == null ? widget.user.photoUrl : widget.fbPic,
                                           scale: 1)
-                                      : ExactAssetImage('assets/trees.jpeg'),
+                                      : ExactAssetImage('assets/no-avatar.jpg'),
                                   maxRadius: 40,
                                 ),
                               ),
@@ -277,8 +265,15 @@ class _ProfilePageState extends State<ProfilePage>
                               right: 30,
                               child: GestureDetector(
                                 onTap: () {
-                                  controller.forward();
+                                  final snackBar = SnackBar(
+                                      content: Text(AppTranslations.of(context).text("badge_string")),
+                                    duration: Duration(seconds: 8),
+                                  );
+
+                                  Scaffold.of(context).showSnackBar(snackBar);
+
                                 },
+                                onDoubleTap: (){controller.forward();},
                                 child: Badge(animation: animation),
                               ),
                             ),

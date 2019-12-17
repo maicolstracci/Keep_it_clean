@@ -22,6 +22,7 @@
   "login_string": "Entra come ospite",
   "google_login_string": "Login con Google",
   "facebook_login_string": "Login con Facebook",
+  "login_desc_string" : "Accedi attraverso il tuo\nsocial network preferito\no entra come ospite.",
   "find_bin_string": "Trova il cestino della differenziata più vicino a te!",
   "you_are_guest_profile_string": "Gli utenti ospiti non possono accedere alla pagina del profilo",
   "you_are_guest_add_string": "Gli utenti ospiti non possono segnalare centri di raccolta",
@@ -29,7 +30,11 @@
   "report_bin_string" : "Vuoi segnalare questo bidone?",
   "reported_by" : "Segnalato da ",
   "date_string" : "In data: ",
+  "loading_position_string" : "Stiamo rilevando la tua posizione attuale.",
   "position_string" : "Abbiamo rilevato questa tua posizione attuale.",
   "move_cursor_string" : "Sposta il cursore sulla mappa nel caso in cui la posizione non sia corretta",
-  "confirm_position_string" : "Conferma posizione"
+  "confirm_position_string" : "Conferma posizione",
+  "badge_string" : "Congratulazioni! Grazie alle tue segnalazioni hai ricevuto il badge diamante.",
+  "location_requested_string" : "E' necessario fornire i permessi di localizzazione per poter segnalare un cestino",
+  "settings_string" : "Impostazioni"
 }

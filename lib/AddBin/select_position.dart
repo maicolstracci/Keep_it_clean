@@ -16,6 +16,7 @@ class _SelectPositionState extends State<SelectPosition> {
   Set<Marker> markers = Set.from([]);
   LatLng _lastPosition;
   GoogleMapController controller;
+  bool locationLoaded = false;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _SelectPositionState extends State<SelectPosition> {
     _moveToPosition();
 
     setState(() {
+      locationLoaded = true;
       // adding a new marker to map
       markers.add(marker);
     });
@@ -74,100 +76,115 @@ class _SelectPositionState extends State<SelectPosition> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.green[300],
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          child: Flex(
-            direction: Axis.vertical,
-            children: <Widget>[
-              Expanded(
-                flex: 7,
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(color: Colors.black12, blurRadius: 40),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: GoogleMap(
-                          mapType: MapType.normal,
-                          myLocationEnabled: false,
-                          mapToolbarEnabled: false,
-                          initialCameraPosition: _kGooglePlex,
-                          markers: markers,
-                          onMapCreated: (controller) {
-                            _controller.complete(controller);
-                          },
-                          onCameraMove: _onCameraMove,
-                        )),
-                    Positioned(
-                      top: 30,
-                      left: 15,
-                      right: 15,
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(color: Colors.black12, blurRadius: 40),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(40),
+    return WillPopScope(
+      onWillPop: () async {
+        return true;
+      },
 
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.green[300],
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Flex(
+              direction: Axis.vertical,
+              children: <Widget>[
+                Expanded(
+                  flex: 7,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(color: Colors.black12, blurRadius: 40),
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: GoogleMap(
+                            mapType: MapType.normal,
+                            myLocationEnabled: false,
+                            mapToolbarEnabled: false,
+                            initialCameraPosition: _kGooglePlex,
+                            markers: markers,
+                            onMapCreated: (controller) {
+                              _controller.complete(controller);
+                            },
+                            onCameraMove: _onCameraMove,
+                          )),
+                      Positioned(
+                        top: 30,
+                        left: 15,
+                        right: 15,
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(color: Colors.black12, blurRadius: 40),
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+
+                          ),
+                          child: Text(
+                              locationLoaded ?
+                              AppTranslations.of(context).text("position_string") :
+                              AppTranslations.of(context).text("loading_position_string"),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2)),
+                        ),
+                      ),
+                      Visibility(
+                        visible: !locationLoaded,
+                        child: Center(child: Container(
+                          padding: EdgeInsets.all(30),
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                            child: CircularProgressIndicator())),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        AppTranslations.of(context).text("move_cursor_string"),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),
+                      ),
+                      RawMaterialButton(
+                        onPressed: () {
+                          Navigator.pop(context, _lastPosition);
+                        },
+                        fillColor: Colors.white,
+                        splashColor: Colors.green[400],
+                        elevation: 0,
+                        highlightElevation: 0,
+                        constraints: BoxConstraints(
+                            minWidth: MediaQuery.of(context).size.width * 0.85,
+                            minHeight: 60),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(200.0),
                         ),
                         child: Text(
-                            AppTranslations.of(context).text("position_string"),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      AppTranslations.of(context).text("move_cursor_string"),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),
-                    ),
-                    RawMaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context, _lastPosition);
-                      },
-                      fillColor: Colors.white,
-                      splashColor: Colors.green[400],
-                      elevation: 0,
-                      highlightElevation: 0,
-                      constraints: BoxConstraints(
-                          minWidth: MediaQuery.of(context).size.width * 0.85,
-                          minHeight: 60),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(200.0),
-                      ),
-                      child: Text(
-                        AppTranslations.of(context)
-                            .text("confirm_position_string"),
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.w600,
+                          AppTranslations.of(context)
+                              .text("confirm_position_string"),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "Montserrat",
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
