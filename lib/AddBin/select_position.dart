@@ -80,7 +80,6 @@ class _SelectPositionState extends State<SelectPosition> {
       onWillPop: () async {
         return true;
       },
-
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.green[300],
@@ -123,12 +122,13 @@ class _SelectPositionState extends State<SelectPosition> {
                             ],
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(40),
-
                           ),
                           child: Text(
-                              locationLoaded ?
-                              AppTranslations.of(context).text("position_string") :
-                              AppTranslations.of(context).text("loading_position_string"),
+                              locationLoaded
+                                  ? AppTranslations.of(context)
+                                      .text("position_string")
+                                  : AppTranslations.of(context)
+                                      .text("loading_position_string"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 22,
@@ -138,10 +138,13 @@ class _SelectPositionState extends State<SelectPosition> {
                       ),
                       Visibility(
                         visible: !locationLoaded,
-                        child: Center(child: Container(
-                          padding: EdgeInsets.all(30),
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-                            child: CircularProgressIndicator())),
+                        child: Center(
+                            child: Container(
+                                padding: EdgeInsets.all(30),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: CircularProgressIndicator())),
                       )
                     ],
                   ),
@@ -154,7 +157,8 @@ class _SelectPositionState extends State<SelectPosition> {
                       Text(
                         AppTranslations.of(context).text("move_cursor_string"),
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w600),
                       ),
                       RawMaterialButton(
                         onPressed: () {

@@ -107,7 +107,10 @@ class _AddBinState extends State<AddBin> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        compressedImage.delete();
+        if (compressedImage != null) {
+          compressedImage.delete();
+        }
+
         return true;
       },
       child: SafeArea(
@@ -161,7 +164,8 @@ class _AddBinState extends State<AddBin> {
                           _buildButton("assets/paper.png", "paper_string", 3),
                           _buildButton(
                               "assets/indifferenziata.png", "other_string", 4),
-                          _buildButton("assets/battery.png", "battery_string", 5),
+                          _buildButton(
+                              "assets/battery.png", "battery_string", 5),
                           _buildButton("assets/drugs.png", "drugs_string", 6),
                           _buildButton("assets/leaf.png", "leaf_string", 7),
                           _buildButton(
@@ -226,7 +230,7 @@ class _AddBinState extends State<AddBin> {
                       context,
                       MaterialPageRoute(builder: (context) => SelectPosition()),
                     );
-                    if(lat != null){
+                    if (lat != null) {
                       setState(() {
                         _uploadInProgress = true;
                       });

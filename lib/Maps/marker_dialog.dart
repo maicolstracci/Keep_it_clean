@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
@@ -58,7 +60,7 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return createAlertDialog(context);
+                      return createAlertDialog(context, documentID);
                     });
               },
               icon: Icon(
@@ -135,7 +137,7 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
   );
 }
 
-AlertDialog createAlertDialog(BuildContext context) {
+AlertDialog createAlertDialog(BuildContext context, String documentId) {
   int pressed = 0;
 
   return AlertDialog(
@@ -162,9 +164,14 @@ AlertDialog createAlertDialog(BuildContext context) {
         color: Colors.red,
         textColor: Colors.black,
         onPressed: () {
-          if(pressed == 2){
-            print("delete");
-            //TODO: add fast delete option
+          if(pressed == 3){
+
+            //TODO: improve fast delete option
+            Firestore.instance
+                .collection('cestini')
+                .document(documentId)
+                .delete();
+            Navigator.of(context).pop();
 
             return;
           }

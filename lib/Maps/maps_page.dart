@@ -28,6 +28,7 @@ class Maps extends StatefulWidget {
 class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   LatLng _lastPosition;
+  static LatLng _defaultPos = LatLng(44.170147, 8.3438333);
   Completer<GoogleMapController> _controller = Completer();
 
   // Two sets of markers are needed to perform the markers filtering on screen
@@ -40,30 +41,36 @@ class _MapsState extends State<Maps> {
   @override
   void initState() {
     super.initState();
-    _initMarkers();
     requestPermission();
+    _initMarkers();
   }
 
   // Request permission method from permissions_handlers plugin
   void requestPermission() async {
-    permissions =
-        await PermissionHandler()
-            .requestPermissions([PermissionGroup.location]);
+    permissions = await PermissionHandler()
+        .requestPermissions([PermissionGroup.location]);
   }
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(44.170147, 8.3438333),
+    target: _defaultPos,
     zoom: 14.4746,
   );
 
+  //TODO: Avoid hardcoded value
   void _initMarkers() {
     Firestore.instance
         .collection('cestini')
+        .where("lat",
+            isGreaterThan: _defaultPos.latitude - 0.05,
+            isLessThan: _defaultPos.latitude + 0.05)
         .snapshots()
         .listen((data) => data.documents.forEach((cestino) {
-              LatLng l = new LatLng(cestino['lat'], cestino['lng']);
-              _addMarker(cestino.documentID, l, cestino['type']);
+              if (cestino['lng'] > _defaultPos.longitude - 0.05 &&
+                  cestino['lng'] < _defaultPos.longitude + 0.05) {
+                LatLng l = new LatLng(cestino['lat'], cestino['lng']);
+                _addMarker(cestino.documentID, l, cestino['type']);
+              }
             }));
   }
 
@@ -78,38 +85,24 @@ class _MapsState extends State<Maps> {
         .then((DocumentSnapshot ds) {
       _pos = new LatLng(ds['lat'], ds['lng']);
       // if photoUrl is not null then we recover the photo from Firebase Storage
-      if (ds['photoUrl'] != null) {
-        final StorageReference storageReference =
-            FirebaseStorage().ref().child(ds['photoUrl']);
-        storageReference.getDownloadURL().then((img) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return createDialog(
-                  context,
-                  ds.documentID,
-                  img,
-                  _pos,
-                  ds['type'],
-                  ds['username'],
-                  ds['reportDate'],
-                );
-              });
-        });
-      } else {
+
+      final StorageReference storageReference =
+          FirebaseStorage().ref().child(ds['photoUrl']);
+      storageReference.getDownloadURL().then((img) {
         showDialog(
             context: context,
             builder: (context) {
               return createDialog(
                 context,
-                null,
+                ds.documentID,
+                img,
                 _pos,
                 ds['type'],
                 ds['username'],
                 ds['reportDate'],
               );
             });
-      }
+      });
     });
   }
 
@@ -208,13 +201,19 @@ class _MapsState extends State<Maps> {
       notFilteredMarkers.addAll(markers);
       markers.clear();
 
+      //TODO: avoid hardcoded values
       Firestore.instance
           .collection('cestini')
           .where("type", isEqualTo: type)
           .snapshots()
           .listen((data) => data.documents.forEach((doc) {
-                LatLng l = new LatLng(doc['lat'], doc['lng']);
-                _addMarker(doc.documentID, l, doc['type']);
+                if (doc['lng'] > _defaultPos.longitude - 0.05 &&
+                    doc['lng'] < _defaultPos.longitude + 0.05 &&
+                    doc['lat'] > _defaultPos.latitude - 0.05 &&
+                    doc['lat'] < _defaultPos.latitude + 0.05) {
+                  LatLng l = new LatLng(doc['lat'], doc['lng']);
+                  _addMarker(doc.documentID, l, doc['type']);
+                }
               }));
     }
     setState(() {});
@@ -257,27 +256,34 @@ class _MapsState extends State<Maps> {
 
   void _showSnackBar(BuildContext context, int variant) {
     String s;
-    switch(variant){
-      case 1: s = "you_are_guest_profile_string"; break;
-      case 2: s = "you_are_guest_add_string"; break;
-      case 3: s = "location_requested_string"; break;
+    switch (variant) {
+      case 1:
+        s = "you_are_guest_profile_string";
+        break;
+      case 2:
+        s = "you_are_guest_add_string";
+        break;
+      case 3:
+        s = "location_requested_string";
+        break;
     }
 
     final snackBar = SnackBar(
-        content: Text(AppTranslations.of(context).text(s)),
-      action: (variant == 1 || variant == 2) ? SnackBarAction(
-        label: "LOGIN",
-        onPressed: (){
-          Navigator.of(context).pop();
-        },
-      ) : SnackBarAction(
-        label: AppTranslations.of(context).text("settings_string"),
-        onPressed: (){
-          PermissionHandler().openAppSettings();
-        },
-      ),
+      content: Text(AppTranslations.of(context).text(s)),
+      action: (variant == 1 || variant == 2)
+          ? SnackBarAction(
+              label: "LOGIN",
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          : SnackBarAction(
+              label: AppTranslations.of(context).text("settings_string"),
+              onPressed: () {
+                PermissionHandler().openAppSettings();
+              },
+            ),
       behavior: SnackBarBehavior.fixed,
-
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
   }
@@ -368,19 +374,18 @@ class _MapsState extends State<Maps> {
                     shape: CircleBorder(),
                     onPressed: () {
                       if (widget.user != null) {
-                        //TODO: check location permission
-                        PermissionHandler().checkPermissionStatus(PermissionGroup.location).then((permission){
-                          if(permission == PermissionStatus.granted){
+                        PermissionHandler()
+                            .checkPermissionStatus(PermissionGroup.location)
+                            .then((permission) {
+                          if (permission == PermissionStatus.granted) {
                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddBin(addBin)
-                            ));
-                          } else{
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddBin(addBin)));
+                          } else {
                             _showSnackBar(context, 3);
                           }
                         });
-
                       } else {
                         _showSnackBar(context, 2);
                       }

@@ -5,8 +5,9 @@ import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
 
+//TODO: if no location enable should crash fix
 //TODO: Add translations
-//TODO: Fast delete admin option
+//TODO: Improve fast delete admin option - OPTIONAL
 //TODO: Check report before make it public
 //TODO: Change loginPage colors to be more light
 
