@@ -1,13 +1,13 @@
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
+import 'package:provider/provider.dart';
+
+import 'map_widget.dart';
 
 class SearchWidget extends StatefulWidget {
-  final Function showFilteredMarkers;
-
-  SearchWidget(this.showFilteredMarkers);
-
   @override
   _SearchWidgetState createState() => _SearchWidgetState();
 }
@@ -108,33 +108,37 @@ class _SearchWidgetState extends State<SearchWidget> {
     return AnimatedPositioned(
       bottom: bottom > max ? max : bottom,
       right: bottomR > right ? right : bottomR,
-      duration: Duration(milliseconds: 1200),
-      curve: Curves.bounceOut,
+      duration: Duration(milliseconds: 750),
+//       Curves.linearToEaseOut, Curves.fastOutSlowIn,
+      curve: Curves.fastOutSlowIn,
       child: AnimatedOpacity(
         curve: Curves.easeInQuart,
-        duration: Duration(milliseconds: 400),
+        duration: Duration(milliseconds: 350),
         opacity:
             !horizontalButton ? (open ? 1.0 : 0.0) : (openMore ? 1.0 : 0.0),
         child: GestureDetector(
           onTap: () {
-            if (type == 0) {
-              setState(() {
+            setState(() {
+              if (type == 0) {
+
                 if (!openMore) {
                   bottomR = 300;
                 } else {
                   bottomR = 0;
                 }
                 openMore = !openMore;
-              });
-            } else {
-              if(buttonTapped == type){
-                buttonTapped = null;
-                widget.showFilteredMarkers(0);
+
+              } else {
+                if(buttonTapped == type){
+                  buttonTapped = null;
+                  Provider.of<TypeChanger>(context,listen: false).setType(0);
+                }
+                else{
+                  Provider.of<TypeChanger>(context,listen: false).setType(type);
+                  buttonTapped = type;}
               }
-              else{
-              widget.showFilteredMarkers(type);
-              buttonTapped = type;}
-            }
+            });
+
           },
           child: Column(
             children: <Widget>[

@@ -39,6 +39,7 @@ dependencies:
   path_provider:
   flutter_facebook_login: ^2.0.1
   http:
+  provider:
   flare_flutter: 1.8.1
   image_picker:
   path:

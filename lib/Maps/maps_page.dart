@@ -1,18 +1,15 @@
-import 'dart:async';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
-import 'package:keep_it_clean/AddBin/select_position.dart';
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
-import 'package:keep_it_clean/Maps/marker_dialog.dart';
+import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math';
+import 'package:provider/provider.dart';
+import 'map_widget.dart';
 import 'search_widget.dart';
 
 class Maps extends StatefulWidget {
@@ -27,14 +24,9 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  LatLng _lastPosition;
-  static LatLng _defaultPos = LatLng(44.170147, 8.3438333);
-  Completer<GoogleMapController> _controller = Completer();
 
-  // Two sets of markers are needed to perform the markers filtering on screen
-  Set<Marker> markers = Set.from([]);
-  Set<Marker> notFilteredMarkers = Set.from([]);
-  GoogleMapController controller;
+  final db = Firestore.instance;
+  List<Bin> binList;
 
   Map<PermissionGroup, PermissionStatus> permissions;
 
@@ -42,216 +34,12 @@ class _MapsState extends State<Maps> {
   void initState() {
     super.initState();
     requestPermission();
-    _initMarkers();
   }
 
   // Request permission method from permissions_handlers plugin
   void requestPermission() async {
     permissions = await PermissionHandler()
         .requestPermissions([PermissionGroup.location]);
-  }
-
-  // Starting Google Maps camera position targeting Finale Ligure, Italy <3
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: _defaultPos,
-    zoom: 14.4746,
-  );
-
-  //TODO: Avoid hardcoded value
-  void _initMarkers() {
-    Firestore.instance
-        .collection('cestini')
-        .where("lat",
-            isGreaterThan: _defaultPos.latitude - 0.05,
-            isLessThan: _defaultPos.latitude + 0.05)
-        .snapshots()
-        .listen((data) => data.documents.forEach((cestino) {
-              if (cestino['lng'] > _defaultPos.longitude - 0.05 &&
-                  cestino['lng'] < _defaultPos.longitude + 0.05) {
-                LatLng l = new LatLng(cestino['lat'], cestino['lng']);
-                _addMarker(cestino.documentID, l, cestino['type']);
-              }
-            }));
-  }
-
-  void _onMarkerTapped(MarkerId markerId) {
-    LatLng _pos;
-
-    // On tap retrieve data directly from Firebase
-    Firestore.instance
-        .collection('cestini')
-        .document(markerId.value)
-        .get()
-        .then((DocumentSnapshot ds) {
-      _pos = new LatLng(ds['lat'], ds['lng']);
-      // if photoUrl is not null then we recover the photo from Firebase Storage
-
-      final StorageReference storageReference =
-          FirebaseStorage().ref().child(ds['photoUrl']);
-      storageReference.getDownloadURL().then((img) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return createDialog(
-                context,
-                ds.documentID,
-                img,
-                _pos,
-                ds['type'],
-                ds['username'],
-                ds['reportDate'],
-              );
-            });
-      });
-    });
-  }
-
-  void _addMarker(String id, LatLng latLng, int type) {
-    bool positionChanged = false;
-    LatLng alteredPos;
-
-    var markerColor;
-    switch (type) {
-      case 1:
-        markerColor = BitmapDescriptor.hueRed;
-        break;
-      case 2:
-        markerColor = BitmapDescriptor.hueGreen;
-        break;
-      case 3:
-        markerColor = BitmapDescriptor.hueYellow;
-        break;
-      case 4:
-        markerColor = BitmapDescriptor.hueOrange;
-        break;
-      case 5:
-        markerColor = BitmapDescriptor.hueBlue;
-        break;
-      case 6:
-        markerColor = BitmapDescriptor.hueRose;
-        break;
-      case 7:
-        markerColor = BitmapDescriptor.hueMagenta;
-        break;
-      case 8:
-        markerColor = BitmapDescriptor.hueViolet;
-        break;
-    }
-
-    final MarkerId markerId = MarkerId(id);
-
-    // Offset marker position to avoid stacking
-    markers.forEach((marker) {
-      if (marker.position == latLng) {
-        int rng = Random().nextInt(5);
-        if (rng == 0) rng = 1;
-        double offset = (rng / 100000);
-
-        switch (rng) {
-          case 1:
-            alteredPos =
-                new LatLng(latLng.latitude + offset, latLng.longitude + offset);
-            break;
-          case 2:
-            alteredPos =
-                new LatLng(latLng.latitude + offset, latLng.longitude - offset);
-            break;
-          case 3:
-            alteredPos =
-                new LatLng(latLng.latitude - offset, latLng.longitude + offset);
-            break;
-          case 4:
-            alteredPos =
-                new LatLng(latLng.latitude - offset, latLng.longitude - offset);
-            break;
-        }
-        positionChanged = true;
-      }
-    });
-
-    // creating a new MARKER
-    final Marker marker = Marker(
-      markerId: markerId,
-      position: positionChanged ? alteredPos : latLng,
-      icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-      onTap: () {
-        // markerId is used as a reference to the marker in the Firebase db
-        _onMarkerTapped(markerId);
-      },
-    );
-
-    setState(() {
-      // adding a new marker to map
-      markers.add(marker);
-    });
-  }
-
-  void showAllMarkers() {
-    notFilteredMarkers.addAll(markers);
-    setState(() {
-      markers.clear();
-      markers.addAll(notFilteredMarkers);
-    });
-  }
-
-  void showFilteredMarkers(int type) async {
-    if (type == 0) {
-      showAllMarkers();
-    } else {
-      notFilteredMarkers.addAll(markers);
-      markers.clear();
-
-      //TODO: avoid hardcoded values
-      Firestore.instance
-          .collection('cestini')
-          .where("type", isEqualTo: type)
-          .snapshots()
-          .listen((data) => data.documents.forEach((doc) {
-                if (doc['lng'] > _defaultPos.longitude - 0.05 &&
-                    doc['lng'] < _defaultPos.longitude + 0.05 &&
-                    doc['lat'] > _defaultPos.latitude - 0.05 &&
-                    doc['lat'] < _defaultPos.latitude + 0.05) {
-                  LatLng l = new LatLng(doc['lat'], doc['lng']);
-                  _addMarker(doc.documentID, l, doc['type']);
-                }
-              }));
-    }
-    setState(() {});
-  }
-
-  void addBin(List<int> types, String imgName, LatLng binPos) async {
-    types.forEach((type) async {
-      await Firestore.instance.collection("cestini").add({
-        'lat': binPos.latitude,
-        'lng': binPos.longitude,
-        'type': type,
-        'photoUrl': imgName,
-        'username': widget.user.displayName,
-        'reportDate': new DateTime.now().toString()
-      }).then((doc) {
-        doc.get().then((c) {
-          _addMarker(doc.documentID, LatLng(c['lat'], c['lng']), c['type']);
-        });
-      });
-    });
-
-    final DocumentReference postRef =
-        Firestore.instance.collection("users").document(widget.user.uid);
-    Firestore.instance.runTransaction((Transaction tx) async {
-      DocumentSnapshot postSnapshot = await tx.get(postRef);
-      if (postSnapshot.exists) {
-        types.forEach((type) async {
-          await tx.update(postRef,
-              <String, dynamic>{'$type': postSnapshot.data['$type'] + 1});
-        });
-      }
-    });
-  }
-
-  void _onCameraMove(CameraPosition position) {
-    setState(() {
-      _lastPosition = position.target;
-    });
   }
 
   void _showSnackBar(BuildContext context, int variant) {
@@ -290,114 +78,119 @@ class _MapsState extends State<Maps> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          key: _scaffoldKey,
-          body: Stack(
-            children: <Widget>[
-              GoogleMap(
-                mapType: MapType.normal,
-                myLocationEnabled: true,
-                mapToolbarEnabled: false,
-                initialCameraPosition: _kGooglePlex,
-                markers: markers,
-                onMapCreated: (controller) {
-                  _controller.complete(controller);
-                },
-                onCameraMove: _onCameraMove,
-              ),
-              Positioned(
-                top: 10,
-                left: 10,
-                child: GestureDetector(
-                  onTap: () {
-                    if (widget.user != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ProfilePage(widget.user, widget.fbPic)),
-                      );
-                    } else {
-                      _showSnackBar(context, 1);
-                    }
-                  },
-                  child: Hero(
-                    tag: "profilePic",
-                    child: new Container(
-                      width: 60,
-                      height: 60,
-                      decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10.0,
-                            ),
-                          ]),
-                      child: CircleAvatar(
-                        backgroundImage: (widget.user != null)
-                            ? NetworkImage(
-                                widget.fbPic == null
-                                    ? widget.user.photoUrl
-                                    : widget.fbPic,
-                                scale: 1)
-                            : ExactAssetImage('assets/no-avatar.jpg'),
-                        maxRadius: 40,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 30,
-                right: 10,
-                child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: SearchWidget(showFilteredMarkers)),
-              ),
-              Positioned(
-                bottom: 30,
-                left: 10,
-                child: Container(
-                  width: 60.0,
-                  height: 60.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green[300],
-                  ),
-                  child: RawMaterialButton(
-                    shape: CircleBorder(),
-                    onPressed: () {
-                      if (widget.user != null) {
-                        PermissionHandler()
-                            .checkPermissionStatus(PermissionGroup.location)
-                            .then((permission) {
-                          if (permission == PermissionStatus.granted) {
-                            Navigator.push(
+    return MultiProvider(
+      providers: [
+        StreamProvider<List<Bin>>.value(
+          value: DatabaseService().streamBins(),
+        ),
+        ChangeNotifierProvider<TypeChanger>(create: (_) => TypeChanger(0))
+      ],
+      child: SafeArea(
+        child: WillPopScope(
+          onWillPop: () async => false,
+          child: Scaffold(
+            key: _scaffoldKey,
+            body: StreamBuilder<List<Bin>>(
+                stream: DatabaseService().streamBins(),
+                builder: (context, snapshot) {
+                  return Stack(
+                    children: <Widget>[
+                      MapWidget(),
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (widget.user != null) {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AddBin(addBin)));
-                          } else {
-                            _showSnackBar(context, 3);
-                          }
-                        });
-                      } else {
-                        _showSnackBar(context, 2);
-                      }
-                    },
-                    child: Icon(
-                      Icons.add,
-                      size: 32,
-                    ),
-                  ),
-                ),
-              )
-            ],
+                                    builder: (context) =>
+                                        ProfilePage(widget.user, widget.fbPic)),
+                              );
+                            } else {
+                              _showSnackBar(context, 1);
+                            }
+                          },
+                          child: Hero(
+                            tag: "profilePic",
+                            child: new Container(
+                              width: 60,
+                              height: 60,
+                              decoration: new BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10.0,
+                                    ),
+                                  ]),
+                              child: CircleAvatar(
+                                backgroundImage: (widget.user != null)
+                                    ? NetworkImage(
+                                        widget.fbPic == null
+                                            ? widget.user.photoUrl
+                                            : widget.fbPic,
+                                        scale: 1)
+                                    : ExactAssetImage('assets/no-avatar.jpg'),
+                                maxRadius: 40,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 30,
+                        right: 10,
+                        child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: SearchWidget()),
+                      ),
+                      Positioned(
+                        bottom: 30,
+                        left: 10,
+                        child: Container(
+                          width: 60.0,
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green[300],
+                          ),
+                          child: RawMaterialButton(
+                            shape: CircleBorder(),
+                            onPressed: () {
+                              if (widget.user != null) {
+                                PermissionHandler()
+                                    .checkPermissionStatus(
+                                        PermissionGroup.location)
+                                    .then((permission) {
+                                  if (permission == PermissionStatus.granted) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddBin(
+                                                  user: widget.user,
+                                                )));
+                                  } else {
+                                    _showSnackBar(context, 3);
+                                  }
+                                });
+                              } else {
+                                _showSnackBar(context, 2);
+                              }
+                            },
+                            child: Icon(
+                              Icons.add,
+                              size: 32,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }),
           ),
         ),
       ),

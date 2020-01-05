@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:keep_it_clean/AddBin/select_position.dart';
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'dialogs.dart';
 
@@ -21,9 +23,9 @@ import 'dialogs.dart';
  */
 
 class AddBin extends StatefulWidget {
-  final Function createBin;
+  final FirebaseUser user;
 
-  const AddBin(this.createBin, {Key key}) : super(key: key);
+  const AddBin({this.user, Key key}) : super(key: key);
 
   @override
   _AddBinState createState() => _AddBinState();
@@ -101,6 +103,13 @@ class _AddBinState extends State<AddBin> {
         ],
       ),
     );
+  }
+
+  void addBin(List<int> types, String imgName, LatLng binPos) async {
+    types.forEach((type) async {
+      DatabaseService().createBin(type, imgName, binPos, widget.user);
+    });
+    DatabaseService().addPoints(widget.user, types);
   }
 
   @override
@@ -235,7 +244,7 @@ class _AddBinState extends State<AddBin> {
                         _uploadInProgress = true;
                       });
                       _uploadImage(compressedImage).then((imgName) {
-                        widget.createBin(_selected, imgName, lat);
+                        addBin(_selected, imgName, lat);
                         Navigator.pop(context);
                       });
                     }
