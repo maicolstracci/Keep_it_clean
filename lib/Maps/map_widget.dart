@@ -1,29 +1,32 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'package:keep_it_clean/Maps/searchbutton_widget.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
 import 'marker_dialog.dart';
 
 class MapWidget extends StatefulWidget {
+  final List<Bin> binList;
+
+  const MapWidget({Key key, this.binList}) : super(key: key);
+
   @override
   _MapWidgetState createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  LatLng _lastPosition;
   static LatLng _defaultPos = LatLng(44.170147, 8.3438333);
-  Completer<GoogleMapController> _controller = Completer();
 
   // Two sets of markers are needed to perform the markers filtering on screen
   Set<Marker> markers = Set.from([]);
-  Set<Marker> notFilteredMarkers = Set.from([]);
-  GoogleMapController controller;
+  GoogleMapController mapsController;
+  static LatLng _userLocation;
+  LatLng _oldLocation;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -31,52 +34,32 @@ class _MapWidgetState extends State<MapWidget> {
     zoom: 14.4746,
   );
 
-  //TODO: Avoid hardcoded value
-//  void _initMarkers() {
-//    db
-//        .collection('cestini')
-//        .where("lat",
-//        isGreaterThan: _defaultPos.latitude - 0.05,
-//        isLessThan: _defaultPos.latitude + 0.05)
-//        .snapshots()
-//        .listen((data) => data.documents.forEach((cestino) {
-//      if (cestino['lng'] > _defaultPos.longitude - 0.05 &&
-//          cestino['lng'] < _defaultPos.longitude + 0.05) {
-//        LatLng l = new LatLng(cestino['lat'], cestino['lng']);
-//        _addMarker(cestino.documentID, l, cestino['type']);
-//      }
-//    }));
-//  }
-  void _onMarkerTapped(MarkerId markerId) {
-    LatLng _pos;
+  static final CameraPosition _userCameraPosition = CameraPosition(
+    target: _userLocation,
+    zoom: 14.4746,
+  );
 
-    // On tap retrieve data directly from Firebase
-    Firestore.instance
-        .collection('cestini')
-        .document(markerId.value)
-        .get()
-        .then((DocumentSnapshot ds) {
-      _pos = new LatLng(ds['lat'], ds['lng']);
-      // if photoUrl is not null then we recover the photo from Firebase Storage
+  @override
+  void initState() {
+    super.initState();
+  }
 
-      final StorageReference storageReference =
-          FirebaseStorage().ref().child(ds['photoUrl']);
-      storageReference.getDownloadURL().then((img) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return createDialog(
-                context,
-                ds.documentID,
-                img,
-                _pos,
-                ds['type'],
-                ds['username'],
-                ds['reportDate'],
-              );
-            });
-      });
-    });
+  void _onMarkerTapped(MarkerId markerId) async {
+    Bin bin = await DatabaseService().getBinInfo(markerId);
+    String img = await DatabaseService().getImageFromUrl(bin.photoUrl);
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return createDialog(
+              context,
+              bin.id,
+              img,
+              LatLng(bin.longitude, bin.latitude),
+              bin.type,
+              bin.username,
+              bin.reportDate);
+        });
   }
 
   void _addMarker(String id, LatLng latLng, int type) {
@@ -157,44 +140,115 @@ class _MapWidgetState extends State<MapWidget> {
     markers.add(marker);
   }
 
-
-
   void _onCameraMove(CameraPosition position) {
-    _lastPosition = position.target;
+    LatLng currentPos;
+
+    if (_oldLocation != null) {
+      currentPos = _oldLocation;
+    } else {
+      currentPos = _userLocation;
+    }
+
+    if (_userLocation != null) {
+      LatLng target = position.target;
+      if (target.latitude >= currentPos.latitude + 0.5 ||
+          target.latitude <= currentPos.latitude - 0.5 ||
+          target.longitude >= currentPos.longitude + 0.5 ||
+          target.longitude <= currentPos.longitude - 0.5) {
+        Provider.of<SearchButtonChanger>(context, listen: false)
+            .setVisibility(true);
+      }
+    }
   }
 
-  void initMarkers() {
+  Future<void> filterMarkers() async {
+    Provider.of<TypeChanger>(context, listen: false)
+        .setVisibleArea(await mapsController.getVisibleRegion());
+    setState(() {});
+  }
+
+  void showMarkers(LatLngBounds area) {
     markers.clear();
-    if (Provider.of<List<Bin>>(context) != null) {
+
+    if (widget.binList != null && _userLocation != null) {
       if (Provider.of<TypeChanger>(context).getType() == 0) {
-        Provider.of<List<Bin>>(context).forEach((bin) {
-          _addMarker(bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
-        });
-      } else {
-        Provider.of<List<Bin>>(context).forEach((bin) {
-          if (bin.type == Provider.of<TypeChanger>(context).getType()) {
+        widget.binList.forEach((bin) {
+          if (area == null &&
+              bin.latitude >= _userLocation.latitude - 0.5 &&
+              bin.latitude <= _userLocation.latitude + 0.5 &&
+              bin.longitude >= _userLocation.longitude - 0.5 &&
+              bin.longitude <= _userLocation.longitude + 0.5) {
             _addMarker(
                 bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+          } else {
+            if (area != null &&
+                bin.latitude >= area.southwest.latitude &&
+                bin.latitude <= area.northeast.latitude &&
+                bin.longitude >= area.southwest.longitude &&
+                bin.longitude <= area.northeast.longitude) {
+              _addMarker(
+                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+            }
+          }
+        });
+      } else {
+        widget.binList.forEach((bin) {
+          if (bin.type == Provider.of<TypeChanger>(context).getType()) {
+            if (area == null &&
+                bin.latitude >= _userLocation.latitude - 0.5 &&
+                bin.latitude <= _userLocation.latitude + 0.5 &&
+                bin.longitude >= _userLocation.longitude - 0.5 &&
+                bin.longitude <= _userLocation.longitude + 0.5) {
+              _addMarker(
+                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+            } else {
+              if (area != null &&
+                  bin.latitude >= area.southwest.latitude &&
+                  bin.latitude <= area.northeast.latitude &&
+                  bin.longitude >= area.southwest.longitude &&
+                  bin.longitude <= area.northeast.longitude) {
+                _addMarker(
+                    bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+              }
+            }
           }
         });
       }
     }
   }
 
+  Future<void> moveToUserLocation() async {
+    LocationData location = await Location().getLocation();
+
+    _userLocation = new LatLng(location.latitude, location.longitude);
+
+    await mapsController
+        .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    initMarkers();
+    showMarkers(
+        Provider.of<TypeChanger>(context, listen: false).getVisibleArea());
 
-    return GoogleMap(
-      mapType: MapType.normal,
-      myLocationEnabled: true,
-      mapToolbarEnabled: false,
-      initialCameraPosition: _kGooglePlex,
-      markers: markers,
-      onMapCreated: (controller) {
-        _controller.complete(controller);
-      },
-      onCameraMove: _onCameraMove,
+    return Stack(
+      children: <Widget>[
+        GoogleMap(
+          mapType: MapType.normal,
+          myLocationEnabled: true,
+          mapToolbarEnabled: false,
+          initialCameraPosition: _kGooglePlex,
+          markers: markers,
+          onMapCreated: (GoogleMapController controller) {
+            mapsController = controller;
+            moveToUserLocation();
+          },
+          onCameraMove: _onCameraMove,
+        ),
+        SearchButtonWidget(filterMarkers)
+      ],
     );
   }
 }

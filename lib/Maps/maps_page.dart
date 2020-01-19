@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
@@ -6,9 +5,11 @@ import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
+import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'map_widget.dart';
 import 'search_widget.dart';
 
@@ -24,16 +25,14 @@ class Maps extends StatefulWidget {
 
 class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final db = Firestore.instance;
-  List<Bin> binList;
-
+  double firstTime = 0;
   Map<PermissionGroup, PermissionStatus> permissions;
 
   @override
   void initState() {
     super.initState();
-    requestPermission();
+//    requestPermission();
   }
 
   // Request permission method from permissions_handlers plugin
@@ -42,39 +41,7 @@ class _MapsState extends State<Maps> {
         .requestPermissions([PermissionGroup.location]);
   }
 
-  void _showSnackBar(BuildContext context, int variant) {
-    String s;
-    switch (variant) {
-      case 1:
-        s = "you_are_guest_profile_string";
-        break;
-      case 2:
-        s = "you_are_guest_add_string";
-        break;
-      case 3:
-        s = "location_requested_string";
-        break;
-    }
 
-    final snackBar = SnackBar(
-      content: Text(AppTranslations.of(context).text(s)),
-      action: (variant == 1 || variant == 2)
-          ? SnackBarAction(
-              label: "LOGIN",
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          : SnackBarAction(
-              label: AppTranslations.of(context).text("settings_string"),
-              onPressed: () {
-                PermissionHandler().openAppSettings();
-              },
-            ),
-      behavior: SnackBarBehavior.fixed,
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +50,10 @@ class _MapsState extends State<Maps> {
         StreamProvider<List<Bin>>.value(
           value: DatabaseService().streamBins(),
         ),
-        ChangeNotifierProvider<TypeChanger>(create: (_) => TypeChanger(0))
+        ChangeNotifierProvider<TypeChanger>(
+            create: (_) => TypeChanger(0, null)),
+        ChangeNotifierProvider<SearchButtonChanger>(
+            create: (_) => SearchButtonChanger(false)),
       ],
       child: SafeArea(
         child: WillPopScope(
@@ -95,7 +65,9 @@ class _MapsState extends State<Maps> {
                 builder: (context, snapshot) {
                   return Stack(
                     children: <Widget>[
-                      MapWidget(),
+                      MapWidget(
+                        binList: snapshot.data,
+                      ),
                       Positioned(
                         top: 10,
                         left: 10,
@@ -109,7 +81,7 @@ class _MapsState extends State<Maps> {
                                         ProfilePage(widget.user, widget.fbPic)),
                               );
                             } else {
-                              _showSnackBar(context, 1);
+                              showSnackBar(context, 1, _scaffoldKey);
                             }
                           },
                           child: Hero(
@@ -174,11 +146,11 @@ class _MapsState extends State<Maps> {
                                                   user: widget.user,
                                                 )));
                                   } else {
-                                    _showSnackBar(context, 3);
+                                    showSnackBar(context, 3, _scaffoldKey);
                                   }
                                 });
                               } else {
-                                _showSnackBar(context, 2);
+                                showSnackBar(context, 2, _scaffoldKey);
                               }
                             },
                             child: Icon(
@@ -187,7 +159,8 @@ class _MapsState extends State<Maps> {
                             ),
                           ),
                         ),
-                      )
+                      ),
+
                     ],
                   );
                 }),
@@ -197,3 +170,4 @@ class _MapsState extends State<Maps> {
     );
   }
 }
+

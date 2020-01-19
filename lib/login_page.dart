@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
-
+import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Maps/maps_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,7 +22,25 @@ class _LoginPageState extends State<LoginPage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String fbUserProfilePic;
+  //TODO: change to false and checkIfFirstTimeUser()
+  bool firstTimeUser = true;
 
+  @override
+  void initState() {
+    super.initState();
+//    checkIfFirstTimeUser();
+  }
+
+  void checkIfFirstTimeUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    double firstTime = prefs.getDouble("firstTime");
+    if (firstTime == null) {
+      prefs.setDouble("firstTime", 1);
+      firstTimeUser = true;
+    } else {
+      firstTimeUser = false;
+    }
+  }
 
   Future<FirebaseUser> _fbLogin() async {
     final facebookLogin = FacebookLogin();
@@ -34,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
         final token = result.accessToken.token;
 
         final AuthCredential cred =
-        FacebookAuthProvider.getCredential(accessToken: token);
+            FacebookAuthProvider.getCredential(accessToken: token);
 
         final FirebaseUser user = (await _auth.signInWithCredential(cred)).user;
 
@@ -59,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<FirebaseUser> _googleLogin() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
-    await googleUser.authentication;
+        await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -76,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
   void setupUser(FirebaseUser user) {
     // Check if user already in firestore db, if not create an entry and initialize keys
     DocumentReference ref =
-    Firestore.instance.collection('users').document(user.uid);
+        Firestore.instance.collection('users').document(user.uid);
     ref.get().then((ds) {
       if (!ds.exists) {
         ref.setData({
@@ -93,14 +113,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  Widget _createLoginContainer(String type){
+  Widget _createLoginContainer(String type) {
     IconData icon;
     String string;
     MaterialColor color;
 
-    switch(type){
+    switch (type) {
       case 'fb':
-        icon =  IconData(0xe901, fontFamily: "CustomIcons");
+        icon = IconData(0xe901, fontFamily: "CustomIcons");
         string = "facebook_login_string";
         color = Colors.blue;
         break;
@@ -134,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Icon(
-             icon,
+              icon,
               color: color,
             ),
           ),
@@ -177,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                         overflow: Overflow.visible,
                         children: <Widget>[
                           Positioned(
-                            top:10,
+                            top: 10,
                             right: 10,
                             child: Text(
                               "Keep it",
@@ -188,7 +208,8 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.white,
                               ),
                             ),
-                          ),Positioned(
+                          ),
+                          Positioned(
                             top: 45,
                             right: 10,
                             child: Text(
@@ -208,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     flex: 3,
                     child: Padding(
-                      padding: const EdgeInsets.only(left:30.0),
+                      padding: const EdgeInsets.only(left: 30.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -225,7 +246,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           Text(
-                            AppTranslations.of(context).text("login_desc_string"),
+                            AppTranslations.of(context)
+                                .text("login_desc_string"),
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: "Montserrat",
@@ -248,7 +270,8 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Maps(user: user, fbPic: fbUserProfilePic)),
+                                    builder: (context) => Maps(
+                                        user: user, fbPic: fbUserProfilePic)),
                               );
                             }).catchError((e) => print(e));
                           },
@@ -268,10 +291,17 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Maps()),
-                            );
+                            if (firstTimeUser) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => FirstTimeUserWidget()),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Maps()),
+                              );
+                            }
                           },
                           child: _createLoginContainer("guest"),
                         ),
@@ -280,7 +310,6 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-
             ],
           ),
         ),
@@ -288,275 +317,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-
-
-//
-//class LoginPage2 extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return SafeArea(
-//      child: Scaffold(
-//        backgroundColor: Colors.green[400],
-//        body: SizedBox(
-//          width: MediaQuery.of(context).size.width,
-//          height: MediaQuery.of(context).size.height,
-//          child: Stack(
-//            children: <Widget>[
-//              CustomPaint(
-//                painter: DrawCircle(context),
-//              ),
-//              SizedBox(
-//                width: MediaQuery.of(context).size.width,
-//                height: MediaQuery.of(context).size.height,
-//                child: Column(
-//                  children: <Widget>[
-//                    Expanded(
-//                      flex: 1,
-//                      child: Container(
-//                        width: MediaQuery.of(context).size.width,
-//                        child: Stack(
-//                          overflow: Overflow.visible,
-//                          children: <Widget>[
-//                            Positioned(
-//                              top:10,
-//                              left: 10,
-//                              child: Text(
-//                                "Keep it",
-//                                style: TextStyle(
-//                                  fontSize: 38,
-//                                  fontFamily: "Montserrat",
-//                                  fontWeight: FontWeight.w600,
-//                                  color: Colors.green[700],
-//                                ),
-//                              ),
-//                            ),Positioned(
-//                              top: 40,
-//                              left: 42,
-//                              child: Text(
-//                                "clean",
-//                                style: TextStyle(
-//                                  fontSize: 38,
-//                                  fontFamily: "Montserrat",
-//                                  fontWeight: FontWeight.w600,
-//                                  color: Colors.green[50],
-//                                ),
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                      ),
-//                    ),
-//                    Expanded(
-//                      flex: 3,
-//                      child: Padding(
-//                        padding: const EdgeInsets.only(left:28.0),
-//                        child: Column(
-//                          mainAxisAlignment: MainAxisAlignment.center,
-//                          crossAxisAlignment: CrossAxisAlignment.stretch,
-//                          children: <Widget>[
-//                            SizedBox(height: 20,),
-//                            Text(
-//                              "LOGIN",
-//                              style: TextStyle(
-//                                fontSize: 42,
-//                                fontFamily: "Montserrat",
-//                                fontWeight: FontWeight.w600,
-//                                color: Colors.white,
-//                              ),
-//                            ),
-//                            Text(
-//                              "Fai il login attraverso il tuo\nsocial network preferito\no entra come ospite.",
-//                              style: TextStyle(
-//                                fontSize: 18,
-//                                fontFamily: "Montserrat",
-//                                fontWeight: FontWeight.w600,
-//                                color: Colors.white70,
-//                              ),
-//                            ),
-//                          ],
-//                        ),
-//                      ),
-//                    ),
-//                    Expanded(
-//                      flex: 5,
-//                      child: Column(
-//                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                        children: <Widget>[
-//                          Container(
-//                            height: 70,
-//                            width: 250,
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(15),
-//                                color: Colors.white,
-//                                boxShadow: [
-//                                  BoxShadow(
-//                                    color: Colors.black12,
-//                                    blurRadius: 10.0,
-//                                  ),
-//                                ]),
-//                            child: Row(
-//                              mainAxisAlignment: MainAxisAlignment.start,
-//                              children: <Widget>[
-//                                Padding(
-//                                  padding: EdgeInsets.symmetric(horizontal: 15),
-//                                  child: Icon(
-//                                    IconData(0xe901, fontFamily: "CustomIcons"),
-//                                    color: Colors.blue,
-//                                  ),
-//                                ),
-//                                Expanded(
-//                                  child: Text(
-//                                    AppTranslations.of(context).text("facebook_login_string"),
-//                                    style: TextStyle(
-//                                        fontFamily: "Montserrat",
-//                                        fontWeight: FontWeight.w600,
-//                                        fontSize: 16,
-//                                        color: Colors.blue),
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                          Container(
-//                            height: 70,
-//                            width: 250,
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(15),
-//                                color: Colors.white,
-//                                boxShadow: [
-//                                  BoxShadow(
-//                                    color: Colors.black12,
-//                                    blurRadius: 10.0,
-//                                  ),
-//                                ]),
-//                            child: Row(
-//                              mainAxisAlignment: MainAxisAlignment.start,
-//                              children: <Widget>[
-//                                Padding(
-//                                  padding: EdgeInsets.symmetric(horizontal: 15),
-//                                  child: Icon(
-//                                    IconData(0xe902, fontFamily: "CustomIcons"),
-//                                    color: Colors.redAccent,
-//                                  ),
-//                                ),
-//                                Expanded(
-//                                  child: Text(
-//                                    AppTranslations.of(context).text("login_string"),
-//                                    style: TextStyle(
-//                                        fontFamily: "Montserrat",
-//                                        fontWeight: FontWeight.w600,
-//                                        fontSize: 16,
-//                                        color: Colors.redAccent),
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                          Container(
-//                            height: 70,
-//                            width: 250,
-//                            decoration: BoxDecoration(
-//                                borderRadius: BorderRadius.circular(15),
-//                                color: Colors.white,
-//                                boxShadow: [
-//                                  BoxShadow(
-//                                    color: Colors.black12,
-//                                    blurRadius: 10.0,
-//                                  ),
-//                                ]),
-//                            child: Row(
-//                              mainAxisAlignment: MainAxisAlignment.start,
-//                              children: <Widget>[
-//                                Padding(
-//                                  padding: EdgeInsets.symmetric(horizontal: 15),
-//                                  child: Icon(
-//                                    Icons.arrow_forward,
-//                                    color: Colors.green,
-//                                  ),
-//                                ),
-//                                Expanded(
-//                                  child: Text(
-//                                    AppTranslations.of(context).text("guest_login_string"),
-//                                    style: TextStyle(
-//                                        fontFamily: "Montserrat",
-//                                        fontWeight: FontWeight.w600,
-//                                        fontSize: 16,
-//                                        color: Colors.green),
-//                                  ),
-//                                ),
-//                              ],
-//                            ),
-//                          ),
-//                        ],
-//                      ),
-//                    )
-//                  ],
-//                ),
-//              ),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}
-//
-//class DrawCircle extends CustomPainter {
-//
-//  BuildContext context;
-//  Paint _paint;
-//
-//  DrawCircle(this.context);
-//
-//  @override
-//  void paint(Canvas canvas, Size size) {
-//
-//          canvas.drawCircle(
-//        Offset(MediaQuery.of(context).size.width * 0.8,
-//            MediaQuery.of(context).size.height * 0.15),
-//        70.0,
-//        Paint()
-//          ..color = Colors.green[100]
-//          ..strokeWidth = 100.0
-//          ..style = PaintingStyle.fill);
-//    canvas.drawCircle(
-//        Offset(MediaQuery.of(context).size.width * 0.95,
-//            MediaQuery.of(context).size.height * 0.1),
-//        50.0,
-//        Paint()
-//          ..color = Colors.green[700]
-//          ..strokeWidth = 100.0
-//          ..style = PaintingStyle.fill
-//          );
-//    canvas.drawCircle(
-//        Offset(MediaQuery.of(context).size.width * 0.15,
-//            MediaQuery.of(context).size.height * 0.9),
-//        250.0,
-//        Paint()
-//          ..color = Colors.green[700]
-//          ..strokeWidth = 100.0
-//          ..style = PaintingStyle.fill);
-//    canvas.drawCircle(
-//        Offset(MediaQuery.of(context).size.width * 1,
-//            MediaQuery.of(context).size.height * 1),
-//        250.0,
-//        Paint()
-//          ..color = Colors.white30
-//          ..strokeWidth = 100.0
-//          ..style = PaintingStyle.fill);
-//// create a path
-//    var path = Path();
-//    path.lineTo(0, size.height - 40);
-//    path.lineTo(size.width + 20, 0);
-//    // close the path to form a bounded shape
-//    path.close();
-////    canvas.drawPath(path, Paint()..color = Colors.white30);
-//  }
-//
-//  @override
-//  bool shouldRepaint(CustomPainter oldDelegate) {
-//    return false;
-//  }
-//}
