@@ -45,6 +45,7 @@ class _MapsState extends State<Maps> {
 
   @override
   Widget build(BuildContext context) {
+    //
     return MultiProvider(
       providers: [
         StreamProvider<List<Bin>>.value(
