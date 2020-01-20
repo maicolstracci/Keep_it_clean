@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/FadeAnimation.dart';
+import 'package:keep_it_clean/FirstTimeUserPage/fade_animation.dart';
 import 'package:keep_it_clean/Maps/maps_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 

@@ -13,7 +13,175 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  double bottom = 0, right = 0, bottomR = 0;
+  int buttonTapped;
+
+  Widget _buildButton(int type){
+   String icon, name;
+   
+    switch (type) {
+      case 1:
+        icon = 'assets/plastic_bottle.png';
+        name = AppTranslations.of(context).text("plastic_string");
+        break;
+      case 2:
+        icon = 'assets/glass_bottle.png';
+        name = AppTranslations.of(context).text("glass_string");
+        break;
+      case 3:
+        icon = 'assets/paper.png';
+        name = AppTranslations.of(context).text("paper_string");
+        break;
+      case 4:
+        icon = 'assets/indifferenziata.png';
+        name = AppTranslations.of(context).text("other_string");
+        break;
+      case 5:
+        icon = 'assets/battery.png';
+        name = AppTranslations.of(context).text("battery_string");
+        break;
+      case 6:
+        icon = 'assets/drugs.png';
+        name = AppTranslations.of(context).text("drugs_string");
+        break;
+      case 7:
+        icon = 'assets/leaf.png';
+        name = AppTranslations.of(context).text("leaf_string");
+        break;
+      case 8:
+        icon = 'assets/clothing.png';
+        name = AppTranslations.of(context).text("clothing_string");
+        break;
+    }
+    
+    return Container(
+      width: 120,
+      decoration:
+      BoxDecoration(
+          border:Border.all(
+              color: buttonTapped == type ? Colors.green : Colors.transparent,
+              width: 2),
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4.0,
+            ),
+          ]),
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+
+          RawMaterialButton(
+            padding: EdgeInsets.all(5),
+            onPressed: () {
+              setState(() {
+
+                if(buttonTapped == type){
+                  buttonTapped = 0;
+                  Provider.of<TypeChanger>(context,listen: false).setType(0);
+                } else{
+                  buttonTapped = type;
+                  Provider.of<TypeChanger>(context,listen: false).setType(type);
+                }
+
+              });
+            },
+            fillColor: Colors.white,
+            splashColor: Colors.green[400],
+            elevation: 0,
+            highlightElevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius:
+              BorderRadius.circular(
+                  200.0),
+            ),
+            child: Row(
+              mainAxisAlignment:
+              MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left:4.0),
+                  child: Image.asset(
+                    icon,
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+
+                     name,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Montserrat",
+                        fontWeight:
+                        FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: buttonTapped == type,
+            child: Positioned(
+              bottom: -10,
+              right: -10,
+              child: Container(
+                  decoration: BoxDecoration(color: Colors.green,
+
+                      borderRadius: BorderRadius.circular(40)),
+                  child: Icon(Icons.done, color: Colors.white,)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ConstrainedBox(
+      constraints: new BoxConstraints(
+        maxHeight: 60.0,
+      ),
+      child: ScrollConfiguration(
+        behavior: FilterListBehavior(),
+        child: ListView.separated(
+          padding: EdgeInsets.all(10),
+          shrinkWrap: false,
+          itemBuilder: (_, index) {
+            return _buildButton(index+1);
+          },
+          separatorBuilder: (_, index) =>
+              Container(
+                width: 5,
+              ),
+          itemCount: 6,
+          scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
+  }
+
+}
+
+
+
+
+class FilterListBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
+
+/*double bottom = 0, right = 0, bottomR = 0;
   bool open = false, openMore = false;
   int buttonTapped;
 
@@ -206,5 +374,4 @@ class _SearchWidgetState extends State<SearchWidget> {
     setState(() {
       bottom = 500;
     });
-  }
-}
+  }*/

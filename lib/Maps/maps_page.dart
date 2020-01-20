@@ -41,8 +41,6 @@ class _MapsState extends State<Maps> {
         .requestPermissions([PermissionGroup.location]);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     //
@@ -113,55 +111,89 @@ class _MapsState extends State<Maps> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 30,
-                        right: 10,
-                        child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                            child: SearchWidget()),
-                      ),
-                      Positioned(
-                        bottom: 30,
-                        left: 10,
-                        child: Container(
-                          width: 60.0,
-                          height: 60.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.green[300],
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(),
+                              ),
+                              Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[400].withOpacity(.85),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
+                                  ),
+                                  padding: EdgeInsets.only(left: 20,right: 10, bottom: 2, top:2),
+                                  child: Text(
+                                    "Seleziona un filtro",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w600),
+                                  ))
+                            ],
                           ),
-                          child: RawMaterialButton(
-                            shape: CircleBorder(),
-                            onPressed: () {
-                              if (widget.user != null) {
-                                PermissionHandler()
-                                    .checkPermissionStatus(
-                                        PermissionGroup.location)
-                                    .then((permission) {
-                                  if (permission == PermissionStatus.granted) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AddBin(
-                                                  user: widget.user,
-                                                )));
-                                  } else {
-                                    showSnackBar(context, 3, _scaffoldKey);
-                                  }
-                                });
-                              } else {
-                                showSnackBar(context, 2, _scaffoldKey);
-                              }
-                            },
-                            child: Icon(
-                              Icons.add,
-                              size: 32,
+                          Container(
+                            padding: EdgeInsets.only(bottom: 10),
+                            width: MediaQuery.of(context).size.width,
+                            height: 100,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    left: 10,
+                                  ),
+                                  width: 60.0,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    //border: Border.all(color: Colors.green[600],width: 2),
+
+                                    color: Colors.blue[800].withOpacity(.98),
+                                  ),
+                                  child: RawMaterialButton(
+                                    shape: CircleBorder(),
+                                    onPressed: () {
+                                      if (widget.user != null) {
+                                        PermissionHandler()
+                                            .checkPermissionStatus(
+                                                PermissionGroup.location)
+                                            .then((permission) {
+                                          if (permission ==
+                                              PermissionStatus.granted) {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddBin(
+                                                          user: widget.user,
+                                                        )));
+                                          } else {
+                                            showSnackBar(
+                                                context, 3, _scaffoldKey);
+                                          }
+                                        });
+                                      } else {
+                                        showSnackBar(context, 2, _scaffoldKey);
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 32,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: SearchWidget(),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                        ],
                       ),
-
                     ],
                   );
                 }),
@@ -171,4 +203,3 @@ class _MapsState extends State<Maps> {
     );
   }
 }
-

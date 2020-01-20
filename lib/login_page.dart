@@ -294,7 +294,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (firstTimeUser) {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => FirstTimeUserWidget()),
+                                MaterialPageRoute(builder: (context) => Maps()),
                               );
                             } else {
                               Navigator.push(
