@@ -3,7 +3,27 @@ import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Map<PermissionGroup, PermissionStatus> permissions;
 
+// Request permission method from permissions_handlers plugin
+void requestPermission() async {
+  permissions = await PermissionHandler()
+      .requestPermissions([PermissionGroup.location]);
+}
+
+Future<bool> getLocationPermissionStatus() async {
+  PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.location);
+  return permission == PermissionStatus.granted;
+}
+
+
+class FilterListBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
 
 void showSnackBar(BuildContext context, int variant, var scaffoldKey) {
   String s;

@@ -27,7 +27,7 @@ class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = Firestore.instance;
   double firstTime = 0;
-  Map<PermissionGroup, PermissionStatus> permissions;
+
 
   @override
   void initState() {
@@ -35,11 +35,56 @@ class _MapsState extends State<Maps> {
 //    requestPermission();
   }
 
-  // Request permission method from permissions_handlers plugin
-  void requestPermission() async {
-    permissions = await PermissionHandler()
-        .requestPermissions([PermissionGroup.location]);
+
+
+  Widget addBinButton(){
+    return Container(
+      margin: EdgeInsets.only(
+        left: 10,
+      ),
+      width: 60.0,
+      height: 60.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        //border: Border.all(color: Colors.green[600],width: 2),
+
+        color: Colors.blue[800].withOpacity(.98),
+      ),
+      child: RawMaterialButton(
+        shape: CircleBorder(),
+        onPressed: () {
+          if (widget.user != null) {
+            PermissionHandler()
+                .checkPermissionStatus(
+                PermissionGroup.location)
+                .then((permission) {
+              if (permission ==
+                  PermissionStatus.granted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddBin(
+                              user: widget.user,
+                            )));
+              } else {
+                showSnackBar(
+                    context, 3, _scaffoldKey);
+              }
+            });
+          } else {
+            showSnackBar(context, 2, _scaffoldKey);
+          }
+        },
+        child: Icon(
+          Icons.add,
+          size: 32,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,51 +186,7 @@ class _MapsState extends State<Maps> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    left: 10,
-                                  ),
-                                  width: 60.0,
-                                  height: 60.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    //border: Border.all(color: Colors.green[600],width: 2),
-
-                                    color: Colors.blue[800].withOpacity(.98),
-                                  ),
-                                  child: RawMaterialButton(
-                                    shape: CircleBorder(),
-                                    onPressed: () {
-                                      if (widget.user != null) {
-                                        PermissionHandler()
-                                            .checkPermissionStatus(
-                                                PermissionGroup.location)
-                                            .then((permission) {
-                                          if (permission ==
-                                              PermissionStatus.granted) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddBin(
-                                                          user: widget.user,
-                                                        )));
-                                          } else {
-                                            showSnackBar(
-                                                context, 3, _scaffoldKey);
-                                          }
-                                        });
-                                      } else {
-                                        showSnackBar(context, 2, _scaffoldKey);
-                                      }
-                                    },
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 32,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                addBinButton(),
                                 Expanded(
                                   child: SearchWidget(),
                                 ),

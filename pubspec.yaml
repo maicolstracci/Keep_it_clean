@@ -60,6 +60,7 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   assets:
+    - assets/illustrations/
     - assets/locale/localization_it.json
     - assets/locale/localization_en.json
     - assets/locale/localization_de.json

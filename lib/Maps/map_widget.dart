@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Maps/searchbutton_widget.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
+import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,8 @@ class _MapWidgetState extends State<MapWidget> {
   GoogleMapController mapsController;
   static LatLng _userLocation;
   LatLng _oldLocation;
+
+  bool _showLoadingLocation = true;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -218,14 +222,19 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   Future<void> moveToUserLocation() async {
-    LocationData location = await Location().getLocation();
+    if(await getLocationPermissionStatus()){
+      LocationData location = await Location().getLocation();
 
-    _userLocation = new LatLng(location.latitude, location.longitude);
+      _userLocation = new LatLng(location.latitude, location.longitude);
+    } else _userLocation = _defaultPos;
+
 
     await mapsController
         .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
 
-    setState(() {});
+    setState(() {
+      _showLoadingLocation = false;
+    });
   }
 
   @override
@@ -244,10 +253,32 @@ class _MapWidgetState extends State<MapWidget> {
           onMapCreated: (GoogleMapController controller) {
             mapsController = controller;
             moveToUserLocation();
+
           },
           onCameraMove: _onCameraMove,
         ),
-        SearchButtonWidget(filterMarkers)
+        SearchButtonWidget(filterMarkers),
+        Visibility(
+          visible: _showLoadingLocation,
+          child: Center(
+            child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(40)
+                ),
+
+                height: 180,
+                width: MediaQuery.of(context).size.width*0.80,
+
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Stiamo calcolando la tua posizione...", textAlign: TextAlign.center,),
+                    CircularProgressIndicator(strokeWidth: 4,)
+                  ],
+                )),
+          ),
+        )
       ],
     );
   }

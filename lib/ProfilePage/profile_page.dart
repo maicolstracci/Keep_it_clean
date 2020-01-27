@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage>
     });
   }
 
-  int getSum() {
+  void getSum() {
     reportSum = 0;
     userData.forEach((k, v) {
       reportSum = reportSum + v;
