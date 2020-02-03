@@ -6,6 +6,8 @@ import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
 
+import 'login_page_test.dart';
+
 //TODO: if no location enable should crash fix
 //TODO: Add translations
 //TODO: Improve fast delete admin option - OPTIONAL
@@ -57,8 +59,8 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      home: FirstTimeUserWidget(),
-//      home: LoginPage(),
+//      home: FirstTimeUserWidget(),
+      home: LoginPage2(),
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),

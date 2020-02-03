@@ -1,82 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/Maps/maps_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Page3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: <Widget>[
-          Center(
-            child: Image.asset("assets/illustrations/background.png"),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ClipPath(
-              clipper: CurveClipper(),
-              child: Container(
-                color: Color(0xff06442d).withOpacity(.90),
-                height: MediaQuery.of(context).size.height / 2,
+    return GestureDetector(
+      onHorizontalDragEnd: (details){
+        PermissionHandler()
+            .requestPermissions([PermissionGroup.location]).then((v) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Maps()));
+        });
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Image.asset("assets/illustrations/background.png"),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ClipPath(
+                clipper: CurveClipper(),
+                child: Container(
+                  color: Color(0xff06442d).withOpacity(.90),
+                  height: MediaQuery.of(context).size.height / 2,
+                ),
               ),
             ),
-          ),
-          Center(
-            child: Image.asset("assets/illustrations/page3.png"),
-          ),
-          Container(
-            padding: EdgeInsets.only(bottom: 50, left: 40, right: 40),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "PERMESSI",
-                  style: TextStyle(
-                      color: Color(0xfff4f8f9),
-                      fontSize: 52,
-                      fontWeight: FontWeight.w600),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
-                ),
-              ],
+            Center(
+              child: Image.asset("assets/illustrations/page3.png"),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                textBaseline: TextBaseline.ideographic,
+            Container(
+              padding: EdgeInsets.only(left: 40, right: 40),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text(
-                    "Fornisci permessi",
-                    style: TextStyle(
-                        color: Colors.green[300],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
+                  Flexible(
+                    flex: 8,
+                    child: Container(),
                   ),
-                  Icon(
-                    Icons.done,
-                    color: Colors.green[500],
-                    size: 24.0,
-                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "PERMESSI",
+                          style: TextStyle(
+                              color: Color(0xfff4f8f9),
+                              fontSize: 52,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Richiediamo i permessi di localizzazione per conoscere la tua posizione",
+                          textAlign: TextAlign.center,
+                          style:
+                              TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-          )
-        ],
+            Align(
+              alignment: Alignment.topRight,
+              child: FlatButton(
+                onPressed: () {
+                  PermissionHandler()
+                      .requestPermissions([PermissionGroup.location]).then((v) {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => Maps()));
+                  });
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  textBaseline: TextBaseline.ideographic,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "Cominciamo!",
+                      style: TextStyle(
+                          color: Colors.green[400],
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.green[600],
+                      size: 28.0,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -88,7 +117,6 @@ class CurveClipper extends CustomClipper<Path> {
     var path = new Path();
 
     var controlPoint = Offset(size.width / 2.6, 80);
-    var endPoint = Offset(0, size.width);
 
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);

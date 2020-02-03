@@ -19,40 +19,9 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget _buildButton(int type) {
     String icon, name;
 
-    switch (type) {
-      case 1:
-        icon = 'assets/plastic_bottle.png';
-        name = AppTranslations.of(context).text("plastic_string");
-        break;
-      case 2:
-        icon = 'assets/glass_bottle.png';
-        name = AppTranslations.of(context).text("glass_string");
-        break;
-      case 3:
-        icon = 'assets/paper.png';
-        name = AppTranslations.of(context).text("paper_string");
-        break;
-      case 4:
-        icon = 'assets/indifferenziata.png';
-        name = AppTranslations.of(context).text("other_string");
-        break;
-      case 5:
-        icon = 'assets/battery.png';
-        name = AppTranslations.of(context).text("battery_string");
-        break;
-      case 6:
-        icon = 'assets/drugs.png';
-        name = AppTranslations.of(context).text("drugs_string");
-        break;
-      case 7:
-        icon = 'assets/leaf.png';
-        name = AppTranslations.of(context).text("leaf_string");
-        break;
-      case 8:
-        icon = 'assets/clothing.png';
-        name = AppTranslations.of(context).text("clothing_string");
-        break;
-    }
+    icon = 'assets/icons/icon_type_$type.png';
+    name = AppTranslations.of(context).text("icon_string_$type");
+
 
     return Container(
       width: 120,

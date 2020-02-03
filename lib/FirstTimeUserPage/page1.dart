@@ -25,23 +25,45 @@ class Page1 extends StatelessWidget {
             child: Image.asset("assets/illustrations/page1.png"),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 50, left: 40, right: 40),
+            padding: EdgeInsets.only(left: 40, right: 40),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text("CERCA", style: TextStyle(color: Color(0xfff4f8f9), fontSize: 52, fontWeight: FontWeight.w600),),
-                SizedBox(
-                  height: 20,
+                Flexible(
+                  flex: 8,
+                  child: Container(),
                 ),
-                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet", textAlign: TextAlign.center, style: TextStyle(color: Color(0xfff4f8f9), fontSize: 18),),
+                Flexible(
+                  flex: 4,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "CERCA",
+                        style: TextStyle(
+                            color: Color(0xfff4f8f9),
+                            fontSize: 52,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Trova il centro della raccolta differenziata piu' vicina a te",
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
@@ -50,11 +72,17 @@ class Page1 extends StatelessWidget {
                 textBaseline: TextBaseline.ideographic,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text("Swipe", style: TextStyle(color: Colors.green[300],fontSize: 18,fontWeight: FontWeight.bold),),
+                  Text(
+                    "Swipe",
+                    style: TextStyle(
+                        color: Colors.green[400],
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold),
+                  ),
                   Icon(
                     Icons.arrow_forward,
-                    color: Colors.green[500],
-                    size: 24.0,
+                    color: Colors.green[600],
+                    size: 28.0,
                     semanticLabel: 'Text to announce in accessibility modes',
                   ),
                 ],
@@ -62,19 +90,17 @@ class Page1 extends StatelessWidget {
             ),
           )
         ],
-      ) ,
+      ),
     );
   }
-
 }
 
-class CurveClipper extends CustomClipper<Path>{
+class CurveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-    var path =  new Path();
+    var path = new Path();
 
-    var controlPoint = Offset(size.width/2,70);
-    var endPoint = Offset(0,size.width);
+    var controlPoint = Offset(size.width / 2, 70);
 
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);
@@ -88,6 +114,4 @@ class CurveClipper extends CustomClipper<Path>{
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return false;
   }
-
-
 }

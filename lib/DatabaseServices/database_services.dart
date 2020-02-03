@@ -27,7 +27,6 @@ class DatabaseService {
   }
 
   Future<Bin> getBinInfo(MarkerId markerId) async {
-
     DocumentSnapshot ds = await Firestore.instance
         .collection('cestini')
         .document(markerId.value)
@@ -37,9 +36,16 @@ class DatabaseService {
 
   Future<String> getImageFromUrl(String photoUrl) async {
     final StorageReference storageReference =
-    FirebaseStorage().ref().child(photoUrl);
+        FirebaseStorage().ref().child(photoUrl);
     String img = await storageReference.getDownloadURL();
     return img;
+  }
+
+  // TODO: if no connection available handle correctly
+  Future<Map<String, dynamic >> retrieveUserInfo(FirebaseUser user) async {
+    DocumentSnapshot ds =
+        await Firestore.instance.collection('users').document(user.uid).get();
+    return ds.data;
   }
 
   void addPoints(FirebaseUser user, List<int> types) {

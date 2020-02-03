@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/ProfilePage/who_am_I_page.dart';
-
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'language_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -61,49 +61,13 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget _createBox(double width, int index) {
     String img, name, n;
+    index++;
 
-    switch (index) {
-      case 0:
-        img = "assets/plastic_bottle.png";
-        name = AppTranslations.of(context).text("plastic_string");
-        n = userData["1"].toString();
-        break;
-      case 1:
-        img = "assets/glass_bottle.png";
-        name = AppTranslations.of(context).text("glass_string");
-        n = userData["2"].toString();
-        break;
-      case 2:
-        img = "assets/paper.png";
-        name = AppTranslations.of(context).text("paper_string");
-        n = userData["3"].toString();
-        break;
-      case 3:
-        img = "assets/indifferenziata.png";
-        name = AppTranslations.of(context).text("other_string");
-        n = userData["4"].toString();
-        break;
-      case 4:
-        img = "assets/battery.png";
-        name = AppTranslations.of(context).text("battery_string");
-        n = userData["5"].toString();
-        break;
-      case 5:
-        img = "assets/leaf.png";
-        name = AppTranslations.of(context).text("leaf_string");
-        n = userData["6"].toString();
-        break;
-      case 6:
-        img = "assets/drugs.png";
-        name = AppTranslations.of(context).text("drugs_string");
-        n = userData["7"].toString();
-        break;
-      case 7:
-        img = "assets/clothing.png";
-        name = AppTranslations.of(context).text("clothing_string");
-        n = userData["8"].toString();
-        break;
-    }
+    img = 'assets/icons/icon_type_$index.png';
+    name = AppTranslations.of(context).text("icon_string_$index");
+    n = userData['$index'].toString();
+
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
@@ -149,16 +113,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  // TODO: if no connection available handle correctly
-  Future<void> retrieveUserInfo() async {
-    await Firestore.instance
-        .collection('users')
-        .document(widget.user.uid)
-        .get()
-        .then((DocumentSnapshot ds) {
-      userData = ds.data;
-    });
-  }
+
 
   void getSum() {
     reportSum = 0;
@@ -174,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage>
           backgroundColor: Colors.green[300],
           body: SingleChildScrollView(
             child: FutureBuilder(
-                future: retrieveUserInfo(),
+                future: retrieveUserInfo(widget.user),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     getSum();
@@ -338,6 +293,10 @@ class _ProfilePageState extends State<ProfilePage>
                 }),
           )),
     );
+  }
+
+  Future<void> retrieveUserInfo(FirebaseUser user) async {
+    userData = await DatabaseService().retrieveUserInfo(user);
   }
 }
 

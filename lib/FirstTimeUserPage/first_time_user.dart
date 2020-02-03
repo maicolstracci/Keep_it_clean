@@ -1,163 +1,113 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/fade_animation.dart';
 import 'package:keep_it_clean/FirstTimeUserPage/page1.dart';
 import 'package:keep_it_clean/FirstTimeUserPage/page2.dart';
 import 'package:keep_it_clean/FirstTimeUserPage/page3.dart';
-import 'package:keep_it_clean/Maps/maps_page.dart';
-import 'package:keep_it_clean/Maps/search_widget.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class FirstTimeUserWidget extends StatefulWidget {
   @override
   _FirstTimeUserWidgetState createState() => _FirstTimeUserWidgetState();
 }
 
-class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget>
-    with SingleTickerProviderStateMixin {
-//  AnimationController _scaleController;
-//  Animation<double> _scaleAnimation;
-
+class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
+  final _controller = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xfff4f8f9),
-        body: ScrollConfiguration(
-          behavior: FilterListBehavior(),
-          child: ListView(
-            shrinkWrap: false,
-            scrollDirection: Axis.horizontal,
-            physics: PageScrollPhysics(),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
             children: <Widget>[
-              Page1(),
-              Page2(),
-              Page3()
+              ScrollConfiguration(
+                behavior: FilterListBehavior(),
+                child: PageView(
+                  controller: _controller,
+                  scrollDirection: Axis.horizontal,
+//                  physics: PageScrollPhysics(),
+                  physics: CustomScrollPhysics(),
+                  children: <Widget>[Page1(), Page2(), Page3()],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: SmoothPageIndicator(
+                      controller: _controller, // PageController
+                      count: 3,
+                      effect: ColorTransitionEffect(
+                          spacing: 16.0,
+                          dotWidth: 12.0,
+                          dotHeight: 12.0,
+                          activeDotColor: Colors.green[600],
+                          dotColor: Color(0xfff4f8f9)), // your preferred effect
+                    )),
+              )
             ],
           ),
         ),
       ),
     );
   }
+}
 
-//  @override
-//  void initState() {
-//    super.initState();
-//
-//    _scaleController =
-//        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
-//
-//    _scaleAnimation = Tween<double>(begin: 0.0, end: 3.0)
-//        .chain(CurveTween(curve: Curves.easeIn))
-//        .animate(_scaleController)
-//          ..addStatusListener((status) {
-//            if (status == AnimationStatus.completed) {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(builder: (context) => Maps()),
-//              );
-//            }
-//          });
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return SafeArea(
-//      child: Scaffold(
-//        backgroundColor: Colors.green,
-//        body: Container(
-//          decoration: BoxDecoration(
-//            gradient: LinearGradient(
-//              begin: Alignment.topLeft,
-//              end: Alignment.bottomRight,
-//              stops: [0.1, 0.7, 0.9],
-//              colors: [
-//                Colors.green[700],Colors.green[500],Colors.green[400]
-//              ],
-//            ),
-//          ),
-//          child: Stack(
-//            children: <Widget>[
-//
-//              Positioned(
-//                top: 10,
-//                child: FadeAnimation(
-//                  2,
-//                  Text(
-//                    "Ciao!",
-//                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 94),
-//                  ),
-//                ),
-//              ),
-//              Padding(
-//                padding: const EdgeInsets.only(bottom:200.0),
-//                child: Align(
-//                    alignment: Alignment.centerRight,
-//                    child: FadeAnimation(
-//                      4,
-//                      Text(
-//                        "Sembra sia la prima volta che ci vediamo",
-//                        textAlign: TextAlign.right,
-//                        style: TextStyle(
-//                            fontWeight: FontWeight.normal, fontSize: 32),
-//                      ),
-//                    )),
-//              ),
-//              Padding(
-//                padding: const EdgeInsets.only(bottom:200.0),
-//                child: Align(
-//                    alignment: Alignment.bottomCenter,
-//                    child: FadeAnimation(
-//                      6,
-//                      Text(
-//                        "Keep it Clean richiede la posizione del tuo dispositivo per poter funzionare.",
-//                        textAlign: TextAlign.center,
-//                        style:
-//                            TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
-//                      ),
-//                    )),
-//              ),
-//              Align(
-//                alignment: Alignment.bottomCenter,
-//                child: FadeAnimation(
-//                  6,
-//                  FlatButton(
-//                    color: Colors.transparent,
-//                    onPressed: () async {
-//                      await PermissionHandler()
-//                          .requestPermissions([PermissionGroup.location]);
-//                      setState(() {
-//                        _scaleController.forward();
-//                      });
-//                    },
-//                    child: Text("Fornisci permesso posizione",
-//                        style: TextStyle(
-//                            fontWeight: FontWeight.w100, fontSize: 18)),
-//                  ),
-//                ),
-//              ),
-//              Center(child: AnimatedBuilder(animation: _scaleController,
-//                builder: (context, child) => Transform.scale(
-//                    scale: _scaleAnimation.value,
-//                    child: Container(
-//                      decoration: BoxDecoration(
-//                          shape: BoxShape.circle,
-//                          color: Colors.white.withOpacity(.95)
-//                      ),
-//                      child: Center(
-//                        child: Image.asset("assets/loading.gif"),
-//                      ),
-//                    )
-//                ),
-//
-//              )),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+class CustomScrollPhysics extends ScrollPhysics {
+  CustomScrollPhysics({ScrollPhysics parent}) : super(parent: parent);
+
+  bool isGoingLeft = false;
+
+  @override
+  CustomScrollPhysics applyTo(ScrollPhysics ancestor) {
+    return CustomScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  @override
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    isGoingLeft = offset.sign < 0;
+    return offset;
+  }
+
+  @override
+  double applyBoundaryConditions(ScrollMetrics position, double value) {
+    //print("applyBoundaryConditions");
+    assert(() {
+      if (value == position.pixels) {
+        throw FlutterError(
+            '$runtimeType.applyBoundaryConditions() was called redundantly.\n'
+                'The proposed new position, $value, is exactly equal to the current position of the '
+                'given ${position.runtimeType}, ${position.pixels}.\n'
+                'The applyBoundaryConditions method should only be called when the value is '
+                'going to actually change the pixels, otherwise it is redundant.\n'
+                'The physics object in question was:\n'
+                '  $this\n'
+                'The position object in question was:\n'
+                '  $position\n');
+      }
+      return true;
+    }());
+    if (value < position.pixels && position.pixels <= position.minScrollExtent)
+      return value - position.pixels;
+    if (position.maxScrollExtent <= position.pixels && position.pixels < value)
+      // overscroll
+      return value - position.pixels;
+    if (value < position.minScrollExtent &&
+        position.minScrollExtent < position.pixels) // hit top edge
+
+      return value - position.minScrollExtent;
+
+    if (position.pixels < position.maxScrollExtent &&
+        position.maxScrollExtent < value) // hit bottom edge
+      return value - position.maxScrollExtent;
+
+    if (!isGoingLeft) {
+      return value - position.pixels;
+    }
+    return 0.0;
+  }
 }

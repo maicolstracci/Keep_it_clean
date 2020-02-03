@@ -41,5 +41,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<key>NSCameraUsageDescription</key>
+    <string>Camera is used to take photo of the bin</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Photo can be taken from the camera roll for being uploaded instead of taking them directly from the camera</string>
 </dict>
 </plist>

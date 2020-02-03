@@ -25,33 +25,44 @@ class Page2 extends StatelessWidget {
             child: Image.asset("assets/illustrations/page2.png"),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 50, left: 40, right: 40),
+            padding: EdgeInsets.only( left: 40, right: 40),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  "SEGNALA",
-                  style: TextStyle(
-                      color: Color(0xfff4f8f9),
-                      fontSize: 52,
-                      fontWeight: FontWeight.w600),
+                Flexible(
+                  flex: 8,
+                  child: Container(),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
-                ),
+                Flexible(
+                  flex: 4,
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        "SEGNALA",
+                        style: TextStyle(
+                            color: Color(0xfff4f8f9),
+                            fontSize: 52,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Aiutaci segnalando i centri di raccolta non ancora presenti sulla mappa",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
@@ -63,14 +74,14 @@ class Page2 extends StatelessWidget {
                   Text(
                     "Swipe",
                     style: TextStyle(
-                        color: Colors.green[300],
-                        fontSize: 18,
+                        color: Colors.green[400],
+                        fontSize: 22,
                         fontWeight: FontWeight.bold),
                   ),
                   Icon(
                     Icons.arrow_forward,
-                    color: Colors.green[500],
-                    size: 24.0,
+                    color: Colors.green[600],
+                    size: 28.0,
 
                   ),
                 ],
@@ -89,14 +100,11 @@ class CurveClipper extends CustomClipper<Path> {
     var path = new Path();
 
     var controlPoint = Offset(size.width * 0.60, -10);
-    var endPoint = Offset(0, size.width);
 
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 40);
-//    path.lineTo(0, 40);
     path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, 0, 40);
-//    path.close();
     return path;
   }
 
