@@ -49,5 +49,51 @@
     <string>Camera is used to take photo of the bin</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Photo can be taken from the camera roll for being uploaded instead of taking them directly from the camera</string>
+<key>CFBundleURLTypes</key>
+<array>
+
+    <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+
+    			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+    			<string>com.googleusercontent.apps.771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai</string>
+    		</array>
+    	</dict>
+    </array>
+    </dict>
+
+    <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+
+            <string>fb2885443888132587</string>
+        </array>
+    </dict>
+</array>
+
+<key>FacebookAppID</key>
+
+
+<string>2885443888132587</string>
+<key>FacebookDisplayName</key>
+
+
+<string>Keep it clena</string>
+
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>fbapi</string>
+    <string>fb-messenger-share-api</string>
+    <string>fbauth2</string>
+    <string>fbshareextension</string>
+</array>
+
+
 </dict>
 </plist>

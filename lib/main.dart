@@ -60,7 +60,7 @@ class _KeepItCleanState extends State<KeepItClean> {
         ),
       ),
 //      home: FirstTimeUserWidget(),
-      home: LoginPage2(),
+      home: LoginPage(),
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),
