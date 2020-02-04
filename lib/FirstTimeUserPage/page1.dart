@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class Page1 extends StatelessWidget {
@@ -40,21 +41,25 @@ class Page1 extends StatelessWidget {
                   flex: 4,
                   child: Column(
                     children: <Widget>[
-                      Text(
+                      AutoSizeText(
                         "CERCA",
+                        maxLines: 1,
+                        presetFontSizes: [58, 36, 22],
                         style: TextStyle(
                             color: Color(0xfff4f8f9),
-                            fontSize: 52,
+                            fontSize: 58,
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
+                      AutoSizeText(
                         "Trova il centro della raccolta differenziata piu' vicina a te",
+                        maxLines: 2,
+
                         textAlign: TextAlign.center,
                         style:
-                            TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                            TextStyle(color: Color(0xfff4f8f9), fontSize: 22),
                       ),
                     ],
                   ),

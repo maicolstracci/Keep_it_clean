@@ -59,8 +59,8 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-//      home: FirstTimeUserWidget(),
-      home: LoginPage(),
+      home: FirstTimeUserWidget(),
+//      home: LoginPage(),
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),

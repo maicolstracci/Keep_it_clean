@@ -16,6 +16,7 @@ class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xfff4f8f9),

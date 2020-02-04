@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Maps/maps_page.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,18 +51,21 @@ class Page3 extends StatelessWidget {
                     flex: 4,
                     child: Column(
                       children: <Widget>[
-                        Text(
+                        AutoSizeText(
                           "PERMESSI",
+                          maxLines: 1,
+                          presetFontSizes: [58, 36, 22],
                           style: TextStyle(
                               color: Color(0xfff4f8f9),
-                              fontSize: 52,
+                              fontSize: 58,
                               fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
+                        AutoSizeText(
                           "Richiediamo i permessi di localizzazione per conoscere la tua posizione",
+                          maxLines: 2,
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(color: Color(0xfff4f8f9), fontSize: 18),

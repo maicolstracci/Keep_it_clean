@@ -53,19 +53,15 @@
 <array>
 
     <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-    	<dict>
-    		<key>CFBundleTypeRole</key>
-    		<string>Editor</string>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
 
-    			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-    			<string>com.googleusercontent.apps.771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai</string>
-    		</array>
-    	</dict>
-    </array>
+   		<key>CFBundleTypeRole</key>
+   		<string>Editor</string>
+   		<key>CFBundleURLSchemes</key>
+   		<array>
+
+   			<string>com.googleusercontent.apps.771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai</string>
+   		</array>
+
     </dict>
 
     <dict>

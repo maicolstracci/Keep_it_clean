@@ -6,33 +6,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 SimpleDialog createDialog(BuildContext context, String documentID, String img, LatLng pos,
     int type, String username, String date) {
-  String name;
-  switch (type) {
-    case 1:
-      name = AppTranslations.of(context).text("plastic_string");
-      break;
-    case 2:
-      name = AppTranslations.of(context).text("glass_string");
-      break;
-    case 3:
-      name = AppTranslations.of(context).text("paper_string");
-      break;
-    case 4:
-      name = AppTranslations.of(context).text("other_string");
-      break;
-    case 5:
-      name = AppTranslations.of(context).text("battery_string");
-      break;
-    case 6:
-      name = AppTranslations.of(context).text("drugs_string");
-      break;
-    case 7:
-      name = AppTranslations.of(context).text("leaf_string");
-      break;
-    case 8:
-      name = AppTranslations.of(context).text("clothing_string");
-      break;
-  }
+
+  String _name = AppTranslations.of(context).text("icon_string_$type");
+
 
   return SimpleDialog(
     titlePadding: EdgeInsets.only(left: 10, right: 5),
@@ -46,7 +22,7 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
-                name,
+                _name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: "Montserrat",

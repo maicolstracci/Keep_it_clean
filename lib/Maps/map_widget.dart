@@ -33,7 +33,7 @@ class _MapWidgetState extends State<MapWidget> {
   bool _showLoadingLocation = true;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static final CameraPosition _initialCameraPosition = CameraPosition(
     target: _defaultPos,
     zoom: 14.4746,
   );
@@ -247,8 +247,9 @@ class _MapWidgetState extends State<MapWidget> {
         GoogleMap(
           mapType: MapType.normal,
           myLocationEnabled: true,
+          myLocationButtonEnabled: false,
           mapToolbarEnabled: false,
-          initialCameraPosition: _kGooglePlex,
+          initialCameraPosition: _initialCameraPosition,
           markers: markers,
           onMapCreated: (GoogleMapController controller) {
             mapsController = controller;
