@@ -51,13 +51,13 @@ class Page2 extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       AutoSizeText(
                         "Aiutaci segnalando i centri di raccolta non ancora presenti sulla mappa",
-                        maxLines: 2,
+                        maxLines: 3,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                        style: TextStyle(color: Color(0xfff4f8f9), fontSize: 24),
                       ),
                     ],
                   ),

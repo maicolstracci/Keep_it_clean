@@ -61,14 +61,14 @@ class Page3 extends StatelessWidget {
                               fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         AutoSizeText(
                           "Richiediamo i permessi di localizzazione per conoscere la tua posizione",
-                          maxLines: 2,
+                          maxLines: 3,
                           textAlign: TextAlign.center,
                           style:
-                              TextStyle(color: Color(0xfff4f8f9), fontSize: 18),
+                              TextStyle(color: Color(0xfff4f8f9), fontSize: 22),
                         ),
                       ],
                     ),

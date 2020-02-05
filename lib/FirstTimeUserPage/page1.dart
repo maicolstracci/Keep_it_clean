@@ -51,7 +51,7 @@ class Page1 extends StatelessWidget {
                             fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       AutoSizeText(
                         "Trova il centro della raccolta differenziata piu' vicina a te",
@@ -59,7 +59,7 @@ class Page1 extends StatelessWidget {
 
                         textAlign: TextAlign.center,
                         style:
-                            TextStyle(color: Color(0xfff4f8f9), fontSize: 22),
+                            TextStyle(color: Color(0xfff4f8f9), fontSize: 24),
                       ),
                     ],
                   ),
