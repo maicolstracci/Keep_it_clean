@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,9 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
-import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Maps/maps_page.dart';
 
@@ -62,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=${token}');
         Map<String, dynamic> pic = jsonDecode(graphResponse.body);
         fbUserProfilePic = pic['picture']['data']['url'];
-        setupUser(user);
+        DatabaseService().setupUser(user);
         return user;
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -88,30 +86,12 @@ class _LoginPageState extends State<LoginPage> {
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
-    setupUser(user);
+    DatabaseService().setupUser(user);
 
     return user;
   }
 
-  void setupUser(FirebaseUser user) {
-    // Check if user already in firestore db, if not create an entry and initialize keys
-    DocumentReference ref =
-        Firestore.instance.collection('users').document(user.uid);
-    ref.get().then((ds) {
-      if (!ds.exists) {
-        ref.setData({
-          '1': 0,
-          '2': 0,
-          '3': 0,
-          '4': 0,
-          '5': 0,
-          '6': 0,
-          '7': 0,
-          '8': 0,
-        });
-      }
-    });
-  }
+
 
   Widget _createLoginContainer(String type) {
     IconData icon;

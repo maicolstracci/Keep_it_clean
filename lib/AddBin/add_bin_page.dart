@@ -167,18 +167,18 @@ class _AddBinState extends State<AddBin> {
                         runSpacing: 30,
                         children: <Widget>[
                           _buildButton(
-                              "assets/plastic_bottle.png", "plastic_string", 1),
+                              "assets/icons/icon_type_1.png", "icon_string_1", 1),
                           _buildButton(
-                              "assets/glass_bottle.png", "glass_string", 2),
-                          _buildButton("assets/paper.png", "paper_string", 3),
+                              "assets/icons/icon_type_2.png", "icon_string_2", 2),
+                          _buildButton("assets/icons/icon_type_3.png", "icon_string_3", 3),
                           _buildButton(
-                              "assets/indifferenziata.png", "other_string", 4),
+                              "assets/icons/icon_type_4.png", "icon_string_4", 4),
                           _buildButton(
-                              "assets/battery.png", "battery_string", 5),
-                          _buildButton("assets/drugs.png", "drugs_string", 6),
-                          _buildButton("assets/leaf.png", "leaf_string", 7),
+                              "assets/icons/icon_type_5.png", "icon_string_5", 5),
+                          _buildButton("assets/icons/icon_type_6.png", "icon_string_6", 6),
+                          _buildButton("assets/icons/icon_type_7.png", "icon_string_7", 7),
                           _buildButton(
-                              "assets/clothing.png", "clothing_string", 8),
+                              "assets/icons/icon_type_8.png", "icon_string_8", 8),
                         ],
                       ),
                     ],

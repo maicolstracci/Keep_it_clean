@@ -37,15 +37,28 @@ class DatabaseService {
   Future<String> getImageFromUrl(String photoUrl) async {
     final StorageReference storageReference =
         FirebaseStorage().ref().child(photoUrl);
-    String img = await storageReference.getDownloadURL();
-    return img;
+
+    return await storageReference.getDownloadURL().catchError((e) {
+      return null;
+    });
   }
 
   // TODO: if no connection available handle correctly
-  Future<Map<String, dynamic >> retrieveUserInfo(FirebaseUser user) async {
+  Future<Map<String, dynamic>> retrieveUserInfo(FirebaseUser user) async {
     DocumentSnapshot ds =
         await Firestore.instance.collection('users').document(user.uid).get();
     return ds.data;
+  }
+
+  void setupUser(FirebaseUser user) {
+    // Check if user already in firestore db, if not create an entry
+    DocumentReference ref =
+        Firestore.instance.collection('users').document(user.uid);
+    ref.get().then((ds) {
+      if (!ds.exists) {
+        ref.setData({});
+      }
+    });
   }
 
   void addPoints(FirebaseUser user, List<int> types) {
@@ -55,9 +68,28 @@ class DatabaseService {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       if (postSnapshot.exists) {
         types.forEach((type) async {
-          await tx.update(postRef,
-              <String, dynamic>{'$type': postSnapshot.data['$type'] + 1});
+          if (postSnapshot.data['$type'] != null) {
+            await tx.update(postRef,
+                <String, dynamic>{'$type': postSnapshot.data['$type'] + 1});
+          } else {
+            await tx.update(postRef, <String, dynamic>{'$type': 1});
+          }
         });
+      }
+    });
+  }
+
+  void reportBinProblem(String documentId) {
+    DocumentReference postRef = _db.collection("reports").document(documentId);
+
+    _db.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      if (postSnapshot.exists) {
+        await tx.update(postRef, <String, dynamic>{
+          'nOfReports': postSnapshot.data['nOfReports'] + 1
+        });
+      } else {
+        await tx.set(postRef, <String, dynamic>{'nOfReports': 1});
       }
     });
   }

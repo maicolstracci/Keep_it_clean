@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -128,8 +129,8 @@ AlertDialog createAlertDialog(BuildContext context, String documentId) {
     actions: <Widget>[
       FlatButton(
         child: new Text(AppTranslations.of(context).text("no")),
-        color: Colors.green,
-        textColor: Colors.white,
+
+        textColor: Colors.black,
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -139,18 +140,20 @@ AlertDialog createAlertDialog(BuildContext context, String documentId) {
         color: Colors.red,
         textColor: Colors.black,
         onPressed: () {
-          if(pressed == 3){
 
-            //TODO: improve fast delete option
-            Firestore.instance
-                .collection('cestini')
-                .document(documentId)
-                .delete();
-            Navigator.of(context).pop();
-
-            return;
-          }
-          Navigator.of(context).pop();
+DatabaseService().reportBinProblem(documentId);
+//          if(pressed == 3){
+//
+//            //TODO: improve fast delete option
+//            Firestore.instance
+//                .collection('cestini')
+//                .document(documentId)
+//                .delete();
+//            Navigator.of(context).pop();
+//
+//            return;
+//          }
+Navigator.of(context).pop();
         },
       ),
     ],

@@ -59,7 +59,7 @@ class _MapWidgetState extends State<MapWidget> {
               context,
               bin.id,
               img,
-              LatLng(bin.longitude, bin.latitude),
+              LatLng(bin.latitude, bin.longitude),
               bin.type,
               bin.username,
               bin.reportDate);

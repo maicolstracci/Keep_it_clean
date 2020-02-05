@@ -65,7 +65,11 @@ class _ProfilePageState extends State<ProfilePage>
 
     img = 'assets/icons/icon_type_$index.png';
     name = AppTranslations.of(context).text("icon_string_$index");
-    n = userData['$index'].toString();
+
+    if(userData['$index'] != null){
+      n = userData['$index'].toString();
+    } else n = "0";
+
 
 
 
