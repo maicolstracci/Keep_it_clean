@@ -53,8 +53,6 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void initState() {
     super.initState();
-
-    //TODO: find a better way to eliminate duplicate.
     testList = widget.pinList;
     testList.removeAt(14);
     testList.removeAt(12);
@@ -64,7 +62,7 @@ class _MapWidgetState extends State<MapWidget> {
     testList.removeAt(4);
     testList.removeAt(2);
     testList.removeAt(0);
-
+    
   }
 
   void _onMarkerTapped(MarkerId markerId) async {

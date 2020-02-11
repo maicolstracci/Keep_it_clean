@@ -37,6 +37,7 @@ class _MapsState extends State<Maps> {
   @override
   void initState() {
     super.initState();
+    //setCustomMapPin();
 //    requestPermission();
   }
 
@@ -51,6 +52,7 @@ class _MapsState extends State<Maps> {
   }
 
   Future<bool> setCustomMapPin() async {
+    bool test = true;
     for (int i = 1; i <= 8; i++) {
       Uint8List val =
           await getBytesFromAsset('assets/maps_markers/marker_$i.png', 150);
@@ -73,12 +75,7 @@ class _MapsState extends State<Maps> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         //border: Border.all(color: Colors.green[600],width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4.0,
-            ),
-          ],
+
         color: Colors.blue[800].withOpacity(.98),
       ),
       child: RawMaterialButton(
@@ -145,7 +142,7 @@ class _MapsState extends State<Maps> {
                               pinList: pinList,
                             );
                           } else
-                            return CircularProgressIndicator();
+                            return Container();
                         },
                       ),
                       Positioned(
