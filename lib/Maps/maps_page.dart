@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -32,12 +31,11 @@ class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = Firestore.instance;
   double firstTime = 0;
-  List<BitmapDescriptor> pinList = [];
+  Map<int, BitmapDescriptor> pinMap = new Map<int, BitmapDescriptor>();
 
   @override
   void initState() {
     super.initState();
-    //setCustomMapPin();
 //    requestPermission();
   }
 
@@ -52,13 +50,12 @@ class _MapsState extends State<Maps> {
   }
 
   Future<bool> setCustomMapPin() async {
-    bool test = true;
     for (int i = 1; i <= 8; i++) {
       Uint8List val =
           await getBytesFromAsset('assets/maps_markers/marker_$i.png', 150);
       BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
-      pinList.add(pinLocationIcon);
+      pinMap[i] = pinLocationIcon;
 
     }
 
@@ -74,8 +71,6 @@ class _MapsState extends State<Maps> {
       height: 60.0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        //border: Border.all(color: Colors.green[600],width: 2),
-
         color: Colors.blue[800].withOpacity(.98),
       ),
       child: RawMaterialButton(
@@ -139,7 +134,7 @@ class _MapsState extends State<Maps> {
                           if (snap.connectionState == ConnectionState.done) {
                             return MapWidget(
                               binList: snapshot.data,
-                              pinList: pinList,
+                              pinMap: pinMap,
                             );
                           } else
                             return Container();

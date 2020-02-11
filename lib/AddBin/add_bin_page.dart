@@ -153,34 +153,44 @@ class _AddBinState extends State<AddBin> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30.0),
-                      child: Text(
-                        AppTranslations.of(context).text("type_string") + "?",
-                        style: TextStyle(
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30),
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        child: Text(
+                          AppTranslations.of(context).text("type_string") + "?",
+                          style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                        ),
                       ),
                     ),
-                    Wrap(
-                      spacing: 15,
-                      runSpacing: 30,
-                      children: <Widget>[
-                        _buildButton(
-                            "assets/icons/icon_type_1.png", "icon_string_1", 1),
-                        _buildButton(
-                            "assets/icons/icon_type_2.png", "icon_string_2", 2),
-                        _buildButton("assets/icons/icon_type_3.png", "icon_string_3", 3),
-                        _buildButton(
-                            "assets/icons/icon_type_4.png", "icon_string_4", 4),
-                        _buildButton(
-                            "assets/icons/icon_type_5.png", "icon_string_5", 5),
-                        _buildButton("assets/icons/icon_type_6.png", "icon_string_6", 6),
-                        _buildButton("assets/icons/icon_type_7.png", "icon_string_7", 7),
-                        _buildButton(
-                            "assets/icons/icon_type_8.png", "icon_string_8", 8),
-                      ],
+                    Flexible(
+                      flex: 7,
+                      child: SingleChildScrollView(
+                        physics: ScrollPhysics(),
+                        child: Wrap(
+                          spacing: 15,
+                          runSpacing: 30,
+                          children: <Widget>[
+                            _buildButton(
+                                "assets/icons/icon_type_1.png", "icon_string_1", 1),
+                            _buildButton(
+                                "assets/icons/icon_type_2.png", "icon_string_2", 2),
+                            _buildButton("assets/icons/icon_type_3.png", "icon_string_3", 3),
+                            _buildButton(
+                                "assets/icons/icon_type_4.png", "icon_string_4", 4),
+                            _buildButton(
+                                "assets/icons/icon_type_5.png", "icon_string_5", 5),
+                            _buildButton("assets/icons/icon_type_6.png", "icon_string_6", 6),
+                            _buildButton("assets/icons/icon_type_7.png", "icon_string_7", 7),
+                            _buildButton(
+                                "assets/icons/icon_type_8.png", "icon_string_8", 8),
+
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

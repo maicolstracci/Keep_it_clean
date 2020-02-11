@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Maps/searchbutton_widget.dart';
@@ -18,9 +14,9 @@ import 'marker_dialog.dart';
 
 class MapWidget extends StatefulWidget {
   final List<Bin> binList;
-  final List<BitmapDescriptor> pinList;
+  final Map<int, BitmapDescriptor> pinMap;
 
-  const MapWidget({Key key, this.binList, this.pinList}) : super(key: key);
+  const MapWidget({Key key, this.binList, this.pinMap}) : super(key: key);
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
@@ -35,9 +31,7 @@ class _MapWidgetState extends State<MapWidget> {
   static LatLng _userLocation;
   LatLng _oldLocation;
   bool _showLoadingLocation = true;
-  List<BitmapDescriptor> testList;
 
-  Future<bool> pinLoading;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _initialCameraPosition = CameraPosition(
@@ -53,16 +47,6 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void initState() {
     super.initState();
-    testList = widget.pinList;
-    testList.removeAt(14);
-    testList.removeAt(12);
-    testList.removeAt(10);
-    testList.removeAt(8);
-    testList.removeAt(6);
-    testList.removeAt(4);
-    testList.removeAt(2);
-    testList.removeAt(0);
-    
   }
 
   void _onMarkerTapped(MarkerId markerId) async {
@@ -86,34 +70,6 @@ class _MapWidgetState extends State<MapWidget> {
   void _addMarker(String id, LatLng latLng, int type) {
     bool positionChanged = false;
     LatLng alteredPos;
-
-    var markerColor;
-    switch (type) {
-      case 1:
-        markerColor = BitmapDescriptor.hueRed;
-        break;
-      case 2:
-        markerColor = BitmapDescriptor.hueGreen;
-        break;
-      case 3:
-        markerColor = BitmapDescriptor.hueYellow;
-        break;
-      case 4:
-        markerColor = BitmapDescriptor.hueOrange;
-        break;
-      case 5:
-        markerColor = BitmapDescriptor.hueBlue;
-        break;
-      case 6:
-        markerColor = BitmapDescriptor.hueRose;
-        break;
-      case 7:
-        markerColor = BitmapDescriptor.hueMagenta;
-        break;
-      case 8:
-        markerColor = BitmapDescriptor.hueViolet;
-        break;
-    }
 
     final MarkerId markerId = MarkerId(id);
 
@@ -150,8 +106,7 @@ class _MapWidgetState extends State<MapWidget> {
     final Marker marker = Marker(
       markerId: markerId,
       position: positionChanged ? alteredPos : latLng,
-//      icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
-      icon: testList[type - 1],
+      icon: widget.pinMap[type],
       onTap: () {
         // markerId is used as a reference to the marker in the Firebase db
         _onMarkerTapped(markerId);

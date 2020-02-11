@@ -46,6 +46,12 @@ class _KeepItCleanState extends State<KeepItClean> {
       DeviceOrientation.portraitUp,
     ]);
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark
+    ));
+
     return MaterialApp(
       title: 'Keep it Clean',
       debugShowCheckedModeBanner: false,
