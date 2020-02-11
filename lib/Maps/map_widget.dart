@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
@@ -8,14 +11,16 @@ import 'package:keep_it_clean/Maps/searchbutton_widget.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:location/location.dart';
+
 import 'package:provider/provider.dart';
 
 import 'marker_dialog.dart';
 
 class MapWidget extends StatefulWidget {
   final List<Bin> binList;
+  final List<BitmapDescriptor> pinList;
 
-  const MapWidget({Key key, this.binList}) : super(key: key);
+  const MapWidget({Key key, this.binList, this.pinList}) : super(key: key);
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
@@ -29,8 +34,10 @@ class _MapWidgetState extends State<MapWidget> {
   GoogleMapController mapsController;
   static LatLng _userLocation;
   LatLng _oldLocation;
-
   bool _showLoadingLocation = true;
+  List<BitmapDescriptor> testList;
+
+  Future<bool> pinLoading;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _initialCameraPosition = CameraPosition(
@@ -46,6 +53,18 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void initState() {
     super.initState();
+
+    //TODO: find a better way to eliminate duplicate.
+    testList = widget.pinList;
+    testList.removeAt(14);
+    testList.removeAt(12);
+    testList.removeAt(10);
+    testList.removeAt(8);
+    testList.removeAt(6);
+    testList.removeAt(4);
+    testList.removeAt(2);
+    testList.removeAt(0);
+
   }
 
   void _onMarkerTapped(MarkerId markerId) async {
@@ -133,7 +152,8 @@ class _MapWidgetState extends State<MapWidget> {
     final Marker marker = Marker(
       markerId: markerId,
       position: positionChanged ? alteredPos : latLng,
-      icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
+//      icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
+      icon: testList[type - 1],
       onTap: () {
         // markerId is used as a reference to the marker in the Firebase db
         _onMarkerTapped(markerId);
@@ -222,12 +242,12 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   Future<void> moveToUserLocation() async {
-    if(await getLocationPermissionStatus()){
+    if (await getLocationPermissionStatus()) {
       LocationData location = await Location().getLocation();
 
       _userLocation = new LatLng(location.latitude, location.longitude);
-    } else _userLocation = _defaultPos;
-
+    } else
+      _userLocation = _defaultPos;
 
     await mapsController
         .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
@@ -254,7 +274,6 @@ class _MapWidgetState extends State<MapWidget> {
           onMapCreated: (GoogleMapController controller) {
             mapsController = controller;
             moveToUserLocation();
-
           },
           onCameraMove: _onCameraMove,
         ),
@@ -264,18 +283,20 @@ class _MapWidgetState extends State<MapWidget> {
           child: Center(
             child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(40)
-                ),
-
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(40)),
                 height: 180,
-                width: MediaQuery.of(context).size.width*0.80,
-
+                width: MediaQuery.of(context).size.width * 0.80,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text("Stiamo calcolando la tua posizione...", textAlign: TextAlign.center,),
-                    CircularProgressIndicator(strokeWidth: 4,)
+                    Text(
+                      "Stiamo calcolando la tua posizione...",
+                      textAlign: TextAlign.center,
+                    ),
+                    CircularProgressIndicator(
+                      strokeWidth: 4,
+                    )
                   ],
                 )),
           ),

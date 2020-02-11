@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
@@ -12,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'map_widget.dart';
 import 'search_widget.dart';
+import 'dart:ui' as ui;
 
 class Maps extends StatefulWidget {
   final FirebaseUser user;
@@ -27,7 +32,7 @@ class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = Firestore.instance;
   double firstTime = 0;
-
+  List<BitmapDescriptor> pinList = [];
 
   @override
   void initState() {
@@ -35,9 +40,30 @@ class _MapsState extends State<Maps> {
 //    requestPermission();
   }
 
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        .buffer
+        .asUint8List();
+  }
 
+  Future<bool> setCustomMapPin() async {
+    for (int i = 1; i <= 8; i++) {
+      Uint8List val =
+          await getBytesFromAsset('assets/maps_markers/marker_$i.png', 150);
+      BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
-  Widget addBinButton(){
+      pinList.add(pinLocationIcon);
+
+    }
+
+    return true;
+  }
+
+  Widget addBinButton() {
     return Container(
       margin: EdgeInsets.only(
         left: 10,
@@ -47,7 +73,12 @@ class _MapsState extends State<Maps> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         //border: Border.all(color: Colors.green[600],width: 2),
-
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4.0,
+            ),
+          ],
         color: Colors.blue[800].withOpacity(.98),
       ),
       child: RawMaterialButton(
@@ -55,21 +86,17 @@ class _MapsState extends State<Maps> {
         onPressed: () {
           if (widget.user != null) {
             PermissionHandler()
-                .checkPermissionStatus(
-                PermissionGroup.location)
+                .checkPermissionStatus(PermissionGroup.location)
                 .then((permission) {
-              if (permission ==
-                  PermissionStatus.granted) {
+              if (permission == PermissionStatus.granted) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            AddBin(
+                        builder: (context) => AddBin(
                               user: widget.user,
                             )));
               } else {
-                showSnackBar(
-                    context, 3, _scaffoldKey);
+                showSnackBar(context, 3, _scaffoldKey);
               }
             });
           } else {
@@ -85,7 +112,6 @@ class _MapsState extends State<Maps> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     //
@@ -99,18 +125,28 @@ class _MapsState extends State<Maps> {
         ChangeNotifierProvider<SearchButtonChanger>(
             create: (_) => SearchButtonChanger(false)),
       ],
-      child: SafeArea(
-        child: WillPopScope(
-          onWillPop: () async => false,
-          child: Scaffold(
-            key: _scaffoldKey,
-            body: StreamBuilder<List<Bin>>(
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          key: _scaffoldKey,
+          body: SafeArea(
+            child: StreamBuilder<List<Bin>>(
                 stream: DatabaseService().streamBins(),
                 builder: (context, snapshot) {
                   return Stack(
                     children: <Widget>[
-                      MapWidget(
-                        binList: snapshot.data,
+                      FutureBuilder<bool>(
+                        future: setCustomMapPin(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot<bool> snap) {
+                          if (snap.connectionState == ConnectionState.done) {
+                            return MapWidget(
+                              binList: snapshot.data,
+                              pinList: pinList,
+                            );
+                          } else
+                            return CircularProgressIndicator();
+                        },
                       ),
                       Positioned(
                         top: 10,
@@ -167,10 +203,12 @@ class _MapsState extends State<Maps> {
                               ),
                               Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.green[400].withOpacity(.85),
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
-                                  ),
-                                  padding: EdgeInsets.only(left: 20,right: 10, bottom: 2, top:2),
+                                      color: Colors.green[400].withOpacity(.85),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(14),
+                                          bottomLeft: Radius.circular(14))),
+                                  padding: EdgeInsets.only(
+                                      left: 20, right: 10, bottom: 2, top: 2),
                                   child: Text(
                                     "Seleziona un filtro",
                                     style: TextStyle(

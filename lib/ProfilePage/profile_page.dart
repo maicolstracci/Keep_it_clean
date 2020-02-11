@@ -128,10 +128,10 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: Colors.green[300],
-          body: SingleChildScrollView(
+    return Scaffold(
+        backgroundColor: Colors.green[300],
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: FutureBuilder(
                 future: retrieveUserInfo(widget.user),
                 builder: (context, snapshot) {
@@ -295,8 +295,8 @@ class _ProfilePageState extends State<ProfilePage>
                     );
                   }
                 }),
-          )),
-    );
+          ),
+        ));
   }
 
   Future<void> retrieveUserInfo(FirebaseUser user) async {

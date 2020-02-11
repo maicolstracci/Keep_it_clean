@@ -17,10 +17,10 @@ class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xfff4f8f9),
-        body: Container(
+    return Scaffold(
+      backgroundColor: Color(0xfff4f8f9),
+      body: SafeArea(
+        child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
