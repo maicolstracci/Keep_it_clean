@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -52,7 +53,7 @@ class _MapsState extends State<Maps> {
   Future<bool> setCustomMapPin() async {
     for (int i = 1; i <= 8; i++) {
       Uint8List val =
-          await getBytesFromAsset('assets/maps_markers/marker_$i.png', 150);
+          await getBytesFromAsset('assets/maps_markers/marker_$i.png', (MediaQuery.of(context).size.width/3).floor());
       BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
       pinMap[i] = pinLocationIcon;
@@ -135,6 +136,7 @@ class _MapsState extends State<Maps> {
                             return MapWidget(
                               binList: snapshot.data,
                               pinMap: pinMap,
+                              user: widget.user
                             );
                           } else
                             return Container();
@@ -201,7 +203,7 @@ class _MapsState extends State<Maps> {
                                           bottomLeft: Radius.circular(14))),
                                   padding: EdgeInsets.only(
                                       left: 20, right: 10, bottom: 2, top: 2),
-                                  child: Text(
+                                  child: AutoSizeText(
                                     "Seleziona un filtro",
                                     style: TextStyle(
                                         fontSize: 24,

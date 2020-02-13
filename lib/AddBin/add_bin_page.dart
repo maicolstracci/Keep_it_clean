@@ -149,7 +149,6 @@ class _AddBinState extends State<AddBin> {
                   color: Colors.white),
               child: Padding(
                 padding: const EdgeInsets.only(top: 100.0),
-                //TODO: In small screens fix bottom overflow
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[

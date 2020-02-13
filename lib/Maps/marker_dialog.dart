@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-SimpleDialog createDialog(BuildContext context, String documentID, String img, LatLng pos,
-    int type, String username, String date) {
-
+SimpleDialog createDialog(BuildContext context, String documentID, String img,
+    LatLng pos, int type, String username, String date, FirebaseUser user) {
   String _name = AppTranslations.of(context).text("icon_string_$type");
-
 
   return SimpleDialog(
     titlePadding: EdgeInsets.only(left: 10, right: 5),
@@ -18,7 +17,6 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
@@ -31,12 +29,13 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
                     fontSize: 24),
               ),
             ),
+
             IconButton(
               onPressed: () {
                 showDialog(
                     context: context,
                     builder: (context) {
-                      return createAlertDialog(context, documentID);
+                      return createAlertDialog(context, documentID, user);
                     });
               },
               icon: Icon(
@@ -49,9 +48,8 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
       ],
     ),
     children: <Widget>[
-
       Padding(
-        padding: const EdgeInsets.only(bottom: 20.0, left: 20, right: 20),
+        padding: const EdgeInsets.only(bottom: 10.0, left: 20, right: 20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Container(
@@ -63,9 +61,18 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
                     image: img,
                     fit: BoxFit.fitWidth,
                   )
-                : Image.asset('assets/trees.png', fit: BoxFit.fitWidth),
+                : Image.asset('assets/default-bin-photo.png', fit: BoxFit.fitWidth),
           ),
         ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center ,
+        children: <Widget>[
+          IconButton(icon: Icon(Icons.thumb_up, color: Colors.green,)),
+          Text("1"),
+
+          IconButton(icon: Icon(Icons.thumb_down, color: Colors.red)),
+        ],
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -113,13 +120,26 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img, L
   );
 }
 
-AlertDialog createAlertDialog(BuildContext context, String documentId) {
+AlertDialog createAlertDialog(BuildContext context, String documentId, FirebaseUser user) {
   int pressed = 0;
-
-  return AlertDialog(
+  if(user == null){
+    return AlertDialog(
+      elevation: 20,
+         title: new Text(
+           "Solo gli utenti autenticati possono segnalare problemi",
+         ),
+      actions: <Widget>[FlatButton(
+        child: new Text("Ho capito"),
+        textColor: Colors.black,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),],
+    );
+  } else return AlertDialog(
     elevation: 20,
     title: GestureDetector(
-      onLongPressUp: (){
+      onLongPressUp: () {
         pressed++;
       },
       child: new Text(
@@ -129,7 +149,6 @@ AlertDialog createAlertDialog(BuildContext context, String documentId) {
     actions: <Widget>[
       FlatButton(
         child: new Text(AppTranslations.of(context).text("no")),
-
         textColor: Colors.black,
         onPressed: () {
           Navigator.of(context).pop();
@@ -140,20 +159,8 @@ AlertDialog createAlertDialog(BuildContext context, String documentId) {
         color: Colors.red,
         textColor: Colors.black,
         onPressed: () {
-
-DatabaseService().reportBinProblem(documentId);
-//          if(pressed == 3){
-//
-//            //TODO: improve fast delete option
-//            Firestore.instance
-//                .collection('cestini')
-//                .document(documentId)
-//                .delete();
-//            Navigator.of(context).pop();
-//
-//            return;
-//          }
-Navigator.of(context).pop();
+          DatabaseService().reportBinProblem(documentId, user);
+          Navigator.of(context).pop();
         },
       ),
     ],

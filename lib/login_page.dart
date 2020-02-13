@@ -8,6 +8,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Maps/maps_page.dart';
 
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String fbUserProfilePic;
+
   //TODO: change to false and checkIfFirstTimeUser()
   bool firstTimeUser = true;
 
@@ -91,8 +93,6 @@ class _LoginPageState extends State<LoginPage> {
     return user;
   }
 
-
-
   Widget _createLoginContainer(String type) {
     IconData icon;
     String string;
@@ -157,142 +157,159 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: <Widget>[
-              FlareActor(
-                'assets/login_splash.flr',
-                fit: BoxFit.fitWidth,
-                animation: 'idle',
-              ),
-              Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        overflow: Overflow.visible,
-                        children: <Widget>[
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: Text(
-                              "Keep it",
+        child: Builder(builder: (context) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: <Widget>[
+                FlareActor(
+                  'assets/login_splash.flr',
+                  fit: BoxFit.fitWidth,
+                  animation: 'idle',
+                ),
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Stack(
+                          overflow: Overflow.visible,
+                          children: <Widget>[
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: Text(
+                                "Keep it",
+                                style: TextStyle(
+                                  fontSize: 38,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 45,
+                              right: 10,
+                              child: Text(
+                                "clean",
+                                style: TextStyle(
+                                  fontSize: 38,
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white54,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+//                          SizedBox(height: 80,),
+                            Text(
+                              "LOGIN",
                               style: TextStyle(
-                                fontSize: 38,
+                                fontSize: 42,
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
+                                letterSpacing: 2,
                               ),
                             ),
-                          ),
-                          Positioned(
-                            top: 45,
-                            right: 10,
-                            child: Text(
-                              "clean",
+                            Text(
+                              AppTranslations.of(context)
+                                  .text("login_desc_string"),
                               style: TextStyle(
-                                fontSize: 38,
+                                fontSize: 18,
                                 fontFamily: "Montserrat",
                                 fontWeight: FontWeight.w600,
-                                color: Colors.white54,
+                                color: Colors.white70,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 30.0),
+                    Expanded(
+                      flex: 5,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-//                          SizedBox(height: 80,),
-                          Text(
-                            "LOGIN",
-                            style: TextStyle(
-                              fontSize: 42,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              letterSpacing: 2,
-                            ),
+                          GestureDetector(
+                            onTap: () {
+                              _fbLogin().then((FirebaseUser user) {
+                                if (user != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Maps(
+                                            user: user,
+                                            fbPic: fbUserProfilePic)),
+                                  );
+                                } else {
+                                  final snackBar = SnackBar(
+                                      content: Text('Errore di connessione'));
+
+                                  Scaffold.of(context).showSnackBar(snackBar);
+                                }
+                              }).catchError((e) => print(e));
+                            },
+                            child: _createLoginContainer("fb"),
                           ),
-                          Text(
-                            AppTranslations.of(context)
-                                .text("login_desc_string"),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white70,
-                            ),
+                          GestureDetector(
+                            onTap: () {
+                              _googleLogin().then((FirebaseUser user) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Maps(user: user)),
+                                );
+                              }).catchError((e) {
+                                final snackBar = SnackBar(
+                                    content: Text('Errore di connessione'));
+
+                                Scaffold.of(context).showSnackBar(snackBar);
+                              });
+                            },
+                            child: _createLoginContainer("google"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (firstTimeUser) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Maps()),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Maps()),
+                                );
+                              }
+                            },
+                            child: _createLoginContainer("guest"),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            _fbLogin().then((FirebaseUser user) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Maps(
-                                        user: user, fbPic: fbUserProfilePic)),
-                              );
-                            }).catchError((e) => print(e));
-                          },
-                          child: _createLoginContainer("fb"),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _googleLogin().then((FirebaseUser user) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Maps(user: user)),
-                              );
-                            }).catchError((e) => print(e));
-                          },
-                          child: _createLoginContainer("google"),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (firstTimeUser) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Maps()),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Maps()),
-                              );
-                            }
-                          },
-                          child: _createLoginContainer("guest"),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

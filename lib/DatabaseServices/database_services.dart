@@ -79,17 +79,27 @@ class DatabaseService {
     });
   }
 
-  void reportBinProblem(String documentId) {
+  void reportBinProblem(String documentId, FirebaseUser user) {
     DocumentReference postRef = _db.collection("reports").document(documentId);
+    List<String> l = [user.uid];
+
 
     _db.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
+
       if (postSnapshot.exists) {
-        await tx.update(postRef, <String, dynamic>{
-          'nOfReports': postSnapshot.data['nOfReports'] + 1
-        });
+        List<dynamic> userList = postSnapshot.data['userList'];
+        if(!userList.contains(user.uid)){
+          print("enter");
+          await tx.update(postRef, <String, dynamic>{
+            'nOfReports': postSnapshot.data['nOfReports'] + 1,
+            'userList': FieldValue.arrayUnion(l)
+
+          });
+        }
+
       } else {
-        await tx.set(postRef, <String, dynamic>{'nOfReports': 1});
+        await tx.set(postRef, <String, dynamic>{'nOfReports': 1, 'userList': FieldValue.arrayUnion(l)});
       }
     });
   }

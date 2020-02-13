@@ -38,10 +38,10 @@ class _ProfilePageState extends State<ProfilePage>
 
     // init badge animation
     controller = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 4000), vsync: this);
     final Animation curve =
         CurvedAnimation(parent: controller, curve: Curves.easeInOutQuint);
-    animation = Tween<double>(begin: 0, end: pi * 6).animate(curve)
+    animation = Tween<double>(begin: 0, end: pi * 2).animate(curve)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
@@ -233,7 +233,9 @@ class _ProfilePageState extends State<ProfilePage>
 
                                 },
                                 onDoubleTap: (){controller.forward();},
-                                child: Badge(animation: animation),
+                                child: Visibility(
+                                    visible: reportSum > 10 ? true : false,
+                                    child: Badge(animation: animation)),
                               ),
                             ),
                             Positioned(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
@@ -15,8 +16,10 @@ import 'marker_dialog.dart';
 class MapWidget extends StatefulWidget {
   final List<Bin> binList;
   final Map<int, BitmapDescriptor> pinMap;
+  final FirebaseUser user;
 
-  const MapWidget({Key key, this.binList, this.pinMap}) : super(key: key);
+  const MapWidget({Key key, this.binList, this.pinMap, this.user})
+      : super(key: key);
 
   @override
   _MapWidgetState createState() => _MapWidgetState();
@@ -28,19 +31,15 @@ class _MapWidgetState extends State<MapWidget> {
   // Two sets of markers are needed to perform the markers filtering on screen
   Set<Marker> markers = Set.from([]);
   GoogleMapController mapsController;
-  static LatLng _userLocation;
+  LatLng _userLocation;
   LatLng _oldLocation;
   bool _showLoadingLocation = true;
-
+  bool _showConnectionError = false;
+  bool _alreadyMoved = false;
 
   // Starting Google Maps camera position targeting Finale Ligure, Italy <3
   static final CameraPosition _initialCameraPosition = CameraPosition(
     target: _defaultPos,
-    zoom: 14.4746,
-  );
-
-  static final CameraPosition _userCameraPosition = CameraPosition(
-    target: _userLocation,
     zoom: 14.4746,
   );
 
@@ -50,8 +49,23 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   void _onMarkerTapped(MarkerId markerId) async {
-    Bin bin = await DatabaseService().getBinInfo(markerId);
-    String img = await DatabaseService().getImageFromUrl(bin.photoUrl);
+    Bin bin = await DatabaseService()
+        .getBinInfo(markerId)
+        .timeout(Duration(seconds: 2), onTimeout: () {
+      setState(() {
+        _showConnectionError = true;
+      });
+      return null;
+    });
+
+    String img = await DatabaseService()
+        .getImageFromUrl(bin.photoUrl)
+        .timeout(Duration(seconds: 2), onTimeout: () {
+      setState(() {
+        _showConnectionError = true;
+      });
+      return null;
+    });
 
     showDialog(
         context: context,
@@ -63,7 +77,8 @@ class _MapWidgetState extends State<MapWidget> {
               LatLng(bin.latitude, bin.longitude),
               bin.type,
               bin.username,
-              bin.reportDate);
+              bin.reportDate,
+              widget.user);
         });
   }
 
@@ -196,11 +211,30 @@ class _MapWidgetState extends State<MapWidget> {
 
   Future<void> moveToUserLocation() async {
     if (await getLocationPermissionStatus()) {
-      LocationData location = await Location().getLocation();
+      LocationData location = await Location()
+          .getLocation()
+          .timeout(Duration(seconds: 10), onTimeout: () {
+        print("Timeout!");
+        setState(() {
+          _showConnectionError = true;
+          _showLoadingLocation = false;
+          _userLocation = _defaultPos;
+        });
 
-      _userLocation = new LatLng(location.latitude, location.longitude);
+        return null;
+      });
+      if (location != null) {
+        _showConnectionError = false;
+        _alreadyMoved = true;
+        _userLocation = new LatLng(location.latitude, location.longitude);
+      }
     } else
       _userLocation = _defaultPos;
+
+    CameraPosition _userCameraPosition = CameraPosition(
+      target: _userLocation,
+      zoom: 14.4746,
+    );
 
     await mapsController
         .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
@@ -231,6 +265,44 @@ class _MapWidgetState extends State<MapWidget> {
           onCameraMove: _onCameraMove,
         ),
         SearchButtonWidget(filterMarkers),
+        Visibility(
+          visible: _showConnectionError,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                 if(_alreadyMoved == false){
+                   _showLoadingLocation = true;
+
+                   moveToUserLocation();
+                 } else _showConnectionError = false;
+                });
+              },
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: Colors.red, width: 2)),
+                    child: IconButton(
+                        icon: Icon(
+                      Icons.report_problem,
+                      color: Colors.red,
+                    )),
+                  ),
+                  Text(
+                    "Problemi di connessione.\nTap per riprovare",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
         Visibility(
           visible: _showLoadingLocation,
           child: Center(

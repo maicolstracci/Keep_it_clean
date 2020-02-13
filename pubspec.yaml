@@ -74,6 +74,7 @@ flutter:
     - assets/profileTest.jpeg
     - assets/trees.png
     - assets/gallery-icon.png
+    - assets/default-bin-photo.png
     - assets/loading.gif
     - assets/badge.png
     - assets/italy.png

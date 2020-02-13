@@ -8,11 +8,9 @@ import 'package:keep_it_clean/login_page.dart';
 
 import 'login_page_test.dart';
 
-//TODO: if no location enable should crash fix
+//TODO: Add custom goToMyLocation button
 //TODO: Add translations
-//TODO: Improve fast delete admin option - OPTIONAL
 //TODO: Check report before make it public
-//TODO: Change loginPage colors to be more light
 
 void main() => runApp(KeepItClean());
 
@@ -49,7 +47,7 @@ class _KeepItCleanState extends State<KeepItClean> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.black,
         statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark
+        statusBarBrightness: Brightness.light
     ));
 
     return MaterialApp(
