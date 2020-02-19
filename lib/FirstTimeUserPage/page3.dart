@@ -1,9 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Maps/maps_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Page3 extends StatelessWidget {
+
+  final FirebaseUser user;
+
+  const Page3({Key key, this.user}): super(key:key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -11,7 +17,7 @@ class Page3 extends StatelessWidget {
         PermissionHandler()
             .requestPermissions([PermissionGroup.location]).then((v) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Maps()));
+              context, MaterialPageRoute(builder: (context) => Maps(user: user,)));
         });
       },
       child: Container(

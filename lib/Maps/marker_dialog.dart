@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,15 +64,7 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img,
           ),
         ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center ,
-        children: <Widget>[
-          IconButton(icon: Icon(Icons.thumb_up, color: Colors.green,)),
-          Text("1"),
 
-          IconButton(icon: Icon(Icons.thumb_down, color: Colors.red)),
-        ],
-      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Center(
@@ -121,7 +112,6 @@ SimpleDialog createDialog(BuildContext context, String documentID, String img,
 }
 
 AlertDialog createAlertDialog(BuildContext context, String documentId, FirebaseUser user) {
-  int pressed = 0;
   if(user == null){
     return AlertDialog(
       elevation: 20,
@@ -138,13 +128,8 @@ AlertDialog createAlertDialog(BuildContext context, String documentId, FirebaseU
     );
   } else return AlertDialog(
     elevation: 20,
-    title: GestureDetector(
-      onLongPressUp: () {
-        pressed++;
-      },
-      child: new Text(
-        AppTranslations.of(context).text("report_bin_string"),
-      ),
+    title: new Text(
+      AppTranslations.of(context).text("report_bin_string"),
     ),
     actions: <Widget>[
       FlatButton(

@@ -1,4 +1,3 @@
-import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
@@ -6,7 +5,6 @@ import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:provider/provider.dart';
 
-import 'map_widget.dart';
 
 class SearchWidget extends StatefulWidget {
   @override

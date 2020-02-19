@@ -6,14 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
-import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'map_widget.dart';
 import 'search_widget.dart';
 import 'dart:ui' as ui;
@@ -31,7 +29,7 @@ class Maps extends StatefulWidget {
 class _MapsState extends State<Maps> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final db = Firestore.instance;
-  double firstTime = 0;
+  int firstTime = 0;
   Map<int, BitmapDescriptor> pinMap = new Map<int, BitmapDescriptor>();
 
   @override
@@ -110,7 +108,7 @@ class _MapsState extends State<Maps> {
     //
     return MultiProvider(
       providers: [
-        StreamProvider<List<Bin>>.value(
+        FutureProvider<List<Bin>>.value(
           value: DatabaseService().streamBins(),
         ),
         ChangeNotifierProvider<TypeChanger>(
@@ -123,8 +121,8 @@ class _MapsState extends State<Maps> {
         child: Scaffold(
           key: _scaffoldKey,
           body: SafeArea(
-            child: StreamBuilder<List<Bin>>(
-                stream: DatabaseService().streamBins(),
+            child: FutureBuilder<List<Bin>>(
+                future: DatabaseService().streamBins(),
                 builder: (context, snapshot) {
                   return Stack(
                     children: <Widget>[
@@ -133,10 +131,11 @@ class _MapsState extends State<Maps> {
                         builder:
                             (BuildContext context, AsyncSnapshot<bool> snap) {
                           if (snap.connectionState == ConnectionState.done) {
+
                             return MapWidget(
                               binList: snapshot.data,
                               pinMap: pinMap,
-                              user: widget.user
+                              user: widget.user,
                             );
                           } else
                             return Container();
@@ -152,7 +151,7 @@ class _MapsState extends State<Maps> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        ProfilePage(widget.user, widget.fbPic)),
+                                        ProfilePage(user: widget.user, fbPic: widget.fbPic)),
                               );
                             } else {
                               showSnackBar(context, 1, _scaffoldKey);

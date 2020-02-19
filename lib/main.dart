@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
 
-import 'login_page_test.dart';
-
-//TODO: Add custom goToMyLocation button
+//TODO: add oil, food, cans types of bins
 //TODO: Add translations
 //TODO: Check report before make it public
 
@@ -63,7 +60,6 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-//      home: FirstTimeUserWidget(),
       home: LoginPage(),
       localizationsDelegates: [
         _newLocaleDelegate,

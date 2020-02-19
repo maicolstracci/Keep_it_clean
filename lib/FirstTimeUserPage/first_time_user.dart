@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/FirstTimeUserPage/page1.dart';
 import 'package:keep_it_clean/FirstTimeUserPage/page2.dart';
@@ -7,6 +8,10 @@ import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class FirstTimeUserWidget extends StatefulWidget {
+  final FirebaseUser user;
+
+  const FirstTimeUserWidget({Key key, this.user}) : super(key:key);
+
   @override
   _FirstTimeUserWidgetState createState() => _FirstTimeUserWidgetState();
 }
@@ -32,7 +37,7 @@ class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
                   scrollDirection: Axis.horizontal,
 //                  physics: PageScrollPhysics(),
                   physics: CustomScrollPhysics(),
-                  children: <Widget>[Page1(), Page2(), Page3()],
+                  children: <Widget>[Page1(), Page2(), Page3(user: widget.user,)],
                 ),
               ),
               Align(

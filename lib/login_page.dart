@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
-import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Maps/maps_page.dart';
 
@@ -22,13 +22,12 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String fbUserProfilePic;
 
-  //TODO: change to false and checkIfFirstTimeUser()
-  bool firstTimeUser = true;
+  bool firstTimeUser = false;
 
   @override
   void initState() {
     super.initState();
-//    checkIfFirstTimeUser();
+    checkIfFirstTimeUser();
   }
 
   void checkIfFirstTimeUser() async {
@@ -59,10 +58,10 @@ class _LoginPageState extends State<LoginPage> {
         final FirebaseUser user = (await _auth.signInWithCredential(cred)).user;
 
         final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=${token}');
+            'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=$token');
         Map<String, dynamic> pic = jsonDecode(graphResponse.body);
         fbUserProfilePic = pic['picture']['data']['url'];
-        DatabaseService().setupUser(user);
+        DatabaseService().setupUser(user, fbPic: fbUserProfilePic);
         return user;
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -74,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         return null;
         break;
     }
+    return null;
   }
 
   Future<FirebaseUser> _googleLogin() async {
@@ -252,15 +252,17 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Maps(
-                                            user: user,
-                                            fbPic: fbUserProfilePic)),
+                                        builder: (context) => firstTimeUser
+                                            ? FirstTimeUserWidget(
+                                                user: user,
+                                              )
+                                            : Maps(
+                                                user: user,
+                                                fbPic: fbUserProfilePic)),
                                   );
                                 } else {
-                                  final snackBar = SnackBar(
-                                      content: Text('Errore di connessione'));
-
-                                  Scaffold.of(context).showSnackBar(snackBar);
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text('Errore di connessione')));
                                 }
                               }).catchError((e) => print(e));
                             },
@@ -272,32 +274,30 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Maps(user: user)),
+                                      builder: (context) => firstTimeUser
+                                          ? FirstTimeUserWidget(
+                                              user: user,
+                                            )
+                                          : Maps(user: user)),
                                 );
                               }).catchError((e) {
-                                final snackBar = SnackBar(
-                                    content: Text('Errore di connessione'));
-
-                                Scaffold.of(context).showSnackBar(snackBar);
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text('Errore di connessione')));
                               });
                             },
                             child: _createLoginContainer("google"),
                           ),
                           GestureDetector(
                             onTap: () {
-                              if (firstTimeUser) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Maps()),
-                                );
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Maps()),
-                                );
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => firstTimeUser
+                                        ? FirstTimeUserWidget(user: null)
+                                        : Maps(
+                                            user: null,
+                                          )),
+                              );
                             },
                             child: _createLoginContainer("guest"),
                           ),

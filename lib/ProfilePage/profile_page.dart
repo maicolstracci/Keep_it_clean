@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +7,13 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/ProfilePage/who_am_I_page.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
-import 'language_dialog.dart';
 
 class ProfilePage extends StatefulWidget {
   final FirebaseUser user;
   final String fbPic;
+  final String uid;
 
-  ProfilePage(this.user, this.fbPic, {Key key});
+  ProfilePage({Key key, this.user, this.fbPic, this.uid});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -27,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage>
   Animation<double> animation;
   AnimationController controller;
   List<String> userName;
+  String photoUrl;
   Map<String, dynamic> userData;
   int reportSum = 0;
 
@@ -66,12 +66,10 @@ class _ProfilePageState extends State<ProfilePage>
     img = 'assets/icons/icon_type_$index.png';
     name = AppTranslations.of(context).text("icon_string_$index");
 
-    if(userData['$index'] != null){
+    if (userData['$index'] != null) {
       n = userData['$index'].toString();
-    } else n = "0";
-
-
-
+    } else
+      n = "0";
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40),
@@ -117,12 +115,12 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-
-
   void getSum() {
     reportSum = 0;
     userData.forEach((k, v) {
-      reportSum = reportSum + v;
+      if (v.runtimeType == num) {
+        reportSum = reportSum + v;
+      }
     });
   }
 
@@ -133,10 +131,17 @@ class _ProfilePageState extends State<ProfilePage>
         body: SafeArea(
           child: SingleChildScrollView(
             child: FutureBuilder(
-                future: retrieveUserInfo(widget.user),
+                future: widget.user != null
+                    ? retrieveUserInfo(widget.user)
+                    : retrieveUserInfoString(widget.uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
+                    userName = userData['name'].split(" ");
+                    photoUrl = userData['photoUrl'];
+
+
                     getSum();
+
                     return Column(
                       children: <Widget>[
                         Row(
@@ -153,10 +158,11 @@ class _ProfilePageState extends State<ProfilePage>
                             IconButton(
                               padding: EdgeInsets.all(0),
                               onPressed: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => WhoAmIPage()),
-                        )
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WhoAmIPage()),
+                                )
                               },
                               icon: Icon(
                                 Icons.info_outline,
@@ -189,8 +195,12 @@ class _ProfilePageState extends State<ProfilePage>
                               child: Hero(
                                 tag: "profilePic",
                                 child: CircleAvatar(
-                                  backgroundImage: (widget.user != null)
-                                      ? NetworkImage(widget.fbPic == null ? widget.user.photoUrl : widget.fbPic,
+                                  backgroundImage: (photoUrl != null)
+                                      ? NetworkImage(
+                                    photoUrl,
+//                                          widget.fbPic == null
+//                                              ? widget.user.photoUrl
+//                                              : widget.fbPic,
                                           scale: 1)
                                       : ExactAssetImage('assets/no-avatar.jpg'),
                                   maxRadius: 40,
@@ -225,14 +235,16 @@ class _ProfilePageState extends State<ProfilePage>
                               child: GestureDetector(
                                 onTap: () {
                                   final snackBar = SnackBar(
-                                      content: Text(AppTranslations.of(context).text("badge_string")),
+                                    content: Text(AppTranslations.of(context)
+                                        .text("badge_string")),
                                     duration: Duration(seconds: 8),
                                   );
 
                                   Scaffold.of(context).showSnackBar(snackBar);
-
                                 },
-                                onDoubleTap: (){controller.forward();},
+                                onDoubleTap: () {
+                                  controller.forward();
+                                },
                                 child: Visibility(
                                     visible: reportSum > 10 ? true : false,
                                     child: Badge(animation: animation)),
@@ -302,7 +314,11 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Future<void> retrieveUserInfo(FirebaseUser user) async {
-    userData = await DatabaseService().retrieveUserInfo(user);
+    userData = await DatabaseService().retrieveUserInfo(user: user);
+  }
+
+  Future<void> retrieveUserInfoString(String userUid) async {
+    userData = await DatabaseService().retrieveUserInfo(uid: userUid);
   }
 }
 

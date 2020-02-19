@@ -8,11 +8,11 @@ import 'package:keep_it_clean/Models/bin_model.dart';
 class DatabaseService {
   final Firestore _db = Firestore.instance;
 
-  Stream<List<Bin>> streamBins() {
-    var ref = _db.collection('cestini');
+  Future<List<Bin>> streamBins() async {
+    QuerySnapshot ref = await _db.collection('cestini').getDocuments();
 
-    return ref.snapshots().map(
-        (list) => list.documents.map((doc) => Bin.fromFirestore(doc)).toList());
+   return ref.documents.map((doc) => Bin.fromFirestore(doc)).toList();
+
   }
 
   void createBin(int type, String imgName, LatLng binPos, FirebaseUser user) {
@@ -22,7 +22,12 @@ class DatabaseService {
       'type': type,
       'photoUrl': imgName,
       'username': user.displayName,
-      'reportDate': new DateTime.now().toString()
+      'reportDate': new DateTime.now().toString(),
+      'uidUser' : user.uid,
+      'likes' : 0,
+      'dislikes' : 0,
+      'userListLikes' : [], 'userListDislikes' : []
+
     });
   }
 
@@ -43,20 +48,27 @@ class DatabaseService {
     });
   }
 
-  // TODO: if no connection available handle correctly
-  Future<Map<String, dynamic>> retrieveUserInfo(FirebaseUser user) async {
+  Future<Map<String, dynamic>> retrieveUserInfo({FirebaseUser user, String uid}) async {
+
+    String userUid;
+    if(user == null){
+      userUid = uid;
+    } else userUid = user.uid;
     DocumentSnapshot ds =
-        await Firestore.instance.collection('users').document(user.uid).get();
+        await Firestore.instance.collection('users').document(userUid).get();
     return ds.data;
   }
 
-  void setupUser(FirebaseUser user) {
+  void setupUser(FirebaseUser user, {String fbPic}) {
     // Check if user already in firestore db, if not create an entry
     DocumentReference ref =
         Firestore.instance.collection('users').document(user.uid);
     ref.get().then((ds) {
       if (!ds.exists) {
-        ref.setData({});
+        ref.setData({
+          'name' : user.displayName,
+          'photoUrl' : fbPic != null ? fbPic : user.photoUrl
+        });
       }
     });
   }
@@ -77,6 +89,62 @@ class DatabaseService {
         });
       }
     });
+  }
+
+  Future<void> addLikeBin(String documentId, FirebaseUser user) async {
+    DocumentReference postRef = _db.collection("cestini").document(documentId);
+    List<String> l = [user.uid];
+
+
+    await _db.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      List<dynamic> userList = postSnapshot.data['userListLikes'];
+
+
+        if(!userList.contains(user.uid)){
+          await tx.update(postRef, <String, dynamic>{
+            'likes': postSnapshot.data['likes'] + 1,
+            'userListLikes': FieldValue.arrayUnion(l)
+
+          });
+        } else {
+          await tx.update(postRef, <String, dynamic>{
+            'likes': postSnapshot.data['likes'] - 1,
+            'userListLikes': FieldValue.arrayRemove(l)
+
+          });
+        }
+
+    }).catchError((e){print(e);});
+  }
+
+  Future<void> addDislikeBin(String documentId, FirebaseUser user) async{
+
+    DocumentReference postRef = _db.collection("cestini").document(documentId);
+    List<String> l = [user.uid];
+
+
+    await _db.runTransaction((Transaction tx) async {
+      DocumentSnapshot postSnapshot = await tx.get(postRef);
+      List<dynamic> userList = postSnapshot.data['userListDislikes'];
+
+
+      if(!userList.contains(user.uid)){
+        await tx.update(postRef, <String, dynamic>{
+          'dislikes': postSnapshot.data['dislikes'] + 1,
+          'userListDislikes': FieldValue.arrayUnion(l)
+
+        });
+      } else {
+        await tx.update(postRef, <String, dynamic>{
+          'dislikes': postSnapshot.data['dislikes'] - 1,
+
+          'userListDislikes': FieldValue.arrayRemove(l)
+
+        });
+      }
+
+    }).catchError((e){print(e);});
   }
 
   void reportBinProblem(String documentId, FirebaseUser user) {
