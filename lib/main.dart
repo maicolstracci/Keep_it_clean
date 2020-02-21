@@ -5,7 +5,6 @@ import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
 
-//TODO: add oil, food, cans types of bins
 //TODO: Add translations
 //TODO: Check report before make it public
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:provider/provider.dart';
 
 class SearchButtonWidget extends StatelessWidget {
@@ -33,7 +34,7 @@ class SearchButtonWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(200.0),
               ),
               child: Text(
-                "Ricerca in questa zona",
+                AppTranslations.of(context).text("search_here"),
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: "Montserrat",

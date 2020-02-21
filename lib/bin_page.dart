@@ -43,11 +43,11 @@ class _BinPageState extends State<BinPage> {
       return AlertDialog(
         elevation: 20,
         title: new Text(
-          "Solo gli utenti autenticati possono segnalare problemi",
+          AppTranslations.of(context).text("only_auth_user"),
         ),
         actions: <Widget>[
           FlatButton(
-            child: new Text("Ho capito"),
+            child: new Text(AppTranslations.of(context).text("i_understand")),
             textColor: Colors.black,
             onPressed: () {
               Navigator.of(context).pop();
@@ -135,58 +135,69 @@ class _BinPageState extends State<BinPage> {
                             ),
                             Align(
                               alignment: Alignment.topCenter,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  IconButton(
-                                    padding: EdgeInsets.all(0),
-                                    onPressed: () => {Navigator.pop(context)},
-                                    icon: Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.white,
-                                      size: 32,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding:
-                                        EdgeInsets.only(right: 24, left: 24),
-                                    decoration: BoxDecoration(
-                                        color: Colors.green[400],
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
-                                    child: Text(
-                                      AppTranslations.of(context)
-                                          .text("icon_string_${_bin.type}"),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black87,
-                                          fontSize: 24),
-                                    ),
-                                  ),
-                                  Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
                                       height: 40,
                                       width: 40,
                                       decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white),
+                                        shape: BoxShape.circle,
+                                        color: Colors.white
+                                      ),
                                       child: IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return createAlertDialog(
-                                                    context,
-                                                    _bin.id,
-                                                    widget.user);
-                                              });
-                                        },
+                                        padding: EdgeInsets.all(0),
+                                        onPressed: () => {Navigator.pop(context)},
                                         icon: Icon(
-                                          Icons.error_outline,
-                                          color: Colors.red,
+                                          Icons.arrow_back,
+                                          color: Colors.black87,
+
                                         ),
-                                      )),
-                                ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding:
+                                          EdgeInsets.only(right: 24, left: 24),
+                                      decoration: BoxDecoration(
+                                          color: Colors.green[400],
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      child: Text(
+                                        AppTranslations.of(context)
+                                            .text("icon_string_${_bin.type}"),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                            fontSize: 24),
+                                      ),
+                                    ),
+                                    Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return createAlertDialog(
+                                                      context,
+                                                      _bin.id,
+                                                      widget.user);
+                                                });
+                                          },
+                                          icon: Icon(
+                                            Icons.error_outline,
+                                            color: Colors.red,
+                                          ),
+                                        )),
+                                  ],
+                                ),
                               ),
                             ),
                             Align(
@@ -215,7 +226,7 @@ class _BinPageState extends State<BinPage> {
                                             Scaffold.of(context).showSnackBar(
                                                 SnackBar(
                                                     content: Text(
-                                                        'Gli utenti non autenticati non possono lasciare like')));
+                                                        AppTranslations.of(context).text("no_auth_user_like"))));
                                           }
                                         },
                                         icon: Icon(
@@ -273,7 +284,7 @@ class _BinPageState extends State<BinPage> {
                                             Scaffold.of(context).showSnackBar(
                                                 SnackBar(
                                                     content: Text(
-                                                        'Gli utenti non autenticati non possono lasciare dislike')));
+                                                     AppTranslations.of(context).text("no_auth_user_like"))));
                                           }
                                         },
                                         icon: Icon(
@@ -301,43 +312,50 @@ class _BinPageState extends State<BinPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    "Segnalato da ",
+                                    AppTranslations.of(context).text("reported_by"),
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white),
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(
-                                          _bin.username,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfilePage(
-                                                          uid: _bin.uidUser)),
-                                            );
-                                          },
-                                          icon: Icon(
-                                            Icons.launch,
-                                            color: Colors.blue,
+                                  Flexible(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.white),
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: Container(
+                                              child: Text(
+                                                _bin.username,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                    color: Colors.black87,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
                                           ),
-                                        )
-                                      ],
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProfilePage(
+                                                            uid: _bin.uidUser)),
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.launch,
+                                              color: Colors.blue,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -347,7 +365,7 @@ class _BinPageState extends State<BinPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    "In data ",
+                                    AppTranslations.of(context).text("date_string"),
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),

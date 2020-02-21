@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 
 class Page1 extends StatelessWidget {
   @override
@@ -54,7 +55,7 @@ class Page1 extends StatelessWidget {
                         height: 10,
                       ),
                       AutoSizeText(
-                        "Trova il centro della raccolta differenziata piu' vicina a te",
+                        AppTranslations.of(context).text("search_string"),
                         maxLines: 2,
 
                         textAlign: TextAlign.center,
@@ -88,7 +89,6 @@ class Page1 extends StatelessWidget {
                     Icons.arrow_forward,
                     color: Colors.green[600],
                     size: 28.0,
-                    semanticLabel: 'Text to announce in accessibility modes',
                   ),
                 ],
               ),

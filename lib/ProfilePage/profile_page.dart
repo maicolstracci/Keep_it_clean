@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,16 +86,21 @@ class _ProfilePageState extends State<ProfilePage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Image.asset(
-              img,
-              height: 120,
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Image.asset(
+                img,
+                height: 120,
+              ),
             ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(name,
-                      overflow: TextOverflow.ellipsis,
+                  AutoSizeText(name,
+maxLines: 2, wrapWords: false,
+
+//                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
@@ -251,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                             ),
                             Positioned(
-                              bottom: 25,
+                              bottom: 20,
                               left: 10,
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.80,
@@ -294,7 +300,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     MediaQuery.of(context).size.width * 0.85,
                                     index);
                               },
-                              itemCount: 8,
+                              itemCount: 11,
                               viewportFraction: 0.8,
                               scale: 0.8,
                             ))

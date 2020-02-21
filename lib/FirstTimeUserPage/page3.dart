@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Maps/maps_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -58,7 +59,7 @@ class Page3 extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         AutoSizeText(
-                          "PERMESSI",
+                          AppTranslations.of(context).text("permissions"),
                           maxLines: 1,
                           presetFontSizes: [58, 36, 22],
                           style: TextStyle(
@@ -70,7 +71,7 @@ class Page3 extends StatelessWidget {
                           height: 10,
                         ),
                         AutoSizeText(
-                          "Richiediamo i permessi di localizzazione per conoscere la tua posizione",
+                          AppTranslations.of(context).text("permissions_string"),
                           maxLines: 3,
                           textAlign: TextAlign.center,
                           style:
@@ -99,7 +100,7 @@ class Page3 extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      "Cominciamo!",
+                      AppTranslations.of(context).text("lets_go"),
                       style: TextStyle(
                           color: Colors.green[400],
                           fontSize: 22,

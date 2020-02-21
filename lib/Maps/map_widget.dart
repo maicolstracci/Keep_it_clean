@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Maps/searchbutton_widget.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
@@ -56,37 +57,7 @@ class _MapWidgetState extends State<MapWidget> {
         context,
         MaterialPageRoute(
             builder: (context) => BinPage(markerId: markerId,user: widget.user)));
-//    Bin bin = await DatabaseService()
-//        .getBinInfo(markerId)
-//        .timeout(Duration(seconds: 2), onTimeout: () {
-//      setState(() {
-//        _showConnectionError = true;
-//      });
-//      return null;
-//    });
-//
-//    String img = await DatabaseService()
-//        .getImageFromUrl(bin.photoUrl)
-//        .timeout(Duration(seconds: 2), onTimeout: () {
-//      setState(() {
-//        _showConnectionError = true;
-//      });
-//      return null;
-//    });
-//
-//    showDialog(
-//        context: context,
-//        builder: (context) {
-//          return createDialog(
-//              context,
-//              bin.id,
-//              img,
-//              LatLng(bin.latitude, bin.longitude),
-//              bin.type,
-//              bin.username,
-//              bin.reportDate,
-//              widget.user);
-//        });
+
   }
 
   void _addMarker(String id, LatLng latLng, int type) {
@@ -317,7 +288,7 @@ class _MapWidgetState extends State<MapWidget> {
                     ),
                   ),
                   Text(
-                    "Problemi di connessione.\nTap per riprovare",
+                    AppTranslations.of(context).text("connection_problem"),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   )
@@ -339,7 +310,7 @@ class _MapWidgetState extends State<MapWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
-                      "Stiamo calcolando la tua posizione...",
+                      AppTranslations.of(context).text("loading_location"),
                       textAlign: TextAlign.center,
                     ),
                     CircularProgressIndicator(

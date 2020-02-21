@@ -156,6 +156,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: SafeArea(
         child: Builder(builder: (context) {
           return SizedBox(
@@ -262,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 } else {
                                   Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('Errore di connessione')));
+                                      content: Text(AppTranslations.of(context).text("connection_error"))));
                                 }
                               }).catchError((e) => print(e));
                             },
@@ -282,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                 );
                               }).catchError((e) {
                                 Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text('Errore di connessione')));
+                                    content: Text(AppTranslations.of(context).text("connection_error"))));
                               });
                             },
                             child: _createLoginContainer("google"),

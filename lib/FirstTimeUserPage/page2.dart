@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 
 class Page2 extends StatelessWidget {
   @override
@@ -42,7 +43,7 @@ class Page2 extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       AutoSizeText(
-                        "SEGNALA",
+                        AppTranslations.of(context).text("report"),
                         maxLines: 1,
                         presetFontSizes: [58, 36, 22],
                         style: TextStyle(
@@ -54,7 +55,7 @@ class Page2 extends StatelessWidget {
                         height: 10,
                       ),
                       AutoSizeText(
-                        "Aiutaci segnalando i centri di raccolta non ancora presenti sulla mappa",
+                        AppTranslations.of(context).text("report_string"),
                         maxLines: 3,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Color(0xfff4f8f9), fontSize: 24),

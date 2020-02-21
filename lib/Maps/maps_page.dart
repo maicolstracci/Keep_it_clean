@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/ProfilePage/profile_page.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
@@ -49,7 +50,7 @@ class _MapsState extends State<Maps> {
   }
 
   Future<bool> setCustomMapPin() async {
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= 11; i++) {
       Uint8List val =
           await getBytesFromAsset('assets/maps_markers/marker_$i.png', (MediaQuery.of(context).size.width/3).floor());
       BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
@@ -57,7 +58,7 @@ class _MapsState extends State<Maps> {
       pinMap[i] = pinLocationIcon;
 
     }
-
+print(pinMap);
     return true;
   }
 
@@ -203,7 +204,7 @@ class _MapsState extends State<Maps> {
                                   padding: EdgeInsets.only(
                                       left: 20, right: 10, bottom: 2, top: 2),
                                   child: AutoSizeText(
-                                    "Seleziona un filtro",
+                                    AppTranslations.of(context).text("select_filter"),
                                     style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w600),
