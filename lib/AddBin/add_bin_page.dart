@@ -1,12 +1,17 @@
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:keep_it_clean/AddBin/select_position.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
+import 'package:keep_it_clean/Models/bin_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dialogs.dart';
 
 /*
@@ -37,10 +42,26 @@ class _AddBinState extends State<AddBin> {
   bool imgUploaded = false;
   bool _uploadInProgress = false;
   File compressedImage;
+  var _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<void> takePicture() async {
     compressedImage = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 40);
+            source: ImageSource.camera, imageQuality: 40)
+        .catchError((e) {
+      print(e.code);
+      if (e.code == "camera_access_denied") {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          duration: Duration(seconds: 6),
+          content: Text(AppTranslations.of(context).text("camera_error")),
+          action: SnackBarAction(
+            label: AppTranslations.of(context).text("settings_string"),
+            onPressed: (){
+              PermissionHandler().openAppSettings();
+            },
+        ),
+        ));
+      }
+    });
     if (compressedImage != null) {
       imgUploaded = true;
     }
@@ -72,44 +93,54 @@ class _AddBinState extends State<AddBin> {
           }
         });
       },
-      child: Column(
-        children: <Widget>[
-          AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            width: 60,
-            height: 60,
-            decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              border: new Border.all(
-                width: 2.0,
-                color: _selected.contains(type)
-                    ? Colors.green
-                    : Colors.transparent,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.7 / 4,
+        child: Column(
+          children: <Widget>[
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              width: 60,
+              height: 60,
+              decoration: new BoxDecoration(
+                shape: BoxShape.circle,
+                border: new Border.all(
+                  width: 2.0,
+                  color: _selected.contains(type)
+                      ? Colors.green
+                      : Colors.transparent,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Image.asset(
+                  imgButton,
+                ),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Image.asset(
-                imgButton,
-              ),
-            ),
-          ),
-          Text(AppTranslations.of(this.context).text(nameButton),
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Montserrat",
-              )),
-        ],
+            AutoSizeText(AppTranslations.of(this.context).text(nameButton),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Montserrat",
+                )),
+          ],
+        ),
       ),
     );
   }
 
-  void addBin(List<int> types, String imgName, LatLng binPos) async {
+  Future<Bin> addBin(List<int> types, String imgName, LatLng binPos) async {
+    Bin _bin;
+
     types.forEach((type) async {
-      DatabaseService().createBin(type, imgName, binPos, widget.user);
+      _bin =
+          await DatabaseService().createBin(type, imgName, binPos, widget.user);
     });
     DatabaseService().addPoints(widget.user, types);
+
+    return _bin;
   }
 
   @override
@@ -123,6 +154,7 @@ class _AddBinState extends State<AddBin> {
         return true;
       },
       child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.green[300],
         body: SafeArea(
           child: Stack(
@@ -148,22 +180,41 @@ class _AddBinState extends State<AddBin> {
                       ],
                       color: Colors.white),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
+                    padding: const EdgeInsets.only(top: 80.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Flexible(
                           flex: 2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 30.0),
-                            child: Text(
-                              AppTranslations.of(context).text("type_string") +
-                                  "?",
-                              style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30),
-                            ),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: AutoSizeText(
+                                  AppTranslations.of(context)
+                                          .text("type_string") +
+                                      "?",
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 36),
+                                ),
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  AppTranslations.of(context)
+                                      .text("type_2_string"),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 24),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Flexible(
@@ -173,6 +224,8 @@ class _AddBinState extends State<AddBin> {
                             child: Wrap(
                               spacing: 15,
                               runSpacing: 5,
+                              alignment: WrapAlignment.start,
+                              runAlignment: WrapAlignment.start,
                               children: <Widget>[
                                 _buildButton("assets/icons/icon_type_1.png",
                                     "icon_string_1", 1),
@@ -263,9 +316,9 @@ class _AddBinState extends State<AddBin> {
                         setState(() {
                           _uploadInProgress = true;
                         });
-                        _uploadImage(compressedImage).then((imgName) {
-                          addBin(_selected, imgName, lat);
-                          Navigator.pop(context);
+                        _uploadImage(compressedImage).then((imgName) async {
+                          Bin bin = await addBin(_selected, imgName, lat);
+                          Navigator.pop(context, bin);
                         });
                       }
                     } else {
@@ -322,7 +375,8 @@ class _AddBinState extends State<AddBin> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              AppTranslations.of(context).text("houston_string"),
+                              AppTranslations.of(context)
+                                  .text("houston_string"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600),
@@ -335,7 +389,8 @@ class _AddBinState extends State<AddBin> {
                               height: 25,
                             ),
                             Text(
-                              AppTranslations.of(context).text("uploading_report_online"),
+                              AppTranslations.of(context)
+                                  .text("uploading_report_online"),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600),

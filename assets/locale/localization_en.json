@@ -12,7 +12,7 @@
   "icon_string_9": "Green",
   "icon_string_10": "Clothing",
   "icon_string_11": "Vegetable oil",
-  "report_string": "Reports",
+  "report_string_short": "Reports",
   "error_string": "Error",
   "no_image_string": "Image required.\nLoad one.",
   "no_type_string": "No collection type has been selected.\n\nPlease select a type to continue.",

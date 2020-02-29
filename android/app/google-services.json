@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "771633064594-4btuoufaqrkq117q554k8u527ker74qp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.maicolstracci.keep_it_clean",
+            "certificate_hash": "282f85125a1c51b10df4bb2f5ed0d5249e46134e"
+          }
+        },
+        {
           "client_id": "771633064594-cp41n1f6dn0p8787jl00jsuvkf7pclv3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +46,13 @@
             {
               "client_id": "771633064594-m5vg1canknft57jj3esha4sjdhu6inph.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "it.maicolstracci.keepitClean"
+              }
             }
           ]
         }

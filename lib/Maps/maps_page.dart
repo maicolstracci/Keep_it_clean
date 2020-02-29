@@ -58,7 +58,6 @@ class _MapsState extends State<Maps> {
       pinMap[i] = pinLocationIcon;
 
     }
-print(pinMap);
     return true;
   }
 
@@ -79,14 +78,18 @@ print(pinMap);
           if (widget.user != null) {
             PermissionHandler()
                 .checkPermissionStatus(PermissionGroup.location)
-                .then((permission) {
+                .then((permission) async {
               if (permission == PermissionStatus.granted) {
-                Navigator.push(
+
+                Bin bin = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => AddBin(
                               user: widget.user,
                             )));
+                setState(() {
+
+                });
               } else {
                 showSnackBar(context, 3, _scaffoldKey);
               }

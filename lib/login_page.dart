@@ -45,8 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     final facebookLogin = FacebookLogin();
     //facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
 
-    final result = await facebookLogin
-        .logInWithReadPermissions(['email', 'public_profile']);
+    final result = await facebookLogin.logInWithReadPermissions(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
@@ -69,6 +68,8 @@ class _LoginPageState extends State<LoginPage> {
         return null;
         break;
       case FacebookLoginStatus.error:
+
+
         print("Error");
         return null;
         break;
@@ -80,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -156,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Builder(builder: (context) {
           return SizedBox(
@@ -265,7 +267,9 @@ class _LoginPageState extends State<LoginPage> {
                                   Scaffold.of(context).showSnackBar(SnackBar(
                                       content: Text(AppTranslations.of(context).text("connection_error"))));
                                 }
-                              }).catchError((e) => print(e));
+                              }).catchError((e) {
+
+                              });
                             },
                             child: _createLoginContainer("fb"),
                           ),

@@ -15,8 +15,8 @@ class DatabaseService {
 
   }
 
-  void createBin(int type, String imgName, LatLng binPos, FirebaseUser user) {
-    _db.collection("cestini").add({
+  Future<Bin> createBin(int type, String imgName, LatLng binPos, FirebaseUser user) async {
+    DocumentReference doc = await _db.collection("cestini").add({
       'lat': binPos.latitude,
       'lng': binPos.longitude,
       'type': type,
@@ -29,6 +29,16 @@ class DatabaseService {
       'userListLikes' : [], 'userListDislikes' : []
 
     });
+
+
+
+//    DocumentSnapshot ds = await Firestore.instance
+//        .collection('cestini')
+//        .document(doc.documentID)
+//        .get();
+
+    return Bin.fromFirestore(await doc.get());
+
   }
 
   Future<Bin> getBinInfo(MarkerId markerId) async {

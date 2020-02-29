@@ -44,7 +44,7 @@ void showSnackBar(BuildContext context, int variant, var scaffoldKey) {
         ? SnackBarAction(
             label: "LOGIN",
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pushNamedAndRemoveUntil('/loginScreen', (Route<dynamic> route) => false);
             },
           )
         : SnackBarAction(

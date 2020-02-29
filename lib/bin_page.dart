@@ -162,7 +162,13 @@ class _BinPageState extends State<BinPage> {
                                       padding:
                                           EdgeInsets.only(right: 24, left: 24),
                                       decoration: BoxDecoration(
-                                          color: Colors.green[400],
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4.0,
+                                            ),
+                                          ],
+                                          color: Colors.green[400].withOpacity(.95),
                                           borderRadius:
                                               BorderRadius.circular(30)),
                                       child: Text(
@@ -212,8 +218,14 @@ class _BinPageState extends State<BinPage> {
                                       height: 60,
                                       width: 60,
                                       decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4.0,
+                                            ),
+                                          ],
                                           shape: BoxShape.circle,
-                                          color: Colors.green[700]),
+                                          color: Colors.green[700].withOpacity(.98)),
                                       child: IconButton(
                                         onPressed: () async {
                                           if (widget.user != null) {
@@ -239,6 +251,12 @@ class _BinPageState extends State<BinPage> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 12),
                                       decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4.0,
+                                            ),
+                                          ],
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(25)),
@@ -269,8 +287,14 @@ class _BinPageState extends State<BinPage> {
                                       height: 60,
                                       width: 60,
                                       decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4.0,
+                                            ),
+                                          ],
                                           shape: BoxShape.circle,
-                                          color: Colors.red[700]),
+                                          color: Colors.red[800].withOpacity(.98)),
                                       child: IconButton(
                                         onPressed: () async {
                                           if (widget.user != null) {
@@ -319,6 +343,12 @@ class _BinPageState extends State<BinPage> {
                                   Flexible(
                                     child: Container(
                                       decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 4.0,
+                                            ),
+                                          ],
                                           borderRadius: BorderRadius.circular(5),
                                           color: Colors.white),
                                       padding: EdgeInsets.only(left: 8),
@@ -370,7 +400,12 @@ class _BinPageState extends State<BinPage> {
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   Container(
-                                    decoration: BoxDecoration(
+                                    decoration: BoxDecoration(boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 4.0,
+                                      ),
+                                    ],
                                         borderRadius: BorderRadius.circular(5),
                                         color: Colors.white),
                                     padding: EdgeInsets.all(12),

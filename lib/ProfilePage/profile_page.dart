@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage>
         duration: const Duration(milliseconds: 4000), vsync: this);
     final Animation curve =
         CurvedAnimation(parent: controller, curve: Curves.easeInOutQuint);
-    animation = Tween<double>(begin: 0, end: pi * 2).animate(curve)
+    animation = Tween<double>(begin: 0, end: pi * 4).animate(curve)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
@@ -98,9 +98,8 @@ class _ProfilePageState extends State<ProfilePage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   AutoSizeText(name,
-maxLines: 2, wrapWords: false,
-
-//                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      wrapWords: false,
                       style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
@@ -145,7 +144,6 @@ maxLines: 2, wrapWords: false,
                     userName = userData['name'].split(" ");
                     photoUrl = userData['photoUrl'];
 
-
                     getSum();
 
                     return Column(
@@ -178,32 +176,34 @@ maxLines: 2, wrapWords: false,
                           ],
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 15,
                         ),
                         Stack(
                           overflow: Overflow.visible,
                           children: <Widget>[
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: MediaQuery.of(context).size.width * 0.85,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black12, blurRadius: 40),
-                                ],
+                            Center(
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                width: MediaQuery.of(context).size.width * 0.85,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black12, blurRadius: 40),
+                                  ],
+                                ),
                               ),
                             ),
                             Positioned(
                               top: 15,
-                              left: -20,
+                              left: 10,
                               child: Hero(
                                 tag: "profilePic",
                                 child: CircleAvatar(
                                   backgroundImage: (photoUrl != null)
-                                      ? NetworkImage(
-                                    photoUrl,
+                                      ? NetworkImage(photoUrl,
 //                                          widget.fbPic == null
 //                                              ? widget.user.photoUrl
 //                                              : widget.fbPic,
@@ -215,7 +215,7 @@ maxLines: 2, wrapWords: false,
                             ),
                             Positioned(
                               top: 15,
-                              left: 70,
+                              left: 100,
                               child:
                                   Text(userName != null ? userName[0] : "N/A",
                                       style: TextStyle(
@@ -226,18 +226,22 @@ maxLines: 2, wrapWords: false,
                             ),
                             Positioned(
                               top: 50,
-                              left: 90,
-                              child:
-                                  Text(userName != null ? userName[1] : "N/A",
-                                      style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Montserrat",
-                                      )),
+                              left: 120,
+                              child: Text(
+                                  userName != null
+                                      ? (userName.length >= 3
+                                          ? userName[1] + " " + userName[2]
+                                          : userName[1])
+                                      : "N/A",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Montserrat",
+                                  )),
                             ),
                             Positioned(
                               top: 10,
-                              right: 30,
+                              right: 50,
                               child: GestureDetector(
                                 onTap: () {
                                   final snackBar = SnackBar(
@@ -252,37 +256,44 @@ maxLines: 2, wrapWords: false,
                                   controller.forward();
                                 },
                                 child: Visibility(
-                                    visible: reportSum > 10 ? true : false,
+                                    visible: true,
+                                    //visible: reportSum > 10 ? true : false,
                                     child: Badge(animation: animation)),
                               ),
                             ),
                             Positioned(
                               bottom: 20,
-                              left: 10,
+                              left: 35,
                               child: Container(
-                                width: MediaQuery.of(context).size.width * 0.80,
+                                width: MediaQuery.of(context).size.width,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment:
                                       CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
-                                  verticalDirection: VerticalDirection.down,
                                   children: <Widget>[
-                                    Text(reportSum.toString(),
-                                        style: TextStyle(
-                                          fontSize: 60,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "Montserrat",
-                                        )),
-                                    Text(
-                                        " " +
-                                            AppTranslations.of(context)
-                                                .text('report_string'),
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "Montserrat",
-                                        )),
+                                    Flexible(
+                                      flex: 1,
+                                      child: Text(reportSum.toString(),
+                                          style: TextStyle(
+                                            fontSize: 60,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "Montserrat",
+                                          )),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                          " " +
+                                              AppTranslations.of(context)
+                                                  .text('report_string_short'),
+                                          overflow: TextOverflow.clip,
+                                          softWrap: false,
+                                          style: TextStyle(
+                                            fontSize: reportSum < 100 ? 26 : 22,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "Montserrat",
+                                          )),
+                                    ),
                                   ],
                                 ),
                               ),

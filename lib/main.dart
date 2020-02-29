@@ -4,8 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
-
-//TODO: Add translations
+//TODO: add sha1 to ios in firebase and check ios in general
 //TODO: Check report before make it public
 
 void main() => runApp(KeepItClean());
@@ -60,6 +59,9 @@ class _KeepItCleanState extends State<KeepItClean> {
         ),
       ),
       home: LoginPage(),
+      routes: <String, WidgetBuilder> {
+        '/loginScreen': (BuildContext context) => new LoginPage(),
+      },
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),
