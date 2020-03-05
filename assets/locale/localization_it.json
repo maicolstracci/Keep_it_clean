@@ -18,7 +18,7 @@
   "no_type_string": "Non e' stata selezionata alcuna tipologia di raccolta.\n\nSeleziona una tipologia per continuare.",
   "select_language": "Seleziona una lingua",
   "type_string": "Tipologia del bidone",
-  "type_2_string": "Puoi tappare su piu' di una tipologia!",
+  "type_2_string": "Puoi selezionare piu' di una tipologia!",
   "camera_error": "E' necessario fornire i permessi alla fotocamera per poter scattare una foto",
   "send_string": "Invia",
   "other_type_string": "Altre tipologie presto disponibili.",

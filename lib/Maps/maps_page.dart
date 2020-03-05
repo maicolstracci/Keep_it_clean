@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page.dart';
+import 'package:keep_it_clean/AddBin/add_bin_page_new.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
@@ -74,8 +75,9 @@ class _MapsState extends State<Maps> {
       ),
       child: RawMaterialButton(
         shape: CircleBorder(),
-        onPressed: () {
-          if (widget.user != null) {
+        onPressed: () async {
+
+         if (widget.user != null) {
             PermissionHandler()
                 .checkPermissionStatus(PermissionGroup.location)
                 .then((permission) async {
@@ -84,9 +86,12 @@ class _MapsState extends State<Maps> {
                 Bin bin = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AddBin(
-                              user: widget.user,
-                            )));
+                      //TODO: change
+                      builder: (context) => AddBinNew(user: widget.user,)
+//                        builder: (context) => AddBin(
+//                              user: widget.user,
+//                            )
+                    ));
                 setState(() {
 
                 });
@@ -94,8 +99,8 @@ class _MapsState extends State<Maps> {
                 showSnackBar(context, 3, _scaffoldKey);
               }
             });
-          } else {
-            showSnackBar(context, 2, _scaffoldKey);
+         } else {
+           showSnackBar(context, 2, _scaffoldKey);
           }
         },
         child: Icon(

@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage>
   void getSum() {
     reportSum = 0;
     userData.forEach((k, v) {
-      if (v.runtimeType == num) {
+      if (v.runtimeType == int) {
         reportSum = reportSum + v;
       }
     });
@@ -131,6 +131,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: Colors.green[300],
         body: SafeArea(
@@ -143,7 +144,6 @@ class _ProfilePageState extends State<ProfilePage>
                   if (snapshot.connectionState == ConnectionState.done) {
                     userName = userData['name'].split(" ");
                     photoUrl = userData['photoUrl'];
-
                     getSum();
 
                     return Column(
@@ -256,8 +256,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   controller.forward();
                                 },
                                 child: Visibility(
-                                    visible: true,
-                                    //visible: reportSum > 10 ? true : false,
+                                    visible: reportSum > 10 ? true : false,
                                     child: Badge(animation: animation)),
                               ),
                             ),

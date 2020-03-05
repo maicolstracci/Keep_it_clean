@@ -260,7 +260,7 @@ class _AddBinState extends State<AddBin> {
               ),
               Positioned(
                 //left: MediaQuery.of(context).size.width * 0.27,
-                top: 20,
+                top: 15,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Center(
