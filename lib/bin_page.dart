@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,10 +19,46 @@ class BinPage extends StatefulWidget {
   _BinPageState createState() => _BinPageState();
 }
 
-class _BinPageState extends State<BinPage> {
+class _BinPageState extends State<BinPage> with TickerProviderStateMixin {
   Bin _bin;
   String _img;
   int _likes, _dislikes;
+  Animation<double> animationLike;
+  Animation<double> animationDislike;
+  AnimationController controllerLike;
+  AnimationController controllerDislike;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controllerLike = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+    controllerDislike = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+
+    final Animation curve =
+        CurvedAnimation(parent: controllerLike, curve: Curves.easeInOut);
+
+    animationLike = Tween<double>(begin: 1, end: 1.5).animate(curve)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controllerLike.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controllerLike.stop();
+        }
+      });
+
+    animationDislike = Tween<double>(begin: 1, end: 1.5).animate(
+        CurvedAnimation(parent: controllerDislike, curve: Curves.easeInOut))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controllerDislike.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controllerDislike.stop();
+        }
+      });
+  }
 
   Future<bool> recoverBinData(markerId) async {
     _bin = await DatabaseService().getBinInfo(markerId);
@@ -92,6 +130,13 @@ class _BinPageState extends State<BinPage> {
   }
 
   @override
+  void dispose() {
+    controllerLike.dispose();
+    controllerDislike.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[400],
@@ -136,7 +181,8 @@ class _BinPageState extends State<BinPage> {
                             Align(
                               alignment: Alignment.topCenter,
                               child: Padding(
-                                padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+                                padding: const EdgeInsets.only(
+                                    top: 8.0, left: 8.0, right: 8.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -145,16 +191,15 @@ class _BinPageState extends State<BinPage> {
                                       height: 40,
                                       width: 40,
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.white
-                                      ),
+                                          shape: BoxShape.circle,
+                                          color: Colors.white),
                                       child: IconButton(
                                         padding: EdgeInsets.all(0),
-                                        onPressed: () => {Navigator.pop(context)},
+                                        onPressed: () =>
+                                            {Navigator.pop(context)},
                                         icon: Icon(
                                           Icons.arrow_back,
                                           color: Colors.black87,
-
                                         ),
                                       ),
                                     ),
@@ -168,7 +213,8 @@ class _BinPageState extends State<BinPage> {
                                               blurRadius: 4.0,
                                             ),
                                           ],
-                                          color: Colors.green[400].withOpacity(.95),
+                                          color: Colors.white
+                                              .withOpacity(.95),
                                           borderRadius:
                                               BorderRadius.circular(30)),
                                       child: Text(
@@ -225,27 +271,30 @@ class _BinPageState extends State<BinPage> {
                                             ),
                                           ],
                                           shape: BoxShape.circle,
-                                          color: Colors.green[700].withOpacity(.98)),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          if (widget.user != null) {
-                                            await DatabaseService().addLikeBin(
-                                                widget.markerId.value,
-                                                widget.user);
+                                          color: Colors.green[700]
+                                              .withOpacity(.98)),
+                                      child: GestureDetector(
+                                          onTap: () async {
+                                            if (widget.user != null) {
+                                              controllerLike.forward();
+                                              await DatabaseService()
+                                                  .addLikeBin(
+                                                      widget.markerId.value,
+                                                      widget.user);
 
-                                            setState(() {});
-                                          } else {
-                                            Scaffold.of(context).showSnackBar(
-                                                SnackBar(
-                                                    content: Text(
-                                                        AppTranslations.of(context).text("no_auth_user_like"))));
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.thumb_up,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                              setState(() {});
+                                            } else {
+                                              Scaffold.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(AppTranslations
+                                                              .of(context)
+                                                          .text(
+                                                              "no_auth_user_like"))));
+                                            }
+                                          },
+                                          child: LikeButton(
+                                              animation: animationLike,
+                                              icon: Icons.thumb_up)),
                                     ),
                                     Container(
                                       padding:
@@ -294,10 +343,12 @@ class _BinPageState extends State<BinPage> {
                                             ),
                                           ],
                                           shape: BoxShape.circle,
-                                          color: Colors.red[800].withOpacity(.98)),
-                                      child: IconButton(
-                                        onPressed: () async {
+                                          color:
+                                              Colors.red[800].withOpacity(.98)),
+                                      child: GestureDetector(
+                                        onTap: () async {
                                           if (widget.user != null) {
+                                            controllerDislike.forward();
                                             await DatabaseService()
                                                 .addDislikeBin(
                                                     widget.markerId.value,
@@ -307,14 +358,15 @@ class _BinPageState extends State<BinPage> {
                                           } else {
                                             Scaffold.of(context).showSnackBar(
                                                 SnackBar(
-                                                    content: Text(
-                                                     AppTranslations.of(context).text("no_auth_user_like"))));
+                                                    content: Text(AppTranslations
+                                                            .of(context)
+                                                        .text(
+                                                            "no_auth_user_like"))));
                                           }
                                         },
-                                        icon: Icon(
-                                          Icons.thumb_down,
-                                          color: Colors.white,
-                                        ),
+                                        child: LikeButton(
+                                            animation: animationDislike,
+                                            icon: Icons.thumb_down),
                                       ),
                                     ),
                                   ],
@@ -336,7 +388,8 @@ class _BinPageState extends State<BinPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    AppTranslations.of(context).text("reported_by"),
+                                    AppTranslations.of(context)
+                                        .text("reported_by"),
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
@@ -349,7 +402,8 @@ class _BinPageState extends State<BinPage> {
                                               blurRadius: 4.0,
                                             ),
                                           ],
-                                          borderRadius: BorderRadius.circular(5),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                           color: Colors.white),
                                       padding: EdgeInsets.only(left: 8),
                                       child: Row(
@@ -363,9 +417,10 @@ class _BinPageState extends State<BinPage> {
                                                 _bin.username,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                  fontSize: 18,
+                                                    fontSize: 18,
                                                     color: Colors.black87,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ),
@@ -395,17 +450,19 @@ class _BinPageState extends State<BinPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    AppTranslations.of(context).text("date_string"),
+                                    AppTranslations.of(context)
+                                        .text("date_string"),
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500),
                                   ),
                                   Container(
-                                    decoration: BoxDecoration(boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 4.0,
-                                      ),
-                                    ],
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black12,
+                                            blurRadius: 4.0,
+                                          ),
+                                        ],
                                         borderRadius: BorderRadius.circular(5),
                                         color: Colors.white),
                                     padding: EdgeInsets.all(12),
@@ -486,5 +543,22 @@ class BottomCurveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return true;
+  }
+}
+
+class LikeButton extends AnimatedWidget {
+  final IconData icon;
+
+  LikeButton({Key key, Animation<double> animation, this.icon})
+      : super(key: key, listenable: animation);
+
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Transform.scale(
+        scale: animation.value,
+        child: Icon(
+          icon,
+          color: Colors.white,
+        ));
   }
 }

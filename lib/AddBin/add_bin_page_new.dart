@@ -92,68 +92,72 @@ class _AddBinNewState extends State<AddBinNew> {
   }
 
   Widget _buildButton(String imgButton, String nameButton, int type) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (_selected.contains(type)) {
-            _selected.remove(type);
-          } else {
-            _selected.add(type);
-          }
-        });
-      },
-      child: AnimatedContainer(
-        height: 150,
-        width: 150,
-        duration: Duration(milliseconds: 2),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: new Border.all(
-              width: 3.0,
-              color:
-                  _selected.contains(type) ? Colors.blue : Colors.transparent,
-            ),
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4.0,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+
+        onTap: () {
+          setState(() {
+            if (_selected.contains(type)) {
+              _selected.remove(type);
+            } else {
+              _selected.add(type);
+            }
+          });
+        },
+        child: AnimatedContainer(
+          height: 125,
+          width: 125,
+          duration: Duration(milliseconds: 2),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: new Border.all(
+                width: 3.0,
+                color:
+                    _selected.contains(type) ? Colors.blue : Colors.transparent,
               ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  AutoSizeText(
-                    AppTranslations.of(context).text(nameButton),
-                    maxLines: 1,
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      imgButton,
-                      fit: BoxFit.contain,
-                    ),
-                  ))
-                ],
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Visibility(
-                  visible: _selected.contains(type) ? true : false,
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.blue,
-                    size: 34,
-                  ),
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 4.0,
                 ),
-              )
-            ],
+              ]),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    AutoSizeText(
+                      AppTranslations.of(context).text(nameButton),
+                      maxLines: 1,
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        imgButton,
+                        fit: BoxFit.contain,
+                      ),
+                    ))
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Visibility(
+                    visible: _selected.contains(type) ? true : false,
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.blue,
+                      size: 34,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -171,23 +175,35 @@ class _AddBinNewState extends State<AddBinNew> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         key: _scaffoldKey,
-        backgroundColor: Colors.green[400],
         appBar: AppBar(
           elevation: 0,
-          title: Text("Segnala un bidone"),
+          title: Text(AppTranslations.of(context).text("report_bin"),),
           backgroundColor: Colors.green[400],
+          centerTitle: true,
         ),
         body: Stack(
           children: <Widget>[
             Container(
+              decoration: BoxDecoration(
+                gradient: new LinearGradient(
+                    colors: [
+                      Colors.green[400],
+                      Colors.green[500]
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.3, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
                   Column(
                     children: <Widget>[
                       AutoSizeText(
-                        "Puoi selezionare piu' di una tipologia!",
+                        AppTranslations.of(context).text("type_2_string"),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.w600),
                         maxFontSize: 28,
@@ -195,37 +211,34 @@ class _AddBinNewState extends State<AddBinNew> {
                       ),
                       Expanded(
                           child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Wrap(
-                            runAlignment: WrapAlignment.spaceAround,
-                            spacing: 15,
-                            runSpacing: 15,
-                            children: <Widget>[
-                              _buildButton("assets/icons/icon_type_1.png",
-                                  "icon_string_1", 1),
-                              _buildButton("assets/icons/icon_type_2.png",
-                                  "icon_string_2", 2),
-                              _buildButton("assets/icons/icon_type_3.png",
-                                  "icon_string_3", 3),
-                              _buildButton("assets/icons/icon_type_4.png",
-                                  "icon_string_4", 4),
-                              _buildButton("assets/icons/icon_type_5.png",
-                                  "icon_string_5", 5),
-                              _buildButton("assets/icons/icon_type_6.png",
-                                  "icon_string_6", 6),
-                              _buildButton("assets/icons/icon_type_7.png",
-                                  "icon_string_7", 7),
-                              _buildButton("assets/icons/icon_type_8.png",
-                                  "icon_string_8", 8),
-                              _buildButton("assets/icons/icon_type_9.png",
-                                  "icon_string_9", 9),
-                              _buildButton("assets/icons/icon_type_10.png",
-                                  "icon_string_10", 10),
-                              _buildButton("assets/icons/icon_type_11.png",
-                                  "icon_string_11", 11),
-                            ],
-                          ),
+                        child: Wrap(
+                          runAlignment: WrapAlignment.spaceAround,
+                          spacing: 15,
+                          runSpacing: 15,
+                          children: <Widget>[
+                            _buildButton("assets/icons/icon_type_1.png",
+                                "icon_string_1", 1),
+                            _buildButton("assets/icons/icon_type_2.png",
+                                "icon_string_2", 2),
+                            _buildButton("assets/icons/icon_type_3.png",
+                                "icon_string_3", 3),
+                            _buildButton("assets/icons/icon_type_4.png",
+                                "icon_string_4", 4),
+                            _buildButton("assets/icons/icon_type_5.png",
+                                "icon_string_5", 5),
+                            _buildButton("assets/icons/icon_type_6.png",
+                                "icon_string_6", 6),
+                            _buildButton("assets/icons/icon_type_7.png",
+                                "icon_string_7", 7),
+                            _buildButton("assets/icons/icon_type_8.png",
+                                "icon_string_8", 8),
+                            _buildButton("assets/icons/icon_type_9.png",
+                                "icon_string_9", 9),
+                            _buildButton("assets/icons/icon_type_10.png",
+                                "icon_string_10", 10),
+                            _buildButton("assets/icons/icon_type_11.png",
+                                "icon_string_11", 11),
+                          ],
                         ),
                       )),
                     ],
@@ -263,7 +276,7 @@ class _AddBinNewState extends State<AddBinNew> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              "Prosegui",
+                              AppTranslations.of(context).text("next_string"),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),

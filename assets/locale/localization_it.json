@@ -59,7 +59,10 @@
   "search" : "CERCA",
   "search_string" : "Trova il centro della raccolta differenziata piu' vicina a te",
   "houston_string" : "Houston...\n richiediamo contatto al server, mi sentite?\n\nSperiamo vada tutto bene!",
-  "uploading_report_online" : "Stiamo caricando la tua segnalazione online."
+  "uploading_report_online" : "Stiamo caricando la tua segnalazione online.",
+  "report_bin" : "Segnala un bidone",
+  "next_string" : "Prosegui",
+  "profile" : "Profilo"
 
 
 }

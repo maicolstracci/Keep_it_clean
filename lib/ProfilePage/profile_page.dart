@@ -131,22 +131,31 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        backgroundColor: Colors.green[300],
+        backgroundColor: Colors.green[400],
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-                future: widget.user != null
-                    ? retrieveUserInfo(widget.user)
-                    : retrieveUserInfoString(widget.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    userName = userData['name'].split(" ");
-                    photoUrl = userData['photoUrl'];
-                    getSum();
+          child: FutureBuilder(
+              future: widget.user != null
+                  ? retrieveUserInfo(widget.user)
+                  : retrieveUserInfoString(widget.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  userName = userData['name'].split(" ");
+                  photoUrl = userData['photoUrl'];
+                  getSum();
 
-                    return Column(
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      gradient: new LinearGradient(
+                          colors: [Colors.green[400], Colors.green[500]],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.3, 1.0],
+                          tileMode: TileMode.clamp),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,157 +184,182 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Stack(
-                          overflow: Overflow.visible,
-                          children: <Widget>[
-                            Center(
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                width: MediaQuery.of(context).size.width * 0.85,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(25),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12, blurRadius: 40),
-                                  ],
+
+                        Flexible(
+                          flex: 8,
+                          child: Stack(
+                            overflow: Overflow.visible,
+                            children: <Widget>[
+                              Center(
+                                child: Container(
+
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.85,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+
+                                    borderRadius: BorderRadius.circular(25),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 40),
+                                    ],
+                                  ),
+                                  child: //REPORTS
+                                      Column(
+                                    children: <Widget>[
+                                      Flexible(
+                                        flex: 1,
+                                        child: Container(),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.baseline,
+                                            textBaseline:
+                                                TextBaseline.alphabetic,
+                                            children: <Widget>[
+                                              Text(reportSum.toString(),
+                                                  style: TextStyle(
+                                                    fontSize: 60,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: "Montserrat",
+                                                  )),
+                                              Expanded(
+                                                child: Text(
+                                                    " " +
+                                                        AppTranslations.of(
+                                                                context)
+                                                            .text(
+                                                                'report_string_short'),
+                                                    overflow: TextOverflow.clip,
+                                                    softWrap: false,
+                                                    style: TextStyle(
+                                                      textBaseline: TextBaseline
+                                                          .alphabetic,
+                                                      fontSize: reportSum < 100
+                                                          ? 26
+                                                          : 22,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: "Montserrat",
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              top: 15,
-                              left: 10,
-                              child: Hero(
-                                tag: "profilePic",
-                                child: CircleAvatar(
-                                  backgroundImage: (photoUrl != null)
-                                      ? NetworkImage(photoUrl,
+                              //PIC
+                              Positioned(
+                                top: 15,
+                                left: 10,
+                                child: Hero(
+                                  tag: "profilePic",
+                                  child: CircleAvatar(
+                                    backgroundImage: (photoUrl != null)
+                                        ? NetworkImage(photoUrl,
 //                                          widget.fbPic == null
 //                                              ? widget.user.photoUrl
 //                                              : widget.fbPic,
-                                          scale: 1)
-                                      : ExactAssetImage('assets/no-avatar.jpg'),
-                                  maxRadius: 40,
+                                            scale: 1)
+                                        : ExactAssetImage(
+                                            'assets/no-avatar.jpg'),
+                                    maxRadius: 40,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              top: 15,
-                              left: 100,
-                              child:
-                                  Text(userName != null ? userName[0] : "N/A",
-                                      style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Montserrat",
-                                      )),
-                            ),
-                            Positioned(
-                              top: 50,
-                              left: 120,
-                              child: Text(
-                                  userName != null
-                                      ? (userName.length >= 3
-                                          ? userName[1] + " " + userName[2]
-                                          : userName[1])
-                                      : "N/A",
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Montserrat",
-                                  )),
-                            ),
-                            Positioned(
-                              top: 10,
-                              right: 50,
-                              child: GestureDetector(
-                                onTap: () {
-                                  final snackBar = SnackBar(
-                                    content: Text(AppTranslations.of(context)
-                                        .text("badge_string")),
-                                    duration: Duration(seconds: 8),
-                                  );
+                              //NAME
+                              Positioned(
+                                top: 15,
+                                left: 100,
+                                child:
+                                    Text(userName != null ? userName[0] : "N/A",
+                                        style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Montserrat",
+                                        )),
+                              ),
+                              //SURNAME
+                              Positioned(
+                                top: 50,
+                                left: 120,
+                                child: Text(
+                                    userName != null
+                                        ? (userName.length >= 3
+                                            ? userName[1] + " " + userName[2]
+                                            : userName[1])
+                                        : "N/A",
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Montserrat",
+                                    )),
+                              ),
+                              //BADGE
+                              Positioned(
+                                top: 10,
+                                right: 50,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    final snackBar = SnackBar(
+                                      content: Text(AppTranslations.of(context)
+                                          .text("badge_string")),
+                                      duration: Duration(seconds: 8),
+                                    );
 
-                                  Scaffold.of(context).showSnackBar(snackBar);
-                                },
-                                onDoubleTap: () {
-                                  controller.forward();
-                                },
-                                child: Visibility(
-                                    visible: reportSum > 10 ? true : false,
-                                    child: Badge(animation: animation)),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              left: 35,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: <Widget>[
-                                    Flexible(
-                                      flex: 1,
-                                      child: Text(reportSum.toString(),
-                                          style: TextStyle(
-                                            fontSize: 60,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Montserrat",
-                                          )),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                          " " +
-                                              AppTranslations.of(context)
-                                                  .text('report_string_short'),
-                                          overflow: TextOverflow.clip,
-                                          softWrap: false,
-                                          style: TextStyle(
-                                            fontSize: reportSum < 100 ? 26 : 22,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Montserrat",
-                                          )),
-                                    ),
-                                  ],
+                                    Scaffold.of(context).showSnackBar(snackBar);
+                                  },
+                                  onDoubleTap: () {
+                                    controller.forward();
+                                  },
+                                  child: Visibility(
+                                      visible: reportSum > 10 ? true : false,
+                                      child: Badge(animation: animation)),
                                 ),
                               ),
-                            )
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 15,
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.45,
-                            child: Swiper(
-                              itemBuilder: (BuildContext context, int index) {
-                                return _createBox(
-                                    MediaQuery.of(context).size.width * 0.85,
-                                    index);
-                              },
-                              itemCount: 11,
-                              viewportFraction: 0.8,
-                              scale: 0.8,
-                            ))
+                        Flexible(
+                          flex: 10,
+                          child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.45,
+                              child: Swiper(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _createBox(
+                                      MediaQuery.of(context).size.width * 0.85,
+                                      index);
+                                },
+                                itemCount: 11,
+                                viewportFraction: 0.8,
+                                scale: 0.8,
+                              )),
+                        )
                       ],
-                    );
-                  } else {
-                    return Container(
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                }),
-          ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              }),
         ));
   }
 

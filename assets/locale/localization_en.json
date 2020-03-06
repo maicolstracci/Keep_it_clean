@@ -56,5 +56,8 @@
   "search_string" : "Find the recycling centre nearest to you.",
   "houston_string" : "Houston...\n  requesting server contact, do you copy?\n\nLet's hope everything's okay!",
   "uploading_report_online" : "We're uploading your report online.",
-  "type_2_string": "You can select more than one type!"
+  "type_2_string": "You can select more than one type!",
+  "report_bin" : "Report a bin",
+  "next_string" : "Next",
+  "profile" : "Profile"
 }

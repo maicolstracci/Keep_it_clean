@@ -61,6 +61,7 @@ class _KeepItCleanState extends State<KeepItClean> {
         ),
       ),
       home: LoginPage(),
+//      home: AddBinNew(),
       routes: <String, WidgetBuilder> {
         '/loginScreen': (BuildContext context) => new LoginPage(),
       },
@@ -75,7 +76,7 @@ class _KeepItCleanState extends State<KeepItClean> {
       supportedLocales: [
         const Locale('en', 'EN'),
         const Locale('it', 'IT'),
-        const Locale('de', 'DE')
+        //const Locale('de', 'DE')
       ],
     );
   }
