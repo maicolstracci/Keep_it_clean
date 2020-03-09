@@ -134,6 +134,7 @@ class _ProfilePageState extends State<ProfilePage>
     return Scaffold(
         backgroundColor: Colors.green[400],
         body: SafeArea(
+          bottom: false,
           child: FutureBuilder(
               future: widget.user != null
                   ? retrieveUserInfo(widget.user)

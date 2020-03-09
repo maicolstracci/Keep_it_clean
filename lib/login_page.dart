@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 FlareActor(
                   'assets/login_splash.flr',
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                   animation: 'idle',
                 ),
                 Column(

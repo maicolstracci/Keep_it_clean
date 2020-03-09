@@ -48,6 +48,7 @@ dependencies:
   path:
   flutter_launcher_icons:
   smooth_page_indicator: ^0.1.3
+  flutter_device_type: ^0.2.0
 
 
 flutter_icons:

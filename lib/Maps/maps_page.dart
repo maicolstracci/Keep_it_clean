@@ -130,6 +130,7 @@ class _MapsState extends State<Maps> {
         child: Scaffold(
           key: _scaffoldKey,
           body: SafeArea(
+            bottom: false,
             child: FutureBuilder<List<Bin>>(
                 future: DatabaseService().streamBins(),
                 builder: (context, snapshot) {
@@ -220,6 +221,7 @@ class _MapsState extends State<Maps> {
                             ],
                           ),
                           Container(
+
                             padding: EdgeInsets.only(bottom: 10),
                             width: MediaQuery.of(context).size.width,
                             height: 100,

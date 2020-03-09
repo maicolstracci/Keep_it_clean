@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/DatabaseServices/database_services.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
@@ -20,7 +21,6 @@ class MapWidget extends StatefulWidget {
   final List<Bin> binList;
   final Map<int, BitmapDescriptor> pinMap;
   final FirebaseUser user;
-
 
   const MapWidget({Key key, this.binList, this.pinMap, this.user})
       : super(key: key);
@@ -56,8 +56,8 @@ class _MapWidgetState extends State<MapWidget> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => BinPage(markerId: markerId,user: widget.user)));
-
+            builder: (context) =>
+                BinPage(markerId: markerId, user: widget.user)));
   }
 
   void _addMarker(String id, LatLng latLng, int type) {
@@ -192,7 +192,6 @@ class _MapWidgetState extends State<MapWidget> {
       LocationData location = await Location()
           .getLocation()
           .timeout(Duration(seconds: 15), onTimeout: () {
-
         setState(() {
           _showConnectionError = true;
           _showLoadingLocation = false;
@@ -230,6 +229,10 @@ class _MapWidgetState extends State<MapWidget> {
     return Stack(
       children: <Widget>[
         GoogleMap(
+          // Padding only applies to iPhone X to avoid obscuring the Google logo
+          padding: EdgeInsets.only(
+              bottom: Device.get().isIphoneX ? 50 : 0,
+              left: Device.get().isIphoneX ? 5 : 0),
           mapType: MapType.normal,
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
