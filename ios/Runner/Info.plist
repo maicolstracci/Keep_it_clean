@@ -43,6 +43,8 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location is used to move the user to their location and to provide the closest bins</string>
 	<key>NSLocationAlwaysUsageDescription</key>
