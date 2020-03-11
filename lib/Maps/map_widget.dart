@@ -15,8 +15,6 @@ import 'package:location/location.dart';
 
 import 'package:provider/provider.dart';
 
-import 'marker_dialog.dart';
-
 class MapWidget extends StatefulWidget {
   final List<Bin> binList;
   final Map<int, BitmapDescriptor> pinMap;
@@ -232,7 +230,7 @@ class _MapWidgetState extends State<MapWidget> {
           // Padding only applies to iPhone X to avoid obscuring the Google logo
           padding: EdgeInsets.only(
               bottom: Device.get().isIphoneX ? 50 : 0,
-              left: Device.get().isIphoneX ? 5 : 0),
+              left: 5 ),
           mapType: MapType.normal,
           myLocationEnabled: true,
           myLocationButtonEnabled: false,

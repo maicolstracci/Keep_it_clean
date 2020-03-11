@@ -160,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
+        bottom: false,
         child: Builder(builder: (context) {
           return SizedBox(
             width: MediaQuery.of(context).size.width,
