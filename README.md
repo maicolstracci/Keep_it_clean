@@ -1,3 +1,4 @@
+![Keep it clean banner](https://i.imgur.com/WGYqr37.jpg)
 # Keep it clean 
 
 Do you want to recycle your plastic bottle but don't know where is the bin?
