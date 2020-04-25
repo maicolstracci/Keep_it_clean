@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<FirebaseUser> _fbLogin() async {
     final facebookLogin = FacebookLogin();
-    //facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
 
     final result = await facebookLogin.logInWithReadPermissions(['email', 'public_profile']);
 

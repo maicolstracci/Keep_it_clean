@@ -25,6 +25,7 @@ class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
     return Scaffold(
       backgroundColor: Color(0xfff4f8f9),
       body: SafeArea(
+        bottom: false,
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
