@@ -101,10 +101,10 @@ class DatabaseService {
     });
   }
 
-  Future<void> addLikeBin(String documentId, FirebaseUser user) async {
+  Future<bool> addLikeBin(String documentId, FirebaseUser user) async {
     DocumentReference postRef = _db.collection("cestini").document(documentId);
     List<String> l = [user.uid];
-
+    bool result = true;
 
     await _db.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
@@ -117,21 +117,30 @@ class DatabaseService {
             'userListLikes': FieldValue.arrayUnion(l)
 
           });
+          result = true;
+
         } else {
           await tx.update(postRef, <String, dynamic>{
             'likes': postSnapshot.data['likes'] - 1,
             'userListLikes': FieldValue.arrayRemove(l)
 
           });
+          result = false;
         }
 
-    }).catchError((e){print(e);});
+
+    }
+
+    ).catchError((e){print(e);});
+
+    return result;
   }
 
-  Future<void> addDislikeBin(String documentId, FirebaseUser user) async{
+  Future<bool> addDislikeBin(String documentId, FirebaseUser user) async{
 
     DocumentReference postRef = _db.collection("cestini").document(documentId);
     List<String> l = [user.uid];
+    bool result = true;
 
 
     await _db.runTransaction((Transaction tx) async {
@@ -143,8 +152,8 @@ class DatabaseService {
         await tx.update(postRef, <String, dynamic>{
           'dislikes': postSnapshot.data['dislikes'] + 1,
           'userListDislikes': FieldValue.arrayUnion(l)
-
         });
+        result = true;
       } else {
         await tx.update(postRef, <String, dynamic>{
           'dislikes': postSnapshot.data['dislikes'] - 1,
@@ -152,9 +161,11 @@ class DatabaseService {
           'userListDislikes': FieldValue.arrayRemove(l)
 
         });
+        result = false;
       }
 
     }).catchError((e){print(e);});
+    return result;
   }
 
   void reportBinProblem(String documentId, FirebaseUser user) {
@@ -212,6 +223,25 @@ class SearchButtonChanger with ChangeNotifier {
 
   setVisibility(bool vis) {
     _visible = vis;
+    notifyListeners();
+  }
+}
+
+class LikesInfoChanger with ChangeNotifier {
+  int likes = 0;
+  int dislikes= 0;
+
+  LikesInfoChanger(this.likes, this.dislikes);
+
+  int getLikes() => likes;
+  int getDislikes() => dislikes;
+
+  setLike(int like) {
+    likes = likes + like;
+    notifyListeners();
+  }
+  setDislike(int dislike) {
+    dislikes = dislikes + dislike;
     notifyListeners();
   }
 }

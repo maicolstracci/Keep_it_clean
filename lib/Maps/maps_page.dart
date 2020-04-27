@@ -124,6 +124,7 @@ class _MapsState extends State<Maps> {
             create: (_) => TypeChanger(0, null)),
         ChangeNotifierProvider<SearchButtonChanger>(
             create: (_) => SearchButtonChanger(false)),
+
       ],
       child: WillPopScope(
         onWillPop: () async => false,

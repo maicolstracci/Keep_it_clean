@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keep_it_clean/AddBin/add_bin_page_new.dart';
+import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/login_page.dart';
@@ -60,8 +61,8 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      home: LoginPage(),
-//      home: AddBinNew(),
+//      home: LoginPage(),
+      home: FirstTimeUserWidget(user: null),
       routes: <String, WidgetBuilder> {
         '/loginScreen': (BuildContext context) => new LoginPage(),
       },

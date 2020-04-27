@@ -36,8 +36,8 @@ class _FirstTimeUserWidgetState extends State<FirstTimeUserWidget> {
                 child: PageView(
                   controller: _controller,
                   scrollDirection: Axis.horizontal,
-//                  physics: PageScrollPhysics(),
-                  physics: CustomScrollPhysics(),
+                 physics: PageScrollPhysics(),
+//                  physics: CustomScrollPhysics(),
                   children: <Widget>[Page1(), Page2(), Page3(user: widget.user,)],
                 ),
               ),

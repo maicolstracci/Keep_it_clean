@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'DatabaseServices/database_services.dart';
 import 'Localization/app_translation.dart';
@@ -22,45 +23,8 @@ class BinPage extends StatefulWidget {
 class _BinPageState extends State<BinPage> with TickerProviderStateMixin {
   Bin _bin;
   String _img;
-  int _likes, _dislikes;
-  Animation<double> animationLike;
-  Animation<double> animationDislike;
-  AnimationController controllerLike;
-  AnimationController controllerDislike;
 
-  @override
-  void initState() {
-    super.initState();
-
-    controllerLike = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
-    controllerDislike = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
-
-    final Animation curve =
-        CurvedAnimation(parent: controllerLike, curve: Curves.easeInOut);
-
-    animationLike = Tween<double>(begin: 1, end: 1.5).animate(curve)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          controllerLike.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          controllerLike.stop();
-        }
-      });
-
-    animationDislike = Tween<double>(begin: 1, end: 1.5).animate(
-        CurvedAnimation(parent: controllerDislike, curve: Curves.easeInOut))
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          controllerDislike.reverse();
-        } else if (status == AnimationStatus.dismissed) {
-          controllerDislike.stop();
-        }
-      });
-  }
-
-  Future<bool> recoverBinData(markerId) async {
+  Future<bool> recoverBinData(MarkerId markerId, BuildContext context) async {
     _bin = await DatabaseService().getBinInfo(markerId);
 
     _img = await DatabaseService()
@@ -69,14 +33,16 @@ class _BinPageState extends State<BinPage> with TickerProviderStateMixin {
       return null;
     });
 
-    _likes = _bin.likes != null ? _bin.likes : 0;
-    _dislikes = _bin.dislikes != null ? _bin.dislikes : 0;
+    Provider.of<LikesInfoChanger>(context, listen: false)
+        .setLike(_bin.likes != null ? _bin.likes : 0);
+    Provider.of<LikesInfoChanger>(context, listen: false)
+        .setDislike(_bin.dislikes != null ? _bin.dislikes : 0);
 
     return (_bin != null && _img != null);
   }
 
-  AlertDialog createAlertDialog(
-      BuildContext context, String documentId, FirebaseUser user) {
+  AlertDialog createAlertDialog(BuildContext context, String documentId,
+      FirebaseUser user) {
     if (user == null) {
       return AlertDialog(
         elevation: 20,
@@ -130,393 +96,378 @@ class _BinPageState extends State<BinPage> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    controllerLike.dispose();
-    controllerDislike.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.green[400],
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          child: FutureBuilder<bool>(
-              future: recoverBinData(widget.markerId),
-              builder: (context, data) {
-                if (data.hasData) {
-                  return Column(
-                    children: <Widget>[
-                      Flexible(
-                        flex: 6,
-                        child: Stack(
-                          children: <Widget>[
-                            ClipPath(
-                              clipper: BottomCurveClipper(),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: double.infinity,
-                                decoration: BoxDecoration(color: Colors.white),
-                                child: _img != null
-                                    ? FadeInImage.assetNetwork(
-                                        placeholder: 'assets/loading.gif',
-                                        image: _img,
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 12.0,
-                                            left: 6.0,
-                                            right: 6.0),
-                                        child: Image.asset(
-                                          'assets/default-bin-photo.png',
-                                          fit: BoxFit.contain,
-                                          alignment: Alignment.bottomCenter,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8.0, left: 8.0, right: 8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white),
-                                      child: IconButton(
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: () =>
-                                            {Navigator.pop(context)},
-                                        icon: Icon(
-                                          Icons.arrow_back,
-                                          color: Colors.black87,
-                                        ),
+      body: ChangeNotifierProvider<LikesInfoChanger>(
+        create: (_) => LikesInfoChanger(0, 0),
+        child: SafeArea(
+          child: Builder(builder: (BuildContext context) {
+            return Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
+              child: FutureBuilder<bool>(
+                  future: recoverBinData(widget.markerId, context),
+                  builder: (context, data) {
+                    if (data.hasData) {
+                      return Column(
+                        children: <Widget>[
+                          Flexible(
+                            flex: 6,
+                            child: Stack(
+                              children: <Widget>[
+                                ClipPath(
+                                  clipper: BottomCurveClipper(),
+                                  child: Container(
+                                    width: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width,
+                                    height: double.infinity,
+                                    decoration:
+                                    BoxDecoration(color: Colors.white),
+                                    child: _img != null
+                                        ? FadeInImage.assetNetwork(
+                                      placeholder: 'assets/loading.gif',
+                                      image: _img,
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                        : Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 12.0,
+                                          left: 6.0,
+                                          right: 6.0),
+                                      child: Image.asset(
+                                        'assets/default-bin-photo.png',
+                                        fit: BoxFit.contain,
+                                        alignment: Alignment.bottomCenter,
                                       ),
                                     ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(right: 24, left: 24),
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          color: Colors.white
-                                              .withOpacity(.95),
-                                          borderRadius:
-                                              BorderRadius.circular(30)),
-                                      child: Text(
-                                        AppTranslations.of(context)
-                                            .text("icon_string_${_bin.type}"),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                            fontSize: 24),
-                                      ),
-                                    ),
-                                    Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white),
-                                        child: IconButton(
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return createAlertDialog(
-                                                      context,
-                                                      _bin.id,
-                                                      widget.user);
-                                                });
-                                          },
-                                          icon: Icon(
-                                            Icons.error_outline,
-                                            color: Colors.red,
-                                          ),
-                                        )),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 60,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          shape: BoxShape.circle,
-                                          color: Colors.green[700]
-                                              .withOpacity(.98)),
-                                      child: GestureDetector(
-                                          onTap: () async {
-                                            if (widget.user != null) {
-                                              controllerLike.forward();
-                                              await DatabaseService()
-                                                  .addLikeBin(
-                                                      widget.markerId.value,
-                                                      widget.user);
-
-                                              setState(() {});
-                                            } else {
-                                              Scaffold.of(context).showSnackBar(
-                                                  SnackBar(
-                                                      content: Text(AppTranslations
-                                                              .of(context)
-                                                          .text(
-                                                              "no_auth_user_like"))));
-                                            }
-                                          },
-                                          child: LikeButton(
-                                              animation: animationLike,
-                                              icon: Icons.thumb_up)),
-                                    ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 12),
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(25)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            _likes.toString(),
-                                            style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.green),
-                                          ),
-                                          Text(
-                                            " - ",
-                                            style: TextStyle(fontSize: 32),
-                                          ),
-                                          Text(
-                                            _dislikes.toString(),
-                                            style: TextStyle(
-                                                fontSize: 32,
-                                                color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          shape: BoxShape.circle,
-                                          color:
-                                              Colors.red[800].withOpacity(.98)),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          if (widget.user != null) {
-                                            controllerDislike.forward();
-                                            await DatabaseService()
-                                                .addDislikeBin(
-                                                    widget.markerId.value,
-                                                    widget.user);
-
-                                            setState(() {});
-                                          } else {
-                                            Scaffold.of(context).showSnackBar(
-                                                SnackBar(
-                                                    content: Text(AppTranslations
-                                                            .of(context)
-                                                        .text(
-                                                            "no_auth_user_like"))));
-                                          }
-                                        },
-                                        child: LikeButton(
-                                            animation: animationDislike,
-                                            icon: Icons.thumb_down),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    AppTranslations.of(context)
-                                        .text("reported_by"),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.white),
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Flexible(
-                                            child: Container(
-                                              child: Text(
-                                                _bin.username,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black87,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfilePage(
-                                                            uid: _bin.uidUser)),
-                                              );
-                                            },
-                                            icon: Icon(
-                                              Icons.launch,
-                                              color: Colors.blue,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    AppTranslations.of(context)
-                                        .text("date_string"),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4.0,
-                                          ),
-                                        ],
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white),
-                                    padding: EdgeInsets.all(12),
+                                Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, left: 8.0, right: 8.0),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
+                                      MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Text(
-                                          _bin.reportDate.substring(0, 10),
-                                          style: TextStyle(
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white),
+                                          child: IconButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () =>
+                                            {Navigator.pop(context)},
+                                            icon: Icon(
+                                              Icons.arrow_back,
                                               color: Colors.black87,
-                                              fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              right: 24, left: 24),
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              color:
+                                              Colors.white.withOpacity(.95),
+                                              borderRadius:
+                                              BorderRadius.circular(30)),
+                                          child: Text(
+                                            AppTranslations.of(context).text(
+                                                "icon_string_${_bin.type}"),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black87,
+                                                fontSize: 24),
+                                          ),
+                                        ),
+                                        Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return createAlertDialog(
+                                                          context,
+                                                          _bin.id,
+                                                          widget.user);
+                                                    });
+                                              },
+                                              icon: Icon(
+                                                Icons.error_outline,
+                                                color: Colors.red,
+                                              ),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: 60,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        Container(
+                                          height: 60,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              shape: BoxShape.circle,
+                                              color: Colors.green[700]
+                                                  .withOpacity(.98)),
+                                          child: LikeButton(
+                                            icon: Icons.thumb_up,
+                                            user: widget.user,
+                                            markerId: widget.markerId,
+                                            type: 0,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              color: Colors.white,
+                                              borderRadius:
+                                              BorderRadius.circular(25)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                Provider
+                                                    .of<LikesInfoChanger>(
+                                                    context)
+                                                    .likes
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 32,
+                                                    color: Colors.green),
+                                              ),
+                                              Text(
+                                                " - ",
+                                                style: TextStyle(fontSize: 32),
+                                              ),
+                                              Text(
+                                                Provider
+                                                    .of<LikesInfoChanger>(
+                                                    context)
+                                                    .dislikes
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 32,
+                                                    color: Colors.red),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 60,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              shape: BoxShape.circle,
+                                              color: Colors.red[800]
+                                                  .withOpacity(.98)),
+                                          child: LikeButton(
+                                            icon: Icons.thumb_down,
+                                            user: widget.user,
+                                            markerId: widget.markerId,
+                                            type: 1,
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 3,
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        AppTranslations.of(context)
+                                            .text("reported_by"),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                              color: Colors.white),
+                                          padding: EdgeInsets.only(left: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                    _bin.username,
+                                                    overflow:
+                                                    TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfilePage(
+                                                                uid: _bin
+                                                                    .uidUser)),
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  Icons.launch,
+                                                  color: Colors.blue,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        AppTranslations.of(context)
+                                            .text("date_string"),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                blurRadius: 4.0,
+                                              ),
+                                            ],
+                                            borderRadius:
+                                            BorderRadius.circular(5),
+                                            color: Colors.white),
+                                        padding: EdgeInsets.all(12),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Text(
+                                              _bin.reportDate.substring(0, 10),
+                                              style: TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Center(
+                                    child: FlatButton(
+                                      padding: const EdgeInsets.all(10),
+                                      onPressed: () {
+                                        _launchMapsUrl(
+                                            _bin.latitude, _bin.longitude);
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        new BorderRadius.circular(6.0),
+                                      ),
+                                      color: Colors.blue[400],
+                                      textColor: Colors.white,
+                                      child: Text(
+                                        AppTranslations.of(context)
+                                            .text("take_me_there_string"),
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 22),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
-                              Center(
-                                child: FlatButton(
-                                  padding: const EdgeInsets.all(10),
-                                  onPressed: () {
-                                    _launchMapsUrl(
-                                        _bin.latitude, _bin.longitude);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(6.0),
-                                  ),
-                                  color: Colors.blue[400],
-                                  textColor: Colors.white,
-                                  child: Text(
-                                    AppTranslations.of(context)
-                                        .text("take_me_there_string"),
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 22),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                } else
-                  return Container(
-                      child: Center(
-                    child: CircularProgressIndicator(),
-                  ));
-              }),
+                            ),
+                          )
+                        ],
+                      );
+                    } else
+                      return Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ));
+                  }),
+            );
+          }),
         ),
       ),
     );
@@ -546,19 +497,95 @@ class BottomCurveClipper extends CustomClipper<Path> {
   }
 }
 
-class LikeButton extends AnimatedWidget {
-  final IconData icon;
 
-  LikeButton({Key key, Animation<double> animation, this.icon})
-      : super(key: key, listenable: animation);
+class LikeButton extends StatefulWidget {
+  IconData icon;
+  FirebaseUser user;
+  MarkerId markerId;
+  int type;
 
+  LikeButton({this.icon, this.markerId, this.user, this.type});
+
+  @override
+  _LikeButtonState createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  double _endValue = 0;
+  double _endValueScale = 0;
+
+  @override
   Widget build(BuildContext context) {
-    final animation = listenable as Animation<double>;
-    return Transform.scale(
-        scale: animation.value,
-        child: Icon(
-          icon,
-          color: Colors.white,
-        ));
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: _endValueScale),
+      curve: Curves.fastLinearToSlowEaseIn,
+      duration: Duration(milliseconds: 800),
+      builder: (BuildContext context, double scale, Widget child) {
+        return Transform.scale(
+          scale: sin(scale) + 1,
+          child: TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0, end: _endValue),
+            duration: Duration(milliseconds: 900),
+            curve: Curves.easeInOutQuad,
+            builder: (BuildContext context, double value, Widget child) {
+              return Transform.rotate(
+                angle: sin(value) / 1.4,
+                child: IconButton(
+                    color: Colors.white,
+                    icon: child,
+                    onPressed: () async {
+                      if (widget.user == null) {
+                        Scaffold.of(context)
+                            .showSnackBar(SnackBar(
+                            content: Text(
+                                AppTranslations.of(
+                                    context)
+                                    .text(
+                                    "no_auth_user_like"))));
+                      } else {
+                        setState(() {
+                          if (_endValue == 0) {
+                            _endValue = pi * 5;
+                            _endValueScale = pi;
+                          } else {
+                            _endValue = 0;
+                            _endValueScale = 0;
+                          }
+                        });
+
+                        if (widget.type == 0) {
+                          if (await DatabaseService()
+                              .addLikeBin(widget.markerId.value, widget.user)) {
+                            Provider.of<LikesInfoChanger>(
+                                context, listen: false)
+                                .setLike(1);
+                          } else
+                            Provider.of<LikesInfoChanger>(
+                                context, listen: false)
+                                .setLike(-1);
+                        } else {
+                          if (await DatabaseService()
+                              .addDislikeBin(
+                              widget.markerId.value, widget.user)) {
+                            Provider.of<LikesInfoChanger>(
+                                context, listen: false)
+                                .setDislike(1);
+                          } else {
+                            Provider.of<LikesInfoChanger>(
+                                context, listen: false)
+                                .setDislike(-1);
+                          }
+                        }
+                      }
+
+                    }
+                ),
+              );
+            },
+            child: Icon(widget.icon),
+          ),
+        );
+      },
+    );
   }
 }
