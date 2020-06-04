@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:animations/animations.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,7 +63,16 @@ class _MapsState extends State<Maps> {
     return true;
   }
 
+  void callSetState(){
+    setState(() {
+
+    });
+  }
+
   Widget addBinButton() {
+
+
+
     return Container(
       margin: EdgeInsets.only(
         left: 10,
@@ -92,6 +102,7 @@ class _MapsState extends State<Maps> {
 //                              user: widget.user,
 //                            )
                     ));
+
                 setState(() {
 
                 });
@@ -111,6 +122,8 @@ class _MapsState extends State<Maps> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {

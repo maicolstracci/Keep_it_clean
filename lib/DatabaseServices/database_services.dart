@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:injectable/injectable.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 
+@lazySingleton
 class DatabaseService {
   final Firestore _db = Firestore.instance;
 
@@ -69,18 +71,20 @@ class DatabaseService {
     return ds.data;
   }
 
-  void setupUser(FirebaseUser user, {String fbPic}) {
+  Future<DocumentSnapshot> setupUser(FirebaseUser user, {String fbPic}) async {
     // Check if user already in firestore db, if not create an entry
     DocumentReference ref =
         Firestore.instance.collection('users').document(user.uid);
-    ref.get().then((ds) {
-      if (!ds.exists) {
-        ref.setData({
-          'name' : user.displayName,
-          'photoUrl' : fbPic != null ? fbPic : user.photoUrl
-        });
-      }
-    });
+
+    DocumentSnapshot documentSnapshot = await ref.get();
+
+    if(!documentSnapshot.exists){
+      await ref.setData({
+        'name': user.displayName,
+        'profilePic' : fbPic != null ? fbPic : user.photoUrl
+      });
+      return await ref.get();
+    } else return documentSnapshot;
   }
 
   void addPoints(FirebaseUser user, List<int> types) {

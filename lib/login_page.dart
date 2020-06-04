@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     final facebookLogin = FacebookLogin();
     facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
 
-    final result = await facebookLogin.logInWithReadPermissions(['email', 'public_profile']);
+    final result = await facebookLogin.logIn(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:

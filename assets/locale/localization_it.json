@@ -24,7 +24,7 @@
   "other_type_string": "Altre tipologie presto disponibili.",
   "send_photo_string": "Vuoi inviare questa foto?",
   "take_me_there_string": "Portamici!",
-  "login_string": "Entra come ospite",
+  "guest_login_string": "Entra come ospite",
   "google_login_string": "Login con Google",
   "facebook_login_string": "Login con Facebook",
   "login_desc_string": "Accedi attraverso il tuo\nsocial network preferito\no entra come ospite.",

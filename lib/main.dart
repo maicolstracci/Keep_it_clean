@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keep_it_clean/AddBin/add_bin_page_new.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
-import 'package:keep_it_clean/login_page.dart';
+import 'package:keep_it_clean/app/locator.dart';
+import 'package:stacked_services/stacked_services.dart';
+
+import 'app/router.gr.dart';
+
+
 //TODO: check ios google login
 //TODO: add translations for new strings
 //TODO: Check report before make it public
 
-void main() => runApp(KeepItClean());
+void main() {
+  setupLocator();
+  runApp(KeepItClean());
+}
 
 class KeepItClean extends StatefulWidget {
   @override
@@ -61,11 +67,9 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-//      home: LoginPage(),
-      home: FirstTimeUserWidget(user: null),
-      routes: <String, WidgetBuilder> {
-        '/loginScreen': (BuildContext context) => new LoginPage(),
-      },
+      onGenerateRoute: Router().onGenerateRoute,
+      navigatorKey: locator<NavigationService>().navigatorKey,
+
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),
@@ -77,7 +81,6 @@ class _KeepItCleanState extends State<KeepItClean> {
       supportedLocales: [
         const Locale('en', 'EN'),
         const Locale('it', 'IT'),
-        //const Locale('de', 'DE')
       ],
     );
   }
