@@ -6,11 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:keep_it_clean/FirstTimeUserPage/first_time_user.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
-import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'file:///C:/Users/Maicol/AndroidStudioProjects/keep_it_clean/lib/services/database_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Maps/maps_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -251,59 +249,15 @@ class _LoginPageState extends State<LoginPage> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              _fbLogin().then((FirebaseUser user) {
-                                if (user != null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => firstTimeUser
-                                            ? FirstTimeUserWidget(
-                                                user: user,
-                                              )
-                                            : Maps(
-                                                user: user,
-                                                fbPic: fbUserProfilePic)),
-                                  );
-                                } else {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text(AppTranslations.of(context).text("connection_error"))));
-                                }
-                              }).catchError((e) {
-
-                              });
-                            },
+                              },
                             child: _createLoginContainer("fb"),
                           ),
                           GestureDetector(
-                            onTap: () {
-                              _googleLogin().then((FirebaseUser user) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => firstTimeUser
-                                          ? FirstTimeUserWidget(
-                                              user: user,
-                                            )
-                                          : Maps(user: user)),
-                                );
-                              }).catchError((e) {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(AppTranslations.of(context).text("connection_error"))));
-                              });
-                            },
+                            onTap: () {},
                             child: _createLoginContainer("google"),
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => firstTimeUser
-                                        ? FirstTimeUserWidget(user: null)
-                                        : Maps(
-                                            user: null,
-                                          )),
-                              );
                             },
                             child: _createLoginContainer("guest"),
                           ),

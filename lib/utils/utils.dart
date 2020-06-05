@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
 
-Map<int, BitmapDescriptor> pinMap = Map();
+Map<String, BitmapDescriptor> pinMap = Map();
 
 Future<Uint8List> getBytesFromAsset(String path, int width) async {
   ByteData data = await rootBundle.load(path);
@@ -21,12 +22,12 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
 
 
 Future<bool> setCustomMapPin() async {
-  for (int i = 1; i <= 11; i++) {
+  for (int i = 1; i <= typesOfBin.length; i++) {
     Uint8List val =
     await getBytesFromAsset('assets/maps_markers/marker_$i.png', (400/3).floor());
     BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
-    pinMap[i] = pinLocationIcon;
+    pinMap[typesOfBin[i-1]] = pinLocationIcon;
   }
   return true;
 }

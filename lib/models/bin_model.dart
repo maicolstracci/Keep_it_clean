@@ -5,7 +5,7 @@ class Bin {
   final GeoPoint position;
   final String photoUrl;
   final String reportDate;
-  final int type;
+  final String type;
   final String username;
   final String uidUser;
   final int likes;

@@ -16,7 +16,7 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
           ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
           margin: EdgeInsets.only(top: 8, right: 8),
           child: IconButton(
-            onPressed: ()=> viewModel.addBin(),
+            onPressed: viewModel.moveCameraToUserLocation,
             icon: Icon(
               Icons.my_location,
               color: Colors.black54,

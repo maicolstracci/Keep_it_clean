@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/ProfilePage/who_am_I_page.dart';
-import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'file:///C:/Users/Maicol/AndroidStudioProjects/keep_it_clean/lib/services/database_services.dart';
 
 class ProfilePage extends StatefulWidget {
   final FirebaseUser user;

@@ -1,6 +1,6 @@
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'file:///C:/Users/Maicol/AndroidStudioProjects/keep_it_clean/lib/services/database_services.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
@@ -17,19 +17,30 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   GoogleMapController mapsController;
   Set<Marker> markers = Set.from([]);
 
+  List<Bin> currentListOfBin = List<Bin>();
+  String filterBinsForType;
 
 
   @override
   void onData(List<Bin> data) {
-    markers.clear();
-    for(Bin bin in data){
-      print('$bin');
-      _addMarker(bin.id, new LatLng(bin.position.latitude, bin.position.longitude), bin.type);
-    }
+//    markers.clear();
+//    for(Bin bin in data){
+//      _addMarker(bin.id, new LatLng(bin.position.latitude, bin.position.longitude), bin.type);
+//    }
+  currentListOfBin = data;
   }
 
+  void setFilterBinsForType(String filter){
+    if(filterBinsForType == filter){
+      filterBinsForType = null;
+    } else filterBinsForType = filter;
 
-  void _addMarker(String id, LatLng latLng, int type) {
+    print('IN SET FILTER -> $filter FILTERBINS ->$filterBinsForType');
+
+    notifyListeners();
+  }
+
+  void _addMarker(String id, LatLng latLng, String type) {
     final MarkerId markerId = MarkerId(id);
     // creating a new MARKER
     final Marker marker = Marker(
@@ -43,9 +54,26 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   }
 
   Future addBin() async{
-    print('press');
-    await _databaseService.createBin(1, "v", LatLng(44.191548, 8.284462));
 
+    await _databaseService.createBin("vetro", "v", LatLng(44.231548, 8.364462));
+
+  }
+
+  void setBinFilterType({String filterBinsForType}){
+
+    this.filterBinsForType = filterBinsForType;
+    print('${this.filterBinsForType}');
+    notifyListeners();
+  }
+
+  Set<Marker> getMarkersSetWithFiltering(){
+    markers.clear();
+    for(Bin bin in currentListOfBin){
+      if(filterBinsForType == null || bin.type == filterBinsForType){
+        _addMarker(bin.id, new LatLng(bin.position.latitude, bin.position.longitude), bin.type);
+      }
+    }
+    return markers;
   }
 
   Future moveCameraToUserLocation() async {
@@ -75,7 +103,7 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   }
 
 
-  void filterBin(int type){
+  void filterBin(String type){
     _databaseService.typeOfBinToFilter = type;
     notifySourceChanged(clearOldData: true);
   }

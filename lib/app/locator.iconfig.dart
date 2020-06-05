@@ -5,7 +5,7 @@
 // **************************************************************************
 
 import 'package:keep_it_clean/services/auth_service.dart';
-import 'package:keep_it_clean/DatabaseServices/database_services.dart';
+import 'file:///C:/Users/Maicol/AndroidStudioProjects/keep_it_clean/lib/services/database_services.dart';
 import 'package:keep_it_clean/services/third_party_services_module.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';

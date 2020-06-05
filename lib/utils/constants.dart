@@ -10,4 +10,4 @@ final CameraPosition initialCameraPosition = CameraPosition(
   zoom: 14.4746,
 );
 
-
+List<String> typesOfBin = ["plastica","vetro","alluminio","carta","umido","indifferenziata","batterie","medicinali","verde","abiti","olio vegetale"];

@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Utils/constants.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/profile_picture.dart';
+import 'package:keep_it_clean/ui/views/MapsPage/search_widget.dart';
 import 'package:stacked/stacked.dart';
 
 import 'loading_position_banner.dart';
@@ -30,7 +31,7 @@ class MapsPageView extends StatelessWidget {
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
                         mapToolbarEnabled: false,
-                        markers: model.markers,
+                        markers: model.getMarkersSetWithFiltering(),
                         initialCameraPosition: initialCameraPosition,
                         onMapCreated: (GoogleMapController controller) {
                           model.mapsController = controller;
@@ -40,6 +41,8 @@ class MapsPageView extends StatelessWidget {
                       LoadingPositionBanner(),
                       MoveToUserPosition(),
                       ProfilePicture(),
+                      FilterBar()
+
                     ],
                   ),
                 ),

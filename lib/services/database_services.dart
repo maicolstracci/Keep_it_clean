@@ -15,7 +15,7 @@ class DatabaseService {
 
   final Firestore _db = Firestore.instance;
   Geoflutterfire _geoflutterfire = Geoflutterfire();
-  int typeOfBinToFilter;
+  String typeOfBinToFilter;
 
   List<Bin> _binListFromSnap(List<DocumentSnapshot> list) {
 
@@ -45,7 +45,7 @@ class DatabaseService {
 
 
   Future<void> createBin(
-      int type, String imgName, LatLng binPos) async {
+      String type, String imgName, LatLng binPos) async {
 
     GeoFirePoint binLocation = _geoflutterfire.point(latitude: binPos.latitude, longitude: binPos.longitude);
 
