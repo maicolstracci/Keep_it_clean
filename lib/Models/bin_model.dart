@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Bin {
   final String id;
-  final double latitude;
-  final double longitude;
+  final GeoPoint position;
   final String photoUrl;
   final String reportDate;
   final int type;
@@ -14,8 +13,7 @@ class Bin {
 
   Bin(
       {this.id,
-      this.latitude,
-      this.longitude,
+      this.position,
       this.photoUrl,
       this.reportDate,
       this.type,
@@ -28,8 +26,7 @@ class Bin {
     Map data = doc.data;
     return Bin(
       id: doc.documentID,
-      latitude: data['lat'],
-      longitude: data['lng'],
+      position: data['position']['geopoint'],
       photoUrl: data['photoUrl'],
       reportDate: data['reportDate'],
       type: data['type'],

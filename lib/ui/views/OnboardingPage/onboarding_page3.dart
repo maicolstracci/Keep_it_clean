@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/Maps/maps_page.dart';
+import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class OnboardingPage3 extends StatelessWidget {
 
@@ -13,12 +16,13 @@ class OnboardingPage3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    NavigationService _navigationService = locator<NavigationService>();
+
     return GestureDetector(
       onHorizontalDragEnd: (details){
         PermissionHandler()
             .requestPermissions([PermissionGroup.location]).then((v) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Maps(user: user,)));
+          _navigationService.navigateTo(Routes.mapsPage);
         });
       },
       child: Container(

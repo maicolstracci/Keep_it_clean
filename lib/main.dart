@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
+import 'package:keep_it_clean/Utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -13,8 +14,10 @@ import 'app/router.gr.dart';
 //TODO: add translations for new strings
 //TODO: Check report before make it public
 
-void main() {
+void main() async {
   setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
+  await setCustomMapPin();
   runApp(KeepItClean());
 }
 
@@ -59,6 +62,8 @@ class _KeepItCleanState extends State<KeepItClean> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
+        backgroundColor: Color(0xff06442d),
+        accentColor: Color(0xfff4f8f9),
         fontFamily: 'Montserrat',
         textTheme: TextTheme(
           body1: TextStyle(

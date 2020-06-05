@@ -135,55 +135,55 @@ class _MapWidgetState extends State<MapWidget> {
     setState(() {});
   }
 
-  void showMarkers(LatLngBounds area) {
-    markers.clear();
-
-    if (widget.binList != null && _userLocation != null) {
-      if (Provider.of<TypeChanger>(context).getType() == 0) {
-        widget.binList.forEach((bin) {
-          if (area == null &&
-              bin.latitude >= _userLocation.latitude - 0.5 &&
-              bin.latitude <= _userLocation.latitude + 0.5 &&
-              bin.longitude >= _userLocation.longitude - 0.5 &&
-              bin.longitude <= _userLocation.longitude + 0.5) {
-            _addMarker(
-                bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
-          } else {
-            if (area != null &&
-                bin.latitude >= area.southwest.latitude &&
-                bin.latitude <= area.northeast.latitude &&
-                bin.longitude >= area.southwest.longitude &&
-                bin.longitude <= area.northeast.longitude) {
-              _addMarker(
-                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
-            }
-          }
-        });
-      } else {
-        widget.binList.forEach((bin) {
-          if (bin.type == Provider.of<TypeChanger>(context).getType()) {
-            if (area == null &&
-                bin.latitude >= _userLocation.latitude - 0.5 &&
-                bin.latitude <= _userLocation.latitude + 0.5 &&
-                bin.longitude >= _userLocation.longitude - 0.5 &&
-                bin.longitude <= _userLocation.longitude + 0.5) {
-              _addMarker(
-                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
-            } else {
-              if (area != null &&
-                  bin.latitude >= area.southwest.latitude &&
-                  bin.latitude <= area.northeast.latitude &&
-                  bin.longitude >= area.southwest.longitude &&
-                  bin.longitude <= area.northeast.longitude) {
-                _addMarker(
-                    bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
-              }
-            }
-          }
-        });
-      }
-    }
-  }
+//  void showMarkers(LatLngBounds area) {
+//    markers.clear();
+//
+//    if (widget.binList != null && _userLocation != null) {
+//      if (Provider.of<TypeChanger>(context).getType() == 0) {
+//        widget.binList.forEach((bin) {
+//          if (area == null &&
+//              bin.latitude >= _userLocation.latitude - 0.5 &&
+//              bin.latitude <= _userLocation.latitude + 0.5 &&
+//              bin.longitude >= _userLocation.longitude - 0.5 &&
+//              bin.longitude <= _userLocation.longitude + 0.5) {
+//            _addMarker(
+//                bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+//          } else {
+//            if (area != null &&
+//                bin.latitude >= area.southwest.latitude &&
+//                bin.latitude <= area.northeast.latitude &&
+//                bin.longitude >= area.southwest.longitude &&
+//                bin.longitude <= area.northeast.longitude) {
+//              _addMarker(
+//                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+//            }
+//          }
+//        });
+//      } else {
+//        widget.binList.forEach((bin) {
+//          if (bin.type == Provider.of<TypeChanger>(context).getType()) {
+//            if (area == null &&
+//                bin.latitude >= _userLocation.latitude - 0.5 &&
+//                bin.latitude <= _userLocation.latitude + 0.5 &&
+//                bin.longitude >= _userLocation.longitude - 0.5 &&
+//                bin.longitude <= _userLocation.longitude + 0.5) {
+//              _addMarker(
+//                  bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+//            } else {
+//              if (area != null &&
+//                  bin.latitude >= area.southwest.latitude &&
+//                  bin.latitude <= area.northeast.latitude &&
+//                  bin.longitude >= area.southwest.longitude &&
+//                  bin.longitude <= area.northeast.longitude) {
+//                _addMarker(
+//                    bin.id, new LatLng(bin.latitude, bin.longitude), bin.type);
+//              }
+//            }
+//          }
+//        });
+//      }
+//    }
+//  }
 
   Future<void> moveToUserLocation() async {
     if (await getLocationPermissionStatus()) {
@@ -221,8 +221,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    showMarkers(
-        Provider.of<TypeChanger>(context, listen: false).getVisibleArea());
+//    showMarkers(
+//        Provider.of<TypeChanger>(context, listen: false).getVisibleArea());
 
     return Stack(
       children: <Widget>[

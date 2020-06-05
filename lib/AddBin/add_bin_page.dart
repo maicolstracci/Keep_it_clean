@@ -134,11 +134,11 @@ class _AddBinState extends State<AddBin> {
   Future<Bin> addBin(List<int> types, String imgName, LatLng binPos) async {
     Bin _bin;
 
-    types.forEach((type) async {
-      _bin =
-          await DatabaseService().createBin(type, imgName, binPos, widget.user);
-    });
-    DatabaseService().addPoints(widget.user, types);
+//    types.forEach((type) async {
+//      _bin =
+////          await DatabaseService().createBin(type, imgName, binPos, widget.user);
+//    });
+//    DatabaseService().addPoints(widget.user, types);
 
     return _bin;
   }

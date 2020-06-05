@@ -9,13 +9,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_view.dart';
 import 'package:keep_it_clean/ui/views/OnboardingPage/onboarding_view.dart';
+import 'package:keep_it_clean/ui/views/MapsPage/maps_page_view.dart';
 
 abstract class Routes {
   static const loginPage = '/';
   static const onboardingPage = '/onboarding-page';
+  static const mapsPage = '/maps-page';
   static const all = {
     loginPage,
     onboardingPage,
+    mapsPage,
   };
 }
 
@@ -38,6 +41,11 @@ class Router extends RouterBase {
       case Routes.onboardingPage:
         return MaterialPageRoute<dynamic>(
           builder: (context) => OnboardingView(),
+          settings: settings,
+        );
+      case Routes.mapsPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => MapsPageView(),
           settings: settings,
         );
       default:

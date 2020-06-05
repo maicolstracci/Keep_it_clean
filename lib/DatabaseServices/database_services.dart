@@ -2,45 +2,68 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:keep_it_clean/Models/bin_model.dart';
+import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/services/auth_service.dart';
 
 @lazySingleton
 class DatabaseService {
+//  AuthService _authService = locator<AuthService>();
+
   final Firestore _db = Firestore.instance;
+  Geoflutterfire _geoflutterfire = Geoflutterfire();
+  int typeOfBinToFilter;
 
-  Future<List<Bin>> streamBins() async {
-    QuerySnapshot ref = await _db.collection('cestini').getDocuments();
+  List<Bin> _binListFromSnap(List<DocumentSnapshot> list) {
 
-   return ref.documents.map((doc) => Bin.fromFirestore(doc)).toList();
+   return list.map((doc) {
+
+      return Bin.fromFirestore(doc);
+    }).toList();
+
 
   }
 
-  Future<Bin> createBin(int type, String imgName, LatLng binPos, FirebaseUser user) async {
+  Stream<List<Bin>> binStream() {
+
+    // Create a geoFirePoint
+    GeoFirePoint center = _geoflutterfire.point(latitude:44.170147, longitude: 8.3438333);
+
+// get the collection reference or query
+    var collectionReference = _db.collection('cestini');
+    double radius = 10;
+    String field = 'position';
+
+    return _geoflutterfire.collection(collectionRef: collectionReference)
+        .within(center: center, radius: radius, field: field, strictMode: true).map(_binListFromSnap);
+
+
+  }
+
+
+  Future<void> createBin(
+      int type, String imgName, LatLng binPos) async {
+
+    GeoFirePoint binLocation = _geoflutterfire.point(latitude: binPos.latitude, longitude: binPos.longitude);
+
     DocumentReference doc = await _db.collection("cestini").add({
-      'lat': binPos.latitude,
-      'lng': binPos.longitude,
+      'position': binLocation.data,
       'type': type,
       'photoUrl': imgName,
-      'username': user.displayName,
+      'username': "Test",
       'reportDate': new DateTime.now().toString(),
-      'uidUser' : user.uid,
-      'likes' : 0,
-      'dislikes' : 0,
-      'userListLikes' : [], 'userListDislikes' : []
-
+      'uidUser': "Test",
+      'likes': 0,
+      'dislikes': 0,
+      'userListLikes': [],
+      'userListDislikes': []
     });
 
 
-
-//    DocumentSnapshot ds = await Firestore.instance
-//        .collection('cestini')
-//        .document(doc.documentID)
-//        .get();
-
-    return Bin.fromFirestore(await doc.get());
-
+//    return Bin.fromFirestore(await doc.get());
   }
 
   Future<Bin> getBinInfo(MarkerId markerId) async {
@@ -60,12 +83,13 @@ class DatabaseService {
     });
   }
 
-  Future<Map<String, dynamic>> retrieveUserInfo({FirebaseUser user, String uid}) async {
-
+  Future<Map<String, dynamic>> retrieveUserInfo(
+      {FirebaseUser user, String uid}) async {
     String userUid;
-    if(user == null){
+    if (user == null) {
       userUid = uid;
-    } else userUid = user.uid;
+    } else
+      userUid = user.uid;
     DocumentSnapshot ds =
         await Firestore.instance.collection('users').document(userUid).get();
     return ds.data;
@@ -78,13 +102,14 @@ class DatabaseService {
 
     DocumentSnapshot documentSnapshot = await ref.get();
 
-    if(!documentSnapshot.exists){
+    if (!documentSnapshot.exists) {
       await ref.setData({
         'name': user.displayName,
-        'profilePic' : fbPic != null ? fbPic : user.photoUrl
+        'profilePic': fbPic != null ? fbPic : user.photoUrl
       });
       return await ref.get();
-    } else return documentSnapshot;
+    } else
+      return documentSnapshot;
   }
 
   void addPoints(FirebaseUser user, List<int> types) {
@@ -114,45 +139,36 @@ class DatabaseService {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       List<dynamic> userList = postSnapshot.data['userListLikes'];
 
-
-        if(!userList.contains(user.uid)){
-          await tx.update(postRef, <String, dynamic>{
-            'likes': postSnapshot.data['likes'] + 1,
-            'userListLikes': FieldValue.arrayUnion(l)
-
-          });
-          result = true;
-
-        } else {
-          await tx.update(postRef, <String, dynamic>{
-            'likes': postSnapshot.data['likes'] - 1,
-            'userListLikes': FieldValue.arrayRemove(l)
-
-          });
-          result = false;
-        }
-
-
-    }
-
-    ).catchError((e){print(e);});
+      if (!userList.contains(user.uid)) {
+        await tx.update(postRef, <String, dynamic>{
+          'likes': postSnapshot.data['likes'] + 1,
+          'userListLikes': FieldValue.arrayUnion(l)
+        });
+        result = true;
+      } else {
+        await tx.update(postRef, <String, dynamic>{
+          'likes': postSnapshot.data['likes'] - 1,
+          'userListLikes': FieldValue.arrayRemove(l)
+        });
+        result = false;
+      }
+    }).catchError((e) {
+      print(e);
+    });
 
     return result;
   }
 
-  Future<bool> addDislikeBin(String documentId, FirebaseUser user) async{
-
+  Future<bool> addDislikeBin(String documentId, FirebaseUser user) async {
     DocumentReference postRef = _db.collection("cestini").document(documentId);
     List<String> l = [user.uid];
     bool result = true;
-
 
     await _db.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       List<dynamic> userList = postSnapshot.data['userListDislikes'];
 
-
-      if(!userList.contains(user.uid)){
+      if (!userList.contains(user.uid)) {
         await tx.update(postRef, <String, dynamic>{
           'dislikes': postSnapshot.data['dislikes'] + 1,
           'userListDislikes': FieldValue.arrayUnion(l)
@@ -161,14 +177,13 @@ class DatabaseService {
       } else {
         await tx.update(postRef, <String, dynamic>{
           'dislikes': postSnapshot.data['dislikes'] - 1,
-
           'userListDislikes': FieldValue.arrayRemove(l)
-
         });
         result = false;
       }
-
-    }).catchError((e){print(e);});
+    }).catchError((e) {
+      print(e);
+    });
     return result;
   }
 
@@ -176,23 +191,23 @@ class DatabaseService {
     DocumentReference postRef = _db.collection("reports").document(documentId);
     List<String> l = [user.uid];
 
-
     _db.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
 
       if (postSnapshot.exists) {
         List<dynamic> userList = postSnapshot.data['userList'];
-        if(!userList.contains(user.uid)){
+        if (!userList.contains(user.uid)) {
           print("enter");
           await tx.update(postRef, <String, dynamic>{
             'nOfReports': postSnapshot.data['nOfReports'] + 1,
             'userList': FieldValue.arrayUnion(l)
-
           });
         }
-
       } else {
-        await tx.set(postRef, <String, dynamic>{'nOfReports': 1, 'userList': FieldValue.arrayUnion(l)});
+        await tx.set(postRef, <String, dynamic>{
+          'nOfReports': 1,
+          'userList': FieldValue.arrayUnion(l)
+        });
       }
     });
   }
@@ -233,17 +248,19 @@ class SearchButtonChanger with ChangeNotifier {
 
 class LikesInfoChanger with ChangeNotifier {
   int likes = 0;
-  int dislikes= 0;
+  int dislikes = 0;
 
   LikesInfoChanger(this.likes, this.dislikes);
 
   int getLikes() => likes;
+
   int getDislikes() => dislikes;
 
   setLike(int like) {
     likes = likes + like;
     notifyListeners();
   }
+
   setDislike(int dislike) {
     dislikes = dislikes + dislike;
     notifyListeners();

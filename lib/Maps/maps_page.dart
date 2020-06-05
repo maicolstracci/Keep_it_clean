@@ -130,9 +130,9 @@ class _MapsState extends State<Maps> {
     //
     return MultiProvider(
       providers: [
-        FutureProvider<List<Bin>>.value(
-          value: DatabaseService().streamBins(),
-        ),
+//        FutureProvider<List<Bin>>.value(
+//          value: DatabaseService().streamBins(),
+//        ),
         ChangeNotifierProvider<TypeChanger>(
             create: (_) => TypeChanger(0, null)),
         ChangeNotifierProvider<SearchButtonChanger>(
@@ -145,115 +145,115 @@ class _MapsState extends State<Maps> {
           key: _scaffoldKey,
           body: SafeArea(
             bottom: false,
-            child: FutureBuilder<List<Bin>>(
-                future: DatabaseService().streamBins(),
-                builder: (context, snapshot) {
-                  return Stack(
-                    children: <Widget>[
-                      FutureBuilder<bool>(
-                        future: setCustomMapPin(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot<bool> snap) {
-                          if (snap.connectionState == ConnectionState.done) {
-
-                            return MapWidget(
-                              binList: snapshot.data,
-                              pinMap: pinMap,
-                              user: widget.user,
-                            );
-                          } else
-                            return Container();
-                        },
-                      ),
-                      Positioned(
-                        top: 10,
-                        left: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (widget.user != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ProfilePage(user: widget.user, fbPic: widget.fbPic)),
-                              );
-                            } else {
-                              showSnackBar(context, 1, _scaffoldKey);
-                            }
-                          },
-                          child: Hero(
-                            tag: "profilePic",
-                            child: new Container(
-                              width: 60,
-                              height: 60,
-                              decoration: new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 10.0,
-                                    ),
-                                  ]),
-                              child: CircleAvatar(
-                                backgroundImage: (widget.user != null)
-                                    ? NetworkImage(
-                                        widget.fbPic == null
-                                            ? widget.user.photoUrl
-                                            : widget.fbPic,
-                                        scale: 1)
-                                    : ExactAssetImage('assets/no-avatar.jpg'),
-                                maxRadius: 40,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(),
-                              ),
-                              Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.green[400].withOpacity(.85),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(14),
-                                          bottomLeft: Radius.circular(14))),
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 10, bottom: 2, top: 2),
-                                  child: AutoSizeText(
-                                    AppTranslations.of(context).text("select_filter"),
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600),
-                                  ))
-                            ],
-                          ),
-                          Container(
-
-                            padding: EdgeInsets.only(bottom: 10),
-                            width: MediaQuery.of(context).size.width,
-                            height: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                addBinButton(),
-                                Expanded(
-                                  child: SearchWidget(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                }),
+//            child: FutureBuilder<List<Bin>>(
+//                future: DatabaseService().binStream(),
+//                builder: (context, snapshot) {
+//                  return Stack(
+//                    children: <Widget>[
+//                      FutureBuilder<bool>(
+//                        future: setCustomMapPin(),
+//                        builder:
+//                            (BuildContext context, AsyncSnapshot<bool> snap) {
+//                          if (snap.connectionState == ConnectionState.done) {
+//
+//                            return MapWidget(
+//                              binList: snapshot.data,
+//                              pinMap: pinMap,
+//                              user: widget.user,
+//                            );
+//                          } else
+//                            return Container();
+//                        },
+//                      ),
+//                      Positioned(
+//                        top: 10,
+//                        left: 10,
+//                        child: GestureDetector(
+//                          onTap: () {
+//                            if (widget.user != null) {
+//                              Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) =>
+//                                        ProfilePage(user: widget.user, fbPic: widget.fbPic)),
+//                              );
+//                            } else {
+//                              showSnackBar(context, 1, _scaffoldKey);
+//                            }
+//                          },
+//                          child: Hero(
+//                            tag: "profilePic",
+//                            child: new Container(
+//                              width: 60,
+//                              height: 60,
+//                              decoration: new BoxDecoration(
+//                                  shape: BoxShape.circle,
+//                                  color: Colors.black,
+//                                  boxShadow: [
+//                                    BoxShadow(
+//                                      color: Colors.black12,
+//                                      blurRadius: 10.0,
+//                                    ),
+//                                  ]),
+//                              child: CircleAvatar(
+//                                backgroundImage: (widget.user != null)
+//                                    ? NetworkImage(
+//                                        widget.fbPic == null
+//                                            ? widget.user.photoUrl
+//                                            : widget.fbPic,
+//                                        scale: 1)
+//                                    : ExactAssetImage('assets/no-avatar.jpg'),
+//                                maxRadius: 40,
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                      Column(
+//                        mainAxisAlignment: MainAxisAlignment.end,
+//                        children: <Widget>[
+//                          Row(
+//                            mainAxisAlignment: MainAxisAlignment.center,
+//                            children: <Widget>[
+//                              Expanded(
+//                                child: Container(),
+//                              ),
+//                              Container(
+//                                  decoration: BoxDecoration(
+//                                      color: Colors.green[400].withOpacity(.85),
+//                                      borderRadius: BorderRadius.only(
+//                                          topLeft: Radius.circular(14),
+//                                          bottomLeft: Radius.circular(14))),
+//                                  padding: EdgeInsets.only(
+//                                      left: 20, right: 10, bottom: 2, top: 2),
+//                                  child: AutoSizeText(
+//                                    AppTranslations.of(context).text("select_filter"),
+//                                    style: TextStyle(
+//                                        fontSize: 24,
+//                                        fontWeight: FontWeight.w600),
+//                                  ))
+//                            ],
+//                          ),
+//                          Container(
+//
+//                            padding: EdgeInsets.only(bottom: 10),
+//                            width: MediaQuery.of(context).size.width,
+//                            height: 100,
+//                            child: Row(
+//                              mainAxisAlignment: MainAxisAlignment.start,
+//                              children: <Widget>[
+//                                addBinButton(),
+//                                Expanded(
+//                                  child: SearchWidget(),
+//                                ),
+//                              ],
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                    ],
+//                  );
+//                }),
           ),
         ),
       ),

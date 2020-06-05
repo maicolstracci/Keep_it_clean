@@ -434,10 +434,10 @@ class _BinPageState extends State<BinPage> with TickerProviderStateMixin {
                                   Center(
                                     child: FlatButton(
                                       padding: const EdgeInsets.all(10),
-                                      onPressed: () {
-                                        _launchMapsUrl(
-                                            _bin.latitude, _bin.longitude);
-                                      },
+//                                      onPressed: () {
+//                                        _launchMapsUrl(
+//                                            _bin.latitude, _bin.longitude);
+//                                      },
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
                                         new BorderRadius.circular(6.0),

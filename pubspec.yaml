@@ -61,7 +61,6 @@ dependencies:
   flutter_hooks:
   stacked_hooks:
 
-
 flutter_icons:
   android: true
   ios: true
