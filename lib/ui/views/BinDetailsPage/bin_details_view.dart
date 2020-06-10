@@ -118,9 +118,7 @@ class BinDetailsPageView extends StatelessWidget {
                                             ),
                                           ),
                                           IconButton(
-                                            onPressed: () {
-
-                                            },
+                                            onPressed: () =>model.navigateToReporterProfile(),
                                             icon: Icon(
                                               Icons.launch,
                                               color: Colors.blue,

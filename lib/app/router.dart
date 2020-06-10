@@ -8,6 +8,7 @@ import 'package:keep_it_clean/ui/views/LoginPage/login_page_view.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_view.dart';
 import 'package:keep_it_clean/ui/views/OnboardingPage/onboarding_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 
 @MaterialAutoRouter()
 class $Router{
@@ -19,4 +20,5 @@ class $Router{
   BinDetailsPageView binDetailsPage;
   AddBinPageView addBinPage;
   SelectBinPositionView selectBinPositionPage;
+  ReporterProfileView reporterProfilePage;
 }

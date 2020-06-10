@@ -7,83 +7,80 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/user_model.dart';
 
+import 'auth_service.dart';
+
 @lazySingleton
 class DatabaseService {
-//  AuthService _authService = locator<AuthService>();
-
   final Firestore _db = Firestore.instance;
   Geoflutterfire _geoflutterfire = Geoflutterfire();
   String typeOfBinToFilter;
 
   List<Bin> _binListFromSnap(List<DocumentSnapshot> list) {
-
-   return list.map((doc) {
-
+    return list.map((doc) {
       return Bin.fromFirestore(doc);
     }).toList();
-
-
   }
 
   Stream<List<Bin>> binStream() {
-
     // Create a geoFirePoint
-    GeoFirePoint center = _geoflutterfire.point(latitude:44.170147, longitude: 8.3438333);
+    GeoFirePoint center =
+        _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
 
-// get the collection reference or query
+    // get the collection reference or query
     var collectionReference = _db.collection('cestini');
+
+    // Search in a 'radius' km
     double radius = 10;
     String field = 'position';
 
-    return _geoflutterfire.collection(collectionRef: collectionReference)
-        .within(center: center, radius: radius, field: field, strictMode: true).map(_binListFromSnap);
-
-
+    return _geoflutterfire
+        .collection(collectionRef: collectionReference)
+        .within(center: center, radius: radius, field: field, strictMode: true)
+        .map(_binListFromSnap);
   }
 
-
   Future<void> createBin(
-      String type, String imgName, LatLng binPos) async {
-
-    GeoFirePoint binLocation = _geoflutterfire.point(latitude: binPos.latitude, longitude: binPos.longitude);
+      {@required String type,
+      @required String imgName,
+      @required LatLng binPos,
+      @required User user}) async {
+    GeoFirePoint binLocation = _geoflutterfire.point(
+        latitude: binPos.latitude, longitude: binPos.longitude);
 
     DocumentReference doc = await _db.collection("cestini").add({
       'position': binLocation.data,
       'type': type,
       'photoUrl': imgName,
-      'username': "Test",
+      'username': user.name,
       'reportDate': new DateTime.now().toString(),
-      'uidUser': "Test",
+      'uidUser': user.uid,
       'likes': 0,
       'dislikes': 0,
       'userListLikes': [],
       'userListDislikes': []
     });
-
-
-//    return Bin.fromFirestore(await doc.get());
   }
 
-  Future<String> uploadImage(File img) async {
-    //TODO: Add user to img name
-    String _imgName = '${DateTime.now()}';
+  Future<String> uploadImage(
+      {@required File imgFile, @required String imgName}) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(_imgName);
+        FirebaseStorage.instance.ref().child(imgName);
 
     //TODO: check for other results
-    StorageUploadTask uploadTask = storageReference.putFile(img);
+    StorageUploadTask uploadTask = storageReference.putFile(imgFile);
     await uploadTask.onComplete;
 
-    img.delete();
-    return _imgName;
+    imgFile.delete();
+    return imgName;
   }
 
-  Stream<Map<String,int>> streamLikesFromBin(String binID){
+  Stream<Map<String, int>> streamLikesFromBin(String binID) {
     return _db.collection("cestini").document(binID).snapshots().map((doc) {
-      Map<String,int> map = Map();
+      Map<String, int> map = Map();
       map["likes"] = doc['likes'];
       map["dislikes"] = doc['dislikes'];
       return map;
@@ -91,10 +88,8 @@ class DatabaseService {
   }
 
   Future<Bin> getBinInfo(String binID) async {
-    DocumentSnapshot ds = await Firestore.instance
-        .collection('cestini')
-        .document(binID)
-        .get();
+    DocumentSnapshot ds =
+        await Firestore.instance.collection('cestini').document(binID).get();
     return Bin.fromFirestore(ds);
   }
 
@@ -107,16 +102,13 @@ class DatabaseService {
     });
   }
 
-  Future<Map<String, dynamic>> retrieveUserInfo(
-      {FirebaseUser user, String uid}) async {
-    String userUid;
-    if (user == null) {
-      userUid = uid;
-    } else
-      userUid = user.uid;
-    DocumentSnapshot ds =
-        await Firestore.instance.collection('users').document(userUid).get();
-    return ds.data;
+  Future<User> retrieveUserInfo({String reporterUid}) async {
+    DocumentSnapshot ds = await Firestore.instance
+        .collection('users')
+        .document(reporterUid)
+        .get();
+
+    return User.fromFirestore(ds);
   }
 
   Future<DocumentSnapshot> setupUser(FirebaseUser user, {String fbPic}) async {

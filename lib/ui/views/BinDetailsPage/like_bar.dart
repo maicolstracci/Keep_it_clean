@@ -10,7 +10,6 @@ class LikeBar extends StatelessWidget {
 
   LikeBar({this.binID});
 
-  //TODO: Doesnt load right away numbers...
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LikeBarModel>.reactive(

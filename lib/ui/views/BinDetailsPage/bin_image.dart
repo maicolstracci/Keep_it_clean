@@ -19,7 +19,6 @@ class BinImageView extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: double.infinity,
         decoration: BoxDecoration(color: Colors.white),
-        //TODO: che if model is busy and dont show null image placeholder...
         child: model.data != null
             ? model.data != 'NO IMAGE'
                 ? FadeInImage.assetNetwork(

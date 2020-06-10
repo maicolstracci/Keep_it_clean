@@ -18,7 +18,10 @@ class OnboardingPage3 extends StatelessWidget {
     NavigationService _navigationService = locator<NavigationService>();
 
     return GestureDetector(
-      onHorizontalDragEnd: (details){
+      onHorizontalDragEnd: (details) async {
+        if(await Permission.location.request().isGranted){
+
+        }
         PermissionHandler()
             .requestPermissions([PermissionGroup.location]).then((v) {
           _navigationService.navigateTo(Routes.mapsPage);

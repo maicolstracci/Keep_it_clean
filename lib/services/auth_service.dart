@@ -80,7 +80,10 @@ class AuthService{
     return null;
   }
 
-
+  signOut(){
+    _auth.signOut();
+    _currentUser = null;
+  }
 
 
 }

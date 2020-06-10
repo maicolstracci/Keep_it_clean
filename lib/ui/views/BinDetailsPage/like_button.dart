@@ -8,18 +8,22 @@ import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class LikeButton extends StatelessWidget {
   final int type;
   final String binID;
   final prevModel;
 
-  LikeButton({this.type, this.binID, this.prevModel });
+  LikeButton({this.type, this.binID, this.prevModel});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LikeButtonModel>.reactive(
-        onModelReady: (model){model.binID = this.binID; model.prevModel = prevModel;} ,
+        onModelReady: (model) {
+          model.binID = this.binID;
+          model.prevModel = prevModel;
+        },
         builder: (context, model, child) => TweenAnimationBuilder(
               tween: Tween<double>(begin: 0, end: model.endValueScale),
               curve: Curves.fastLinearToSlowEaseIn,
@@ -36,11 +40,14 @@ class LikeButton extends StatelessWidget {
                       return Transform.rotate(
                         angle: sin(value) / 1.4,
                         child: IconButton(
+                            disabledColor: Colors.white,
                             color: Colors.white,
                             icon: child,
-                            onPressed: () async {
-                              model.clickButton(type);
-                            }),
+                            onPressed: model.authService.currentUser != null
+                                ? () async {
+                                    model.clickButton(type);
+                                  }
+                                : () => model.showNoLoggedInSnackbar()),
                       );
                     },
                     child: Icon(type == 1 ? Icons.thumb_up : Icons.thumb_down),
@@ -54,10 +61,10 @@ class LikeButton extends StatelessWidget {
 
 class LikeButtonModel extends BaseViewModel {
   DatabaseService _databaseService = locator<DatabaseService>();
-  AuthService _authService = locator<AuthService>();
+  AuthService authService = locator<AuthService>();
+  DialogService _dialogService = locator<DialogService>();
 
   LikeBarModel prevModel;
-
 
   String binID;
 
@@ -75,9 +82,16 @@ class LikeButtonModel extends BaseViewModel {
 
     notifyListeners();
     type == 1
-        ? await _databaseService.addLikeBin(binID, _authService.currentUser)
-        : await _databaseService.addDislikeBin(binID, _authService.currentUser);
+        ? await _databaseService.addLikeBin(binID, authService.currentUser)
+        : await _databaseService.addDislikeBin(binID, authService.currentUser);
 
     prevModel.notifySourceChanged(clearOldData: true);
+  }
+
+  showNoLoggedInSnackbar() {
+    _dialogService.showDialog(
+        title: "Utente non autenticato",
+        description: "Solo gli utenti autenticati possono lasciare like/dislike",
+        buttonTitle: "Ho capito");
   }
 }

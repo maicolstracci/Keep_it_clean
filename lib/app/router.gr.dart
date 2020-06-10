@@ -14,6 +14,7 @@ import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 
 abstract class Routes {
   static const loginPage = '/';
@@ -23,6 +24,7 @@ abstract class Routes {
   static const binDetailsPage = '/bin-details-page';
   static const addBinPage = '/add-bin-page';
   static const selectBinPositionPage = '/select-bin-position-page';
+  static const reporterProfilePage = '/reporter-profile-page';
   static const all = {
     loginPage,
     onboardingPage,
@@ -31,6 +33,7 @@ abstract class Routes {
     binDetailsPage,
     addBinPage,
     selectBinPositionPage,
+    reporterProfilePage,
   };
 }
 
@@ -44,6 +47,7 @@ class Router extends RouterBase {
 
   @override
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
+    final args = settings.arguments;
     switch (settings.name) {
       case Routes.loginPage:
         return MaterialPageRoute<dynamic>(
@@ -80,8 +84,29 @@ class Router extends RouterBase {
           builder: (context) => SelectBinPositionView(),
           settings: settings,
         );
+      case Routes.reporterProfilePage:
+        if (hasInvalidArgs<ReporterProfileViewArguments>(args)) {
+          return misTypedArgsRoute<ReporterProfileViewArguments>(args);
+        }
+        final typedArgs = args as ReporterProfileViewArguments ??
+            ReporterProfileViewArguments();
+        return MaterialPageRoute<dynamic>(
+          builder: (context) =>
+              ReporterProfileView(reporterUid: typedArgs.reporterUid),
+          settings: settings,
+        );
       default:
         return unknownRoutePage(settings.name);
     }
   }
+}
+
+// *************************************************************************
+// Arguments holder classes
+// **************************************************************************
+
+//ReporterProfileView arguments holder class
+class ReporterProfileViewArguments {
+  final String reporterUid;
+  ReporterProfileViewArguments({this.reporterUid});
 }

@@ -1,17 +1,20 @@
+import 'dart:html';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/add_bin_types_list_service.dart';
+import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';
 import 'package:keep_it_clean/services/take_picture_service.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class SelectBinPositionViewModel extends BaseViewModel{
-
+class SelectBinPositionViewModel extends BaseViewModel {
   GoogleMapController mapsController;
   Set<Marker> markers = Set.from([]);
 
@@ -20,20 +23,22 @@ class SelectBinPositionViewModel extends BaseViewModel{
   DatabaseService _databaseService = locator<DatabaseService>();
   LocationService _locationService = locator<LocationService>();
   TakePictureService _takePictureService = locator<TakePictureService>();
-  AddBinTypesListService _addBinTypesListService = locator<AddBinTypesListService>();
+  AddBinTypesListService _addBinTypesListService =
+      locator<AddBinTypesListService>();
   NavigationService _navigationService = locator<NavigationService>();
+  AuthService _authService = locator<AuthService>();
+  DialogService _dialogService = locator<DialogService>();
 
   Future moveCameraToUserLocation() async {
     setBusy(true);
     if (await _locationService.getLocationPermissionStatus()) {
-
       LocationData location = await _locationService.getUserLocation();
 
       if (location == null) {
         //TODO: cant find user location, show error...
         setBusy(false);
         return;
-      } else{
+      } else {
         currentLatLng = LatLng(location.latitude, location.longitude);
 
         CameraPosition _userCameraPosition = CameraPosition(
@@ -51,12 +56,22 @@ class SelectBinPositionViewModel extends BaseViewModel{
       }
     } else {
       //TODO: we dont have user permission to track location, show dialog explaining and asking to turn it on
+      DialogResponse dialogResponse = await _dialogService.showDialog(
+          title: "Permessi di localizzazione disattivati",
+          description:
+              "E' necessario fornire i permessi di localizzazione per completare l'operazione",
+          cancelTitle: "Non voglio",
+          buttonTitle: "Portami alle impostazioni");
+      if(dialogResponse.confirmed){
+        Permissios
+      }else{}
     }
     setBusy(false);
   }
 
   onCameraMove(CameraPosition cameraPosition) {
-    currentLatLng = LatLng(cameraPosition.target.latitude, cameraPosition.target.longitude);
+    currentLatLng =
+        LatLng(cameraPosition.target.latitude, cameraPosition.target.longitude);
 
     markers.clear();
     markers.add(Marker(
@@ -67,22 +82,24 @@ class SelectBinPositionViewModel extends BaseViewModel{
   }
 
   createBin() async {
-
     //TODO: add indicator that we are uploading stuff...
     print('Uploading img');
-    String img = await _databaseService.uploadImage(_takePictureService.pic);
+
+    String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
+    String img = await _databaseService.uploadImage(
+        imgFile: _takePictureService.pic, imgName: _imgName);
     print('Finished uploading img');
     print('Creating bin');
 
-    for(int type in _addBinTypesListService.typesSelected){
-      _databaseService.createBin(typesOfBin[type], img, currentLatLng);
+    for (int type in _addBinTypesListService.typesSelected) {
+      _databaseService.createBin(
+          type: typesOfBin[type],
+          imgName: img,
+          binPos: currentLatLng,
+          user: _authService.currentUser);
     }
     _addBinTypesListService.typesSelected.clear();
 
     _navigationService.clearStackAndShow(Routes.mapsPage);
-
-
-
   }
-
 }

@@ -31,10 +31,6 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
   @override
   void onData(List<Bin> data) {
-//    markers.clear();
-//    for(Bin bin in data){
-//      _addMarker(bin.id, new LatLng(bin.position.latitude, bin.position.longitude), bin.type);
-//    }
   currentListOfBin = data;
   }
 
@@ -76,11 +72,6 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
     _navigationService.navigateTo(Routes.addBinPage);
   }
 
-  Future addBin() async{
-
-    await _databaseService.createBin("vetro", "v", LatLng(44.231548, 8.364462));
-
-  }
 
   void setBinFilterType({String filterBinsForType}){
 
