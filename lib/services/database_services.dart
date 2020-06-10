@@ -10,6 +10,7 @@ import 'package:injectable/injectable.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/user_model.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 
 import 'auth_service.dart';
 
@@ -128,18 +129,19 @@ class DatabaseService {
       return documentSnapshot;
   }
 
-  void addPoints(FirebaseUser user, List<int> types) {
+  //TODO: change to the new system with map
+  Future addPoints(User user, List<int> types) async{
     final DocumentReference postRef =
         _db.collection("users").document(user.uid);
-    _db.runTransaction((Transaction tx) async {
+    await _db.runTransaction((Transaction tx) async {
       DocumentSnapshot postSnapshot = await tx.get(postRef);
       if (postSnapshot.exists) {
         types.forEach((type) async {
-          if (postSnapshot.data['$type'] != null) {
+          if (postSnapshot.data['${typesOfBin[type]}'] != null) {
             await tx.update(postRef,
-                <String, dynamic>{'$type': postSnapshot.data['$type'] + 1});
+                <String, dynamic>{'${typesOfBin[type]}': postSnapshot.data['${typesOfBin[type]}'] + 1});
           } else {
-            await tx.update(postRef, <String, dynamic>{'$type': 1});
+            await tx.update(postRef, <String, dynamic>{'${typesOfBin[type]}': 1});
           }
         });
       }

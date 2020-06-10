@@ -25,7 +25,7 @@ class ProfilePageViewModel extends BaseViewModel {
   }
 
   int getNumberOfReportsForType(int index) {
-    Map<String, int> map = _authService.currentUser.binReportMap;
+    Map<String, int> map = _authService.currentUser.reports;
     if (map == null) return 0;
 
     return map[typesOfBin[index]] ?? 0;

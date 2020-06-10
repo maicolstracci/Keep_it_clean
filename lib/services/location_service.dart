@@ -4,19 +4,14 @@ import 'package:permission_handler/permission_handler.dart';
 
 @lazySingleton
 class LocationService {
-  Map<PermissionGroup, PermissionStatus> permissions;
-
-
 
 // Request permission method from permissions_handlers plugin
   void requestPermission() async {
-    permissions = await PermissionHandler()
-        .requestPermissions([PermissionGroup.location]);
+    await Permission.location.request();
   }
 
   Future<bool> getLocationPermissionStatus() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
+    PermissionStatus permission = await Permission.location.status;
     return permission == PermissionStatus.granted;
   }
 

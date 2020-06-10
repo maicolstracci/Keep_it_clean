@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
@@ -18,6 +16,8 @@ class SelectBinPositionViewModel extends BaseViewModel {
   GoogleMapController mapsController;
   Set<Marker> markers = Set.from([]);
 
+  bool errorLoadingLocation = false;
+
   LatLng currentLatLng;
 
   DatabaseService _databaseService = locator<DatabaseService>();
@@ -35,10 +35,12 @@ class SelectBinPositionViewModel extends BaseViewModel {
       LocationData location = await _locationService.getUserLocation();
 
       if (location == null) {
-        //TODO: cant find user location, show error...
+        errorLoadingLocation = true;
         setBusy(false);
         return;
       } else {
+        errorLoadingLocation = false;
+
         currentLatLng = LatLng(location.latitude, location.longitude);
 
         CameraPosition _userCameraPosition = CameraPosition(
@@ -55,16 +57,20 @@ class SelectBinPositionViewModel extends BaseViewModel {
             .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
       }
     } else {
-      //TODO: we dont have user permission to track location, show dialog explaining and asking to turn it on
-      DialogResponse dialogResponse = await _dialogService.showDialog(
+      DialogResponse dialogResponse = await _dialogService.showConfirmationDialog(
           title: "Permessi di localizzazione disattivati",
           description:
               "E' necessario fornire i permessi di localizzazione per completare l'operazione",
           cancelTitle: "Non voglio",
-          buttonTitle: "Portami alle impostazioni");
-      if(dialogResponse.confirmed){
-        Permissios
-      }else{}
+          confirmationTitle: "Portami alle impostazioni");
+      if (dialogResponse.confirmed) {
+        await openAppSettings();
+      } else {
+        if (_takePictureService.pic != null)
+          await _takePictureService.pic.delete();
+        _addBinTypesListService.typesSelected.clear();
+        _navigationService.clearStackAndShow(Routes.mapsPage);
+      }
     }
     setBusy(false);
   }
@@ -92,12 +98,14 @@ class SelectBinPositionViewModel extends BaseViewModel {
     print('Creating bin');
 
     for (int type in _addBinTypesListService.typesSelected) {
-      _databaseService.createBin(
+      await _databaseService.createBin(
           type: typesOfBin[type],
           imgName: img,
           binPos: currentLatLng,
           user: _authService.currentUser);
     }
+    await _databaseService.addPoints(_authService.currentUser, _addBinTypesListService.typesSelected);
+
     _addBinTypesListService.typesSelected.clear();
 
     _navigationService.clearStackAndShow(Routes.mapsPage);

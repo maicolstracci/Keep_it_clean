@@ -22,7 +22,8 @@ class SelectBinPositionView extends StatelessWidget {
                       myLocationButtonEnabled: false,
                       mapToolbarEnabled: false,
                       markers: model.markers,
-                      onCameraMove: (cameraPosition)=>model.onCameraMove(cameraPosition),
+                      onCameraMove: (cameraPosition) =>
+                          model.onCameraMove(cameraPosition),
                       initialCameraPosition: initialCameraPosition,
                       onMapCreated: (GoogleMapController controller) {
                         model.mapsController = controller;
@@ -34,18 +35,33 @@ class SelectBinPositionView extends StatelessWidget {
                     flex: 2,
                     child: Column(
                       children: [
+                        Container(
+                          child: FlatButton.icon(
+                              onPressed: () {model.moveCameraToUserLocation();},
+                              color: Colors.white.withOpacity(0.3),
+                              icon: Icon(Icons.refresh),
+                              label: Text("Ricalcola posizione")),
+                        ),
                         Expanded(
                           child: Container(
                             child: Center(
-                              child: Text( model.isBusy ? "Sto ricercando la tua posizione..." :
-                                  "Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla",
-                              textAlign: TextAlign.center,),
+                              child: Text(
+                                model.isBusy
+                                    ? "Sto ricercando la tua posizione..."
+                                    : model.errorLoadingLocation
+                                        ? "ERRORE NEL CALCOLARE POSIZIONE"
+                                        : "Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla",
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
                         MaterialButton(
-                            onPressed: ()=> model.createBin(),
+                          onPressed: model.currentLatLng != null
+                              ? () => model.createBin()
+                              : null,
                           color: Colors.blue,
+                          disabledColor: Colors.blueGrey,
                           child: Text("Invia"),
                         )
                       ],

@@ -8,10 +8,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class OnboardingPage3 extends StatelessWidget {
-
   final FirebaseUser user;
 
-  const OnboardingPage3({Key key, this.user}): super(key:key);
+  const OnboardingPage3({Key key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +18,8 @@ class OnboardingPage3 extends StatelessWidget {
 
     return GestureDetector(
       onHorizontalDragEnd: (details) async {
-        if(await Permission.location.request().isGranted){
-
-        }
-        PermissionHandler()
-            .requestPermissions([PermissionGroup.location]).then((v) {
-          _navigationService.navigateTo(Routes.mapsPage);
-        });
+        await Permission.location.request();
+        _navigationService.navigateTo(Routes.mapsPage);
       },
       child: Container(
         height: MediaQuery.of(context).size.height,
@@ -77,11 +71,12 @@ class OnboardingPage3 extends StatelessWidget {
                           height: 10,
                         ),
                         AutoSizeText(
-                          AppTranslations.of(context).text("permissions_string"),
+                          AppTranslations.of(context)
+                              .text("permissions_string"),
                           maxLines: 3,
                           textAlign: TextAlign.center,
                           style:
-                          TextStyle(color: Color(0xfff4f8f9), fontSize: 22),
+                              TextStyle(color: Color(0xfff4f8f9), fontSize: 22),
                         ),
                       ],
                     ),
@@ -92,11 +87,9 @@ class OnboardingPage3 extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: FlatButton(
-                onPressed: () {
-                  PermissionHandler()
-                      .requestPermissions([PermissionGroup.location]).then((v) {
-                    locator<NavigationService>().navigateTo(Routes.mapsPage);
-                  });
+                onPressed: () async {
+                  await Permission.location.request();
+                  _navigationService.navigateTo(Routes.mapsPage);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

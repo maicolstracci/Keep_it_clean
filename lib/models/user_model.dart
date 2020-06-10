@@ -5,13 +5,13 @@ class User{
   final String uid;
   final String name;
   final String profilePic;
-  Map<String, int> binReportMap;
+  Map<String, int> reports;
 
   User(
       {this.uid,
         this.name,
         this.profilePic,
-        this.binReportMap,
+        this.reports,
         });
 
   factory User.fromFirestore(DocumentSnapshot doc) {
@@ -21,7 +21,7 @@ class User{
       uid: doc.documentID,
       name: data['name'],
       profilePic: data['profilePic'],
-      binReportMap: data['binReportMap'] ?? null,
+      reports: data['reports'] != null ? Map<String, int>.from(data['reports']) : null,
     );
   }
 

@@ -12,7 +12,7 @@ class ReporterProfilePageViewModel extends FutureViewModel<User> {
   String reporterUid;
 
   int getNumberOfReportsForType(int index) {
-    Map<String, int> map = data.binReportMap;
+    Map<String, int> map = data.reports;
     if (map == null) return 0;
 
     return map[typesOfBin[index]] ?? 0;
