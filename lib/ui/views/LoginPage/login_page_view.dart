@@ -10,7 +10,7 @@ class LoginPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         builder: (context, model, child) => Scaffold(
-              backgroundColor: Color(0xff06442d),
+              backgroundColor: Theme.of(context).backgroundColor,
               resizeToAvoidBottomPadding: false,
               body: SafeArea(
                 bottom: false,

@@ -1,13 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
-import 'package:keep_it_clean/Models/bin_model.dart';
-import 'package:keep_it_clean/app/locator.dart';
-import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/models/bin_model.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 
 @lazySingleton
 class DatabaseService {
@@ -66,17 +67,40 @@ class DatabaseService {
 //    return Bin.fromFirestore(await doc.get());
   }
 
-  Future<Bin> getBinInfo(MarkerId markerId) async {
+  Future<String> uploadImage(File img) async {
+    //TODO: Add user to img name
+    String _imgName = '${DateTime.now()}';
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(_imgName);
+
+    //TODO: check for other results
+    StorageUploadTask uploadTask = storageReference.putFile(img);
+    await uploadTask.onComplete;
+
+    img.delete();
+    return _imgName;
+  }
+
+  Stream<Map<String,int>> streamLikesFromBin(String binID){
+    return _db.collection("cestini").document(binID).snapshots().map((doc) {
+      Map<String,int> map = Map();
+      map["likes"] = doc['likes'];
+      map["dislikes"] = doc['dislikes'];
+      return map;
+    });
+  }
+
+  Future<Bin> getBinInfo(String binID) async {
     DocumentSnapshot ds = await Firestore.instance
         .collection('cestini')
-        .document(markerId.value)
+        .document(binID)
         .get();
     return Bin.fromFirestore(ds);
   }
 
-  Future<String> getImageFromUrl(String photoUrl) async {
+  Future<String> getDownloadUrlImageFromName(String imageName) async {
     final StorageReference storageReference =
-        FirebaseStorage().ref().child(photoUrl);
+        FirebaseStorage().ref().child(imageName);
 
     return await storageReference.getDownloadURL().catchError((e) {
       return null;
@@ -130,7 +154,7 @@ class DatabaseService {
     });
   }
 
-  Future<bool> addLikeBin(String documentId, FirebaseUser user) async {
+  Future<bool> addLikeBin(String documentId, User user) async {
     DocumentReference postRef = _db.collection("cestini").document(documentId);
     List<String> l = [user.uid];
     bool result = true;
@@ -159,7 +183,7 @@ class DatabaseService {
     return result;
   }
 
-  Future<bool> addDislikeBin(String documentId, FirebaseUser user) async {
+  Future<bool> addDislikeBin(String documentId, User user) async {
     DocumentReference postRef = _db.collection("cestini").document(documentId);
     List<String> l = [user.uid];
     bool result = true;

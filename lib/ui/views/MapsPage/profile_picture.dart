@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/Models/user_model.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
@@ -18,7 +18,7 @@ class ProfilePicture extends StatelessWidget {
       left: 10,
       child: GestureDetector(
         onTap: () {
-          _navigationService.navigateTo(Routes.onboardingPage);
+          _navigationService.navigateTo(Routes.profilePage);
         },
         child: Hero(
           tag: "profilePic",

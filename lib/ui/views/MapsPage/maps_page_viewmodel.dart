@@ -1,18 +1,26 @@
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'file:///C:/Users/Maicol/AndroidStudioProjects/keep_it_clean/lib/services/database_services.dart';
-import 'package:keep_it_clean/Models/bin_model.dart';
-import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:keep_it_clean/models/bin_model.dart';
+import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/services/bin_details_service.dart';
+import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 
 
 class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   LocationService _locationService = locator<LocationService>();
   DatabaseService _databaseService = locator<DatabaseService>();
+  NavigationService _navigationService = locator<NavigationService>();
+  BinDetailsService _binDetailsService = locator<BinDetailsService>();
+  AuthService _authService = locator<AuthService>();
+  DialogService _dialogService = locator<DialogService>();
 
   GoogleMapController mapsController;
   Set<Marker> markers = Set.from([]);
@@ -35,22 +43,37 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
       filterBinsForType = null;
     } else filterBinsForType = filter;
 
-    print('IN SET FILTER -> $filter FILTERBINS ->$filterBinsForType');
-
     notifyListeners();
   }
 
+  bool isUserLoggedIn(){
+    return _authService.currentUser != null;
+  }
+
   void _addMarker(String id, LatLng latLng, String type) {
+
     final MarkerId markerId = MarkerId(id);
     // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
       position: latLng,
       icon: pinMap[type],
+      onTap: () => navigateToBinDetailsPage(id)
     );
 
     // adding a new marker to map
     markers.add(marker);
+  }
+
+  void navigateToBinDetailsPage(String binID){
+
+    _binDetailsService.setBinID(binID);
+
+    _navigationService.navigateTo(Routes.binDetailsPage);
+  }
+
+  void navigateToAddBinPage() {
+    _navigationService.navigateTo(Routes.addBinPage);
   }
 
   Future addBin() async{
@@ -110,4 +133,15 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
   @override
   Stream<List<Bin>> get stream => _databaseService.binStream();
+
+  showUserNoLoggedInDialog() {
+    _dialogService.showDialog(
+      title: "Accesso non consentito agli utenti ospiti",
+      description: "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni",
+
+      buttonTitle: "Ho capito"
+    );
+  }
+
+
 }

@@ -1,9 +1,13 @@
 
+
 import 'package:auto_route/auto_route_annotations.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
+import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_view.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_view.dart';
 import 'package:keep_it_clean/ui/views/OnboardingPage/onboarding_view.dart';
-
+import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
 
 @MaterialAutoRouter()
 class $Router{
@@ -11,4 +15,8 @@ class $Router{
   LoginPageView loginPage;
   OnboardingView onboardingPage;
   MapsPageView mapsPage;
+  ProfilePageView profilePage;
+  BinDetailsPageView binDetailsPage;
+  AddBinPageView addBinPage;
+  SelectBinPositionView selectBinPositionPage;
 }

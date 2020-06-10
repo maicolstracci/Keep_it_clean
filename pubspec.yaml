@@ -60,6 +60,7 @@ dependencies:
   geoflutterfire: ^2.1.0
   flutter_hooks:
   stacked_hooks:
+  observable_ish:
 
 flutter_icons:
   android: true
