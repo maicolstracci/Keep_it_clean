@@ -162,7 +162,8 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
       BuildContext context, MapsPageViewModel viewModel) {
     return FlatButton(
       color: Colors.blue[800].withOpacity(.98),
-      onPressed: viewModel.isUserLoggedIn() ? () => viewModel.navigateToAddBinPage() : () => viewModel.showUserNoLoggedInDialog(),
+//      onPressed: viewModel.isUserLoggedIn() ? () => viewModel.navigateToAddBinPage() : () => viewModel.showUserNoLoggedInDialog(),
+      onPressed:()=> viewModel.mapTest(),
       padding: EdgeInsets.all(14),
       shape: CircleBorder(),
       child: Icon(
@@ -172,27 +173,5 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
       ),
     );
 
-    //    return Container(
-//      margin: EdgeInsets.only(
-//        left: 10,
-//      ),
-//      width: 60.0,
-//      height: 60.0,
-//      decoration: BoxDecoration(
-//        shape: BoxShape.circle,
-//        color: Colors.blue[800].withOpacity(.98),
-//      ),
-//      child: RawMaterialButton(
-//
-//        shape: CircleBorder(),
-//
-////        onPressed: () => viewModel.navigateToAddBinPage(),
-//        child: Icon(
-//          Icons.add,
-//          size: 32,
-//          color: Colors.white,
-//        ),
-//      ),
-//    );
   }
 }

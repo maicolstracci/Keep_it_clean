@@ -24,7 +24,7 @@ class BinDetailsPageView extends StatelessWidget {
                 actions: [IconButton(
                   padding: EdgeInsets.all(0),
                   onPressed: () =>
-                  {},
+                  model.showReportDialog(),
                   icon: Icon(
                     Icons.error_outline,
                     color: Colors.red,

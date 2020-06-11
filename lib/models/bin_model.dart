@@ -24,6 +24,8 @@ class Bin {
 
   factory Bin.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
+    Map review = doc.data['review'];
+
     return Bin(
       id: doc.documentID,
       position: data['position']['geopoint'],
@@ -32,8 +34,8 @@ class Bin {
       type: data['type'],
       username: data['username'],
       uidUser: data['uidUser'],
-      likes: data['likes'],
-      dislikes: data['dislikes'],
+      likes: review != null ? review['like'] : 0,
+      dislikes: review != null ? review['dislike'] : 0,
     );
   }
 }

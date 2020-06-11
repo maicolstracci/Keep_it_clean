@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
-import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
-import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -45,6 +44,7 @@ class LikeButton extends StatelessWidget {
                             icon: child,
                             onPressed: model.authService.currentUser != null
                                 ? () async {
+
                                     model.clickButton(type);
                                   }
                                 : () => model.showNoLoggedInSnackbar()),
@@ -71,6 +71,8 @@ class LikeButtonModel extends BaseViewModel {
   double endValueScale = 0;
   double endValue = 0;
 
+
+
   clickButton(int type) async {
     if (endValue == 0) {
       endValue = pi * 5;
@@ -81,6 +83,9 @@ class LikeButtonModel extends BaseViewModel {
     }
 
     notifyListeners();
+
+    await Future.delayed(Duration(seconds: 1));
+
     type == 1
         ? await _databaseService.addLikeBin(binID, authService.currentUser)
         : await _databaseService.addDislikeBin(binID, authService.currentUser);
@@ -91,7 +96,8 @@ class LikeButtonModel extends BaseViewModel {
   showNoLoggedInSnackbar() {
     _dialogService.showDialog(
         title: "Utente non autenticato",
-        description: "Solo gli utenti autenticati possono lasciare like/dislike",
+        description:
+            "Solo gli utenti autenticati possono lasciare like/dislike",
         buttonTitle: "Ho capito");
   }
 }

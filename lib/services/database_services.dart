@@ -82,8 +82,14 @@ class DatabaseService {
   Stream<Map<String, int>> streamLikesFromBin(String binID) {
     return _db.collection("cestini").document(binID).snapshots().map((doc) {
       Map<String, int> map = Map();
-      map["likes"] = doc['likes'];
-      map["dislikes"] = doc['dislikes'];
+      Map review = doc.data['review'];
+      if (review != null) {
+        map["likes"] = review['like'];
+        map["dislikes"] = review['dislike'];
+      } else {
+        map["likes"] = 0;
+        map["dislikes"] = 0;
+      }
       return map;
     });
   }
@@ -129,158 +135,136 @@ class DatabaseService {
       return documentSnapshot;
   }
 
-  //TODO: change to the new system with map
-  Future addPoints(User user, List<int> types) async{
-    final DocumentReference postRef =
+  Future addPoints(User user, List<int> types) async {
+    final DocumentReference documentReference =
         _db.collection("users").document(user.uid);
-    await _db.runTransaction((Transaction tx) async {
-      DocumentSnapshot postSnapshot = await tx.get(postRef);
-      if (postSnapshot.exists) {
-        types.forEach((type) async {
-          if (postSnapshot.data['${typesOfBin[type]}'] != null) {
-            await tx.update(postRef,
-                <String, dynamic>{'${typesOfBin[type]}': postSnapshot.data['${typesOfBin[type]}'] + 1});
-          } else {
-            await tx.update(postRef, <String, dynamic>{'${typesOfBin[type]}': 1});
-          }
-        });
-      }
-    });
+
+    DocumentSnapshot doc = await documentReference.get();
+
+    // Map is equal to the map retrieved from Firebase if that exist or a new map if it does not exist
+    Map<String, int> map = doc.data['reports'] != null
+        ? Map<String, int>.from(doc.data['reports'])
+        : Map<String, int>();
+    int totalReports = doc.data['totalNumberOfReports'] ?? 0;
+
+    for (int type in types) {
+      map.update(typesOfBin[type], (value) => value + 1, ifAbsent: () => 1);
+      totalReports++;
+    }
+
+    documentReference
+        .updateData({'reports': map, 'totalNumberOfReports': totalReports});
   }
 
   Future<bool> addLikeBin(String documentId, User user) async {
-    DocumentReference postRef = _db.collection("cestini").document(documentId);
-    List<String> l = [user.uid];
+    DocumentReference documentReference =
+        _db.collection("cestini").document(documentId);
     bool result = true;
 
-    await _db.runTransaction((Transaction tx) async {
-      DocumentSnapshot postSnapshot = await tx.get(postRef);
-      List<dynamic> userList = postSnapshot.data['userListLikes'];
+    DocumentSnapshot doc = await documentReference.get();
 
-      if (!userList.contains(user.uid)) {
-        await tx.update(postRef, <String, dynamic>{
-          'likes': postSnapshot.data['likes'] + 1,
-          'userListLikes': FieldValue.arrayUnion(l)
-        });
-        result = true;
+    Map<String, dynamic> map = doc.data['review'] != null
+        ? Map<String, dynamic>.from(doc.data['review'])
+        : Map<String, dynamic>();
+
+    if (map.isNotEmpty) {
+      List<String> userThatLiked = (map['userThatLiked'] as List)
+              ?.map((item) => item as String)
+              ?.toList() ??
+          [];
+
+      if (!userThatLiked.contains(user.uid)) {
+        map.update('like', (value) => value + 1);
+        userThatLiked.add(user.uid);
+        map.update("userThatLiked", (value) => userThatLiked);
       } else {
-        await tx.update(postRef, <String, dynamic>{
-          'likes': postSnapshot.data['likes'] - 1,
-          'userListLikes': FieldValue.arrayRemove(l)
-        });
-        result = false;
+        map.update('like', (value) => value - 1);
+
+        userThatLiked.remove(user.uid);
+        map.update("userThatLiked", (value) => userThatLiked);
       }
-    }).catchError((e) {
-      print(e);
-    });
+    } else {
+      map.putIfAbsent("like", () => 1);
+      map.putIfAbsent("dislike", () => 0);
+      map.putIfAbsent("userThatLiked", () => [user.uid]);
+      map.putIfAbsent("userThatDisliked", () => []);
+    }
+
+    documentReference.updateData({'review': map});
 
     return result;
   }
 
   Future<bool> addDislikeBin(String documentId, User user) async {
-    DocumentReference postRef = _db.collection("cestini").document(documentId);
-    List<String> l = [user.uid];
+    DocumentReference documentReference =
+        _db.collection("cestini").document(documentId);
+
     bool result = true;
 
-    await _db.runTransaction((Transaction tx) async {
-      DocumentSnapshot postSnapshot = await tx.get(postRef);
-      List<dynamic> userList = postSnapshot.data['userListDislikes'];
+    DocumentSnapshot doc = await documentReference.get();
 
-      if (!userList.contains(user.uid)) {
-        await tx.update(postRef, <String, dynamic>{
-          'dislikes': postSnapshot.data['dislikes'] + 1,
-          'userListDislikes': FieldValue.arrayUnion(l)
-        });
-        result = true;
+    Map<String, dynamic> map = doc.data['review'] != null
+        ? Map<String, dynamic>.from(doc.data['review'])
+        : Map<String, dynamic>();
+
+    if (map.isNotEmpty) {
+      List<String> userThatLiked = (map['userThatDisliked'] as List)
+              ?.map((item) => item as String)
+              ?.toList() ??
+          [];
+
+      if (!userThatLiked.contains(user.uid)) {
+        map.update('dislike', (value) => value + 1);
+        userThatLiked.add(user.uid);
+        map.update("userThatDisliked", (value) => userThatLiked);
       } else {
-        await tx.update(postRef, <String, dynamic>{
-          'dislikes': postSnapshot.data['dislikes'] - 1,
-          'userListDislikes': FieldValue.arrayRemove(l)
-        });
-        result = false;
+        map.update('dislike', (value) => value - 1);
+        userThatLiked.remove(user.uid);
+        map.update("userThatDisliked", (value) => userThatLiked);
       }
-    }).catchError((e) {
-      print(e);
-    });
+    } else {
+      map.putIfAbsent("like", () => 0);
+      map.putIfAbsent("dislike", () => 1);
+      map.putIfAbsent("userThatLiked", () => []);
+      map.putIfAbsent("userThatDisliked", () => [user.uid]);
+    }
+
+    documentReference.updateData({'review': map});
+
     return result;
   }
 
-  void reportBinProblem(String documentId, FirebaseUser user) {
-    DocumentReference postRef = _db.collection("reports").document(documentId);
-    List<String> l = [user.uid];
+  void reportBinProblem(String documentId, User user) async {
+    DocumentReference documentReference =
+        _db.collection("cestini").document(documentId);
 
-    _db.runTransaction((Transaction tx) async {
-      DocumentSnapshot postSnapshot = await tx.get(postRef);
+    DocumentSnapshot doc = await documentReference.get();
 
-      if (postSnapshot.exists) {
-        List<dynamic> userList = postSnapshot.data['userList'];
-        if (!userList.contains(user.uid)) {
-          print("enter");
-          await tx.update(postRef, <String, dynamic>{
-            'nOfReports': postSnapshot.data['nOfReports'] + 1,
-            'userList': FieldValue.arrayUnion(l)
-          });
-        }
+    Map<String, dynamic> map = doc.data['reports'] != null
+        ? Map<String, dynamic>.from(doc.data['reports'])
+        : Map<String, dynamic>();
+
+    if (map.isNotEmpty) {
+      List<String> userThatReportedThisBin =
+          (map['userThatReportedThisBin'] as List)
+                  ?.map((item) => item as String)
+                  ?.toList() ??
+              [];
+
+      if (!userThatReportedThisBin.contains(user.uid)) {
+        map.update('numberOfReports', (value) => value + 1);
+        userThatReportedThisBin.add(user.uid);
+        map.update(
+            "userThatReportedThisBin", (value) => userThatReportedThisBin);
       } else {
-        await tx.set(postRef, <String, dynamic>{
-          'nOfReports': 1,
-          'userList': FieldValue.arrayUnion(l)
-        });
+        return;
       }
-    });
-  }
-}
+    } else {
+      map.putIfAbsent("numberOfReports", () => 1);
+      map.putIfAbsent("userThatReportedThisBin", () => [user.uid]);
+    }
 
-class TypeChanger with ChangeNotifier {
-  int _type = 0;
-  LatLngBounds _visibleArea;
+    documentReference.updateData({'reports': map});
 
-  TypeChanger(this._type, this._visibleArea);
-
-  int getType() => _type;
-
-  setType(int type) {
-    _type = type;
-    notifyListeners();
-  }
-
-  LatLngBounds getVisibleArea() => _visibleArea;
-
-  setVisibleArea(LatLngBounds visibleArea) {
-    _visibleArea = visibleArea;
-  }
-}
-
-class SearchButtonChanger with ChangeNotifier {
-  bool _visible = false;
-
-  SearchButtonChanger(this._visible);
-
-  bool getVisibility() => _visible;
-
-  setVisibility(bool vis) {
-    _visible = vis;
-    notifyListeners();
-  }
-}
-
-class LikesInfoChanger with ChangeNotifier {
-  int likes = 0;
-  int dislikes = 0;
-
-  LikesInfoChanger(this.likes, this.dislikes);
-
-  int getLikes() => likes;
-
-  int getDislikes() => dislikes;
-
-  setLike(int like) {
-    likes = likes + like;
-    notifyListeners();
-  }
-
-  setDislike(int dislike) {
-    dislikes = dislikes + dislike;
-    notifyListeners();
   }
 }

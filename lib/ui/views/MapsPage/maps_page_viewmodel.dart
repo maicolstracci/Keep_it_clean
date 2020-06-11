@@ -48,6 +48,7 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
   void _addMarker(String id, LatLng latLng, String type) {
 
+
     final MarkerId markerId = MarkerId(id);
     // creating a new MARKER
     final Marker marker = Marker(
@@ -132,6 +133,10 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
       buttonTitle: "Ho capito"
     );
+  }
+
+  mapTest() {
+    _databaseService.addPoints(_authService.currentUser, [0,1,4]);
   }
 
 

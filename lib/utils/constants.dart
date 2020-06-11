@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 Color mainGreen = Color(0xff06442d);
 
 //Color(0xff1e5540)
@@ -14,4 +13,16 @@ final CameraPosition initialCameraPosition = CameraPosition(
   zoom: 14.4746,
 );
 
-List<String> typesOfBin = ["plastica","vetro","alluminio","carta","umido","indifferenziata","batterie","medicinali","verde","abiti","olio vegetale"];
+List<String> typesOfBin = [
+  "Plastica",
+  "Vetro",
+  "Alluminio",
+  "Carta",
+  "Umido",
+  "Indifferenziata",
+  "Batterie",
+  "Medicinali",
+  "Verde",
+  "Abiti",
+  "Olio vegetale"
+];
