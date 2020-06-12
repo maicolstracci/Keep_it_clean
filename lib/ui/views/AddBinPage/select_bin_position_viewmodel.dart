@@ -17,6 +17,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
   Set<Marker> markers = Set.from([]);
 
   bool errorLoadingLocation = false;
+  bool uploadingBin = true;
 
   LatLng currentLatLng;
 
@@ -88,14 +89,12 @@ class SelectBinPositionViewModel extends BaseViewModel {
   }
 
   createBin() async {
-    //TODO: add indicator that we are uploading stuff...
-    print('Uploading img');
+    uploadingBin = true;
+    notifyListeners();
 
     String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
     String img = await _databaseService.uploadImage(
         imgFile: _takePictureService.pic, imgName: _imgName);
-    print('Finished uploading img');
-    print('Creating bin');
 
     for (int type in _addBinTypesListService.typesSelected) {
       await _databaseService.createBin(
@@ -104,9 +103,11 @@ class SelectBinPositionViewModel extends BaseViewModel {
           binPos: currentLatLng,
           user: _authService.currentUser);
     }
-    await _databaseService.addPoints(_authService.currentUser, _addBinTypesListService.typesSelected);
+    await _databaseService.addPoints(
+        _authService.currentUser, _addBinTypesListService.typesSelected);
 
     _addBinTypesListService.typesSelected.clear();
+    uploadingBin = false;
 
     _navigationService.clearStackAndShow(Routes.mapsPage);
   }

@@ -8,9 +8,9 @@ class TakePictureService {
 
   File pic;
 
-  Future<File> takePicture() async {
+  Future<File> takePicture(String from) async {
   pic = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 30)
+        source: from == "camera" ? ImageSource.camera : ImageSource.gallery, imageQuality: 30)
         .catchError((e) {
       if (e.code == "camera_access_denied") {
         print(e.code);

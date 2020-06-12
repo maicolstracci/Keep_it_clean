@@ -51,19 +51,19 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
         borderRadius: BorderRadius.circular(20.0),
       ),
       elevation: 5,
-      color: _color,
+      color: Theme.of(context).accentColor,
       minWidth: 240,
       height: 60,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(_icon,color: Colors.white,),
+          Icon(_icon,color: _color,),
           SizedBox(
             width: 28,
           ),
           Text(AppTranslations.of(context)
-              .text("${buttonTypeName}_login_string"),style: TextStyle(color: Colors.white),),
+              .text("${buttonTypeName}_login_string"),style: TextStyle(color: _color),),
         ],
       ),
     );

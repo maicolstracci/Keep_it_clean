@@ -13,6 +13,7 @@ import 'package:keep_it_clean/ui/views/MapsPage/maps_page_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/picture_selection_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 
@@ -23,6 +24,7 @@ abstract class Routes {
   static const profilePage = '/profile-page';
   static const binDetailsPage = '/bin-details-page';
   static const addBinPage = '/add-bin-page';
+  static const pictureSelectionPage = '/picture-selection-page';
   static const selectBinPositionPage = '/select-bin-position-page';
   static const reporterProfilePage = '/reporter-profile-page';
   static const all = {
@@ -32,6 +34,7 @@ abstract class Routes {
     profilePage,
     binDetailsPage,
     addBinPage,
+    pictureSelectionPage,
     selectBinPositionPage,
     reporterProfilePage,
   };
@@ -77,6 +80,11 @@ class Router extends RouterBase {
       case Routes.addBinPage:
         return MaterialPageRoute<dynamic>(
           builder: (context) => AddBinPageView(),
+          settings: settings,
+        );
+      case Routes.pictureSelectionPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => PictureSelectionView(),
           settings: settings,
         );
       case Routes.selectBinPositionPage:

@@ -35,7 +35,7 @@ class AuthService{
 
     final FirebaseUser user =
     (await _auth.signInWithCredential(credential)).user;
-
+    
     DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
      _currentUser = User.fromFirestore(documentSnapshot);
      print(_currentUser);

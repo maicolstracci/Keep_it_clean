@@ -2,6 +2,7 @@
 
 import 'package:auto_route/auto_route_annotations.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/picture_selection_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_view.dart';
@@ -19,6 +20,7 @@ class $Router{
   ProfilePageView profilePage;
   BinDetailsPageView binDetailsPage;
   AddBinPageView addBinPage;
+  PictureSelectionView pictureSelectionPage;
   SelectBinPositionView selectBinPositionPage;
   ReporterProfileView reporterProfilePage;
 }

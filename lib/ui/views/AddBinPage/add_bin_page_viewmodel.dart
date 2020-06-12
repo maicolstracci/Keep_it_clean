@@ -28,14 +28,10 @@ class AddBinPageViewModel extends BaseViewModel{
     return _addBinTypesListService.typesSelected.contains(index);
   }
 
-  void takePicture() async {
-    await _takePictureService.takePicture();
-
-    if(_takePictureService.pic != null ){
-        _navigationService.navigateTo(Routes.selectBinPositionPage);
-    }
-
+  navigateToPictureSelection(){
+    _navigationService.navigateTo(Routes.pictureSelectionPage);
   }
+
 }
 
 //Future<void> takePicture() async {

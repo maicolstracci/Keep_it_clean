@@ -135,9 +135,7 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
     );
   }
 
-  mapTest() {
-    _databaseService.addPoints(_authService.currentUser, [0,1,4]);
-  }
+
 
 
 }

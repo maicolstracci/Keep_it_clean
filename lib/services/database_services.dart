@@ -29,7 +29,7 @@ class DatabaseService {
   Stream<List<Bin>> binStream() {
     // Create a geoFirePoint
     GeoFirePoint center =
-        _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
+    _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
 
     // get the collection reference or query
     var collectionReference = _db.collection('cestini');
@@ -44,11 +44,10 @@ class DatabaseService {
         .map(_binListFromSnap);
   }
 
-  Future<void> createBin(
-      {@required String type,
-      @required String imgName,
-      @required LatLng binPos,
-      @required User user}) async {
+  Future<void> createBin({@required String type,
+    @required String imgName,
+    @required LatLng binPos,
+    @required User user}) async {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
@@ -69,7 +68,7 @@ class DatabaseService {
   Future<String> uploadImage(
       {@required File imgFile, @required String imgName}) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(imgName);
+    FirebaseStorage.instance.ref().child(imgName);
 
     //TODO: check for other results
     StorageUploadTask uploadTask = storageReference.putFile(imgFile);
@@ -96,13 +95,13 @@ class DatabaseService {
 
   Future<Bin> getBinInfo(String binID) async {
     DocumentSnapshot ds =
-        await Firestore.instance.collection('cestini').document(binID).get();
+    await Firestore.instance.collection('cestini').document(binID).get();
     return Bin.fromFirestore(ds);
   }
 
   Future<String> getDownloadUrlImageFromName(String imageName) async {
     final StorageReference storageReference =
-        FirebaseStorage().ref().child(imageName);
+    FirebaseStorage().ref().child(imageName);
 
     return await storageReference.getDownloadURL().catchError((e) {
       return null;
@@ -118,10 +117,20 @@ class DatabaseService {
     return User.fromFirestore(ds);
   }
 
+  Future<List<DocumentSnapshot>> retrieveRankings() async {
+   Query query = _db.collection("users").where("totalNumberOfReports", isGreaterThan: 0)
+        .orderBy("totalNumberOfReports",descending: true).limit(50);
+
+   QuerySnapshot snapshot = await query.getDocuments();
+
+   return snapshot.documents;
+
+  }
+
   Future<DocumentSnapshot> setupUser(FirebaseUser user, {String fbPic}) async {
     // Check if user already in firestore db, if not create an entry
     DocumentReference ref =
-        Firestore.instance.collection('users').document(user.uid);
+    Firestore.instance.collection('users').document(user.uid);
 
     DocumentSnapshot documentSnapshot = await ref.get();
 
@@ -137,7 +146,7 @@ class DatabaseService {
 
   Future addPoints(User user, List<int> types) async {
     final DocumentReference documentReference =
-        _db.collection("users").document(user.uid);
+    _db.collection("users").document(user.uid);
 
     DocumentSnapshot doc = await documentReference.get();
 
@@ -158,7 +167,7 @@ class DatabaseService {
 
   Future<bool> addLikeBin(String documentId, User user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+    _db.collection("cestini").document(documentId);
     bool result = true;
 
     DocumentSnapshot doc = await documentReference.get();
@@ -169,8 +178,8 @@ class DatabaseService {
 
     if (map.isNotEmpty) {
       List<String> userThatLiked = (map['userThatLiked'] as List)
-              ?.map((item) => item as String)
-              ?.toList() ??
+          ?.map((item) => item as String)
+          ?.toList() ??
           [];
 
       if (!userThatLiked.contains(user.uid)) {
@@ -197,7 +206,7 @@ class DatabaseService {
 
   Future<bool> addDislikeBin(String documentId, User user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+    _db.collection("cestini").document(documentId);
 
     bool result = true;
 
@@ -209,8 +218,8 @@ class DatabaseService {
 
     if (map.isNotEmpty) {
       List<String> userThatLiked = (map['userThatDisliked'] as List)
-              ?.map((item) => item as String)
-              ?.toList() ??
+          ?.map((item) => item as String)
+          ?.toList() ??
           [];
 
       if (!userThatLiked.contains(user.uid)) {
@@ -236,7 +245,7 @@ class DatabaseService {
 
   void reportBinProblem(String documentId, User user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+    _db.collection("cestini").document(documentId);
 
     DocumentSnapshot doc = await documentReference.get();
 
@@ -247,8 +256,8 @@ class DatabaseService {
     if (map.isNotEmpty) {
       List<String> userThatReportedThisBin =
           (map['userThatReportedThisBin'] as List)
-                  ?.map((item) => item as String)
-                  ?.toList() ??
+              ?.map((item) => item as String)
+              ?.toList() ??
               [];
 
       if (!userThatReportedThisBin.contains(user.uid)) {
@@ -265,6 +274,5 @@ class DatabaseService {
     }
 
     documentReference.updateData({'reports': map});
-
   }
 }

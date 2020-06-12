@@ -1,19 +1,29 @@
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ProfilePageViewModel extends BaseViewModel {
+class ProfilePageViewModel extends FutureViewModel<User> {
   AuthService _authService = locator<AuthService>();
   NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
+  DatabaseService _databaseService = locator<DatabaseService>();
+
+  int currentIndex = 0;
 
   String getUsername() {
     return (_authService.currentUser != null)
         ? _authService.currentUser.name
         : "Utente ospite";
+  }
+
+  changeCurrentIndex(int index){
+    currentIndex = index;
+    notifyListeners();
   }
 
   String getProfilePhotoUrl() {
@@ -25,7 +35,7 @@ class ProfilePageViewModel extends BaseViewModel {
   }
 
   int getNumberOfReportsForType(int index) {
-    Map<String, int> map = _authService.currentUser.reports;
+    Map<String, int> map = data.reports;
     if (map == null) return 0;
 
     return map[typesOfBin[index]] ?? 0;
@@ -42,9 +52,16 @@ class ProfilePageViewModel extends BaseViewModel {
         cancelTitle: "NO",
         buttonTitle: "SI");
 
-    if(response.confirmed){
+    if (response.confirmed) {
       _authService.signOut();
       _navigationService.clearStackAndShow(Routes.loginPage);
     }
+  }
+
+  @override
+  Future<User> futureToRun() {
+    if (_authService.currentUser != null)
+      return _databaseService.retrieveUserInfo(
+          reporterUid: _authService.currentUser.uid);
   }
 }

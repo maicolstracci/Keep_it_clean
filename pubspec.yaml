@@ -61,6 +61,7 @@ dependencies:
   flutter_hooks:
   stacked_hooks:
   observable_ish:
+  blobs: ^1.2.0
 
 flutter_icons:
   android: true

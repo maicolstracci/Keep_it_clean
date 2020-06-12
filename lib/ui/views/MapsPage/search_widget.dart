@@ -162,8 +162,8 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
       BuildContext context, MapsPageViewModel viewModel) {
     return FlatButton(
       color: Colors.blue[800].withOpacity(.98),
-//      onPressed: viewModel.isUserLoggedIn() ? () => viewModel.navigateToAddBinPage() : () => viewModel.showUserNoLoggedInDialog(),
-      onPressed:()=> viewModel.mapTest(),
+      onPressed: viewModel.isUserLoggedIn() ? () => viewModel.navigateToAddBinPage() : () => viewModel.showUserNoLoggedInDialog(),
+
       padding: EdgeInsets.all(14),
       shape: CircleBorder(),
       child: Icon(

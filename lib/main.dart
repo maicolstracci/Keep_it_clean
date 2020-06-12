@@ -58,7 +58,7 @@ class _KeepItCleanState extends State<KeepItClean> {
     ));
 
     return MaterialApp(
-      title: 'Keep it Clean',
+      title: 'Keep it clean',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,

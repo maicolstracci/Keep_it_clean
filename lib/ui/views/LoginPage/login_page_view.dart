@@ -1,3 +1,4 @@
+import 'package:blobs/blobs.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
@@ -29,25 +30,37 @@ class LoginPageView extends StatelessWidget {
                                   SizedBox(
                                       width: 100,
                                       height: 100,
-                                      child: Image.asset("assets/keep_it_clean_only_logo.png",)),
-                                  Text("Keep it Clean", style: TextStyle(color: Colors.white, fontSize: 28),)
+                                      child: Image.asset(
+                                        "assets/keep_it_clean_only_logo.png",
+                                      )),
+                                  Text(
+                                    "Keep it clean",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 28),
+                                  )
                                 ],
                               ),
                             ),
                           ),
                           Flexible(
-                            flex: 6,
+                            flex: 7,
                             child: Container(
                               width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(0xfff4f8f9),
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(50),topRight: Radius.circular(50))
-                              ),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(AppTranslations.of(context).text("login_desc_string"),textAlign: TextAlign.center),
-                                  LoginButton(buttonTypeName: "facebook",),
+                                  Text(
+                                    AppTranslations.of(context)
+                                        .text("login_desc_string"),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color:
+                                            Theme.of(context).accentColor),
+                                  ),
+                                  LoginButton(
+                                    buttonTypeName: "facebook",
+                                  ),
                                   LoginButton(buttonTypeName: "google"),
                                   LoginButton(buttonTypeName: "guest"),
                                 ],

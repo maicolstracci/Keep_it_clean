@@ -73,7 +73,7 @@ class AddBinPageView extends StatelessWidget {
                                   color: Colors.blue,
                                   onPressed: model.getTypesSelectedLength != 0
                                       ? () async {
-                                          model.takePicture();
+                                          model.navigateToPictureSelection();
                                         }
                                       : null,
                                   disabledColor: Colors.blueGrey,
