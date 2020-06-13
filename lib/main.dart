@@ -3,15 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
 import 'package:keep_it_clean/Localization/application.dart';
-import 'package:keep_it_clean/login_page.dart';
+import 'package:keep_it_clean/utils/utils.dart';
+import 'package:keep_it_clean/app/locator.dart';
+import 'package:stacked_services/stacked_services.dart';
 
-//TODO: if no location enable should crash fix
-//TODO: Add translations
-//TODO: Improve fast delete admin option - OPTIONAL
+import 'app/router.gr.dart';
+
+
+//TODO: check ios google login
+//TODO: add translations for new strings
 //TODO: Check report before make it public
-//TODO: Change loginPage colors to be more light
 
-void main() => runApp(KeepItClean());
+void main() async {
+  setupLocator();
+  WidgetsFlutterBinding.ensureInitialized();
+  await setCustomMapPin();
+  runApp(KeepItClean());
+}
 
 class KeepItClean extends StatefulWidget {
   @override
@@ -43,11 +51,19 @@ class _KeepItCleanState extends State<KeepItClean> {
       DeviceOrientation.portraitUp,
     ]);
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light
+    ));
+
     return MaterialApp(
-      title: 'Keep it Clean',
+      title: 'Keep it clean',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
+        backgroundColor: Color(0xff1e5540),
+        accentColor: Color(0xfff4f8f9),
         fontFamily: 'Montserrat',
         textTheme: TextTheme(
           body1: TextStyle(
@@ -56,7 +72,9 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      home: LoginPage(),
+      onGenerateRoute: Router().onGenerateRoute,
+      navigatorKey: locator<NavigationService>().navigatorKey,
+
       localizationsDelegates: [
         _newLocaleDelegate,
         const AppTranslationsDelegate(),
@@ -68,7 +86,6 @@ class _KeepItCleanState extends State<KeepItClean> {
       supportedLocales: [
         const Locale('en', 'EN'),
         const Locale('it', 'IT'),
-        const Locale('de', 'DE')
       ],
     );
   }

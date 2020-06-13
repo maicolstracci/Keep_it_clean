@@ -11,17 +11,55 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>keep_it_clean</string>
+	<string>Keep it clean</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb2885443888132587</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAppID</key>
+	<string>2885443888132587</string>
+	<key>FacebookDisplayName</key>
+	<string>Keep it clean</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used to take photo of the bin</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo can be taken from the camera roll for being uploaded instead of taking them directly from the camera</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -41,5 +79,58 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is used to move the user to their location and to provide the closest bins</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Camera is used to take photo of the bin</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Photo can be taken from the camera roll for being uploaded instead of taking them directly from the camera</string>
+<key>CFBundleURLTypes</key>
+<array>
+
+    <dict>
+
+   		<key>CFBundleTypeRole</key>
+   		<string>Editor</string>
+   		<key>CFBundleURLSchemes</key>
+   		<array>
+
+   			<string>com.googleusercontent.apps.771633064594-mb7sjfujhus25ku2oj6j6lf0cgd9t7ai</string>
+   		</array>
+
+    </dict>
+
+    <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+
+            <string>fb2885443888132587</string>
+        </array>
+    </dict>
+</array>
+
+<key>FacebookAppID</key>
+
+
+<string>2885443888132587</string>
+<key>FacebookDisplayName</key>
+
+
+<string>Keep it clean</string>
+
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>fbapi</string>
+    <string>fb-messenger-share-api</string>
+    <string>fbauth2</string>
+    <string>fbshareextension</string>
+</array>
+
 </dict>
 </plist>
