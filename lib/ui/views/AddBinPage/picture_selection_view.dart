@@ -19,7 +19,7 @@ class PictureSelectionView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child:
                         Image.asset("assets/illustrations/take-picture.png", fit: BoxFit.contain,),
                   ),

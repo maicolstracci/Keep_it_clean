@@ -17,7 +17,7 @@ class ProfilePageView extends StatelessWidget {
               appBar: AppBar(
                 title: Text(
                   model.currentIndex == 0 ? "Profilo personale" : "Classifica",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(color:model.currentIndex == 0 ? Colors.black: Colors.white),
                 ),
                 actions: [
                   model.currentIndex == 0
@@ -36,9 +36,9 @@ class ProfilePageView extends StatelessWidget {
                 ],
                 centerTitle: true,
                 elevation: 0,
-                backgroundColor: Theme.of(context).accentColor,
-                brightness: Brightness.dark,
-                iconTheme: IconThemeData(color: Colors.black),
+                backgroundColor: model.currentIndex == 0 ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+
+                iconTheme: IconThemeData(color: model.currentIndex == 0 ? Colors.black : Colors.white),
               ),
               bottomNavigationBar: BottomNavigationBar(
                 backgroundColor: Theme.of(context).backgroundColor,
