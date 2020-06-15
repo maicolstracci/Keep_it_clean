@@ -17,7 +17,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
   Set<Marker> markers = Set.from([]);
 
   bool errorLoadingLocation = false;
-  bool uploadingBin = true;
+  bool uploadingBin = false;
 
   LatLng currentLatLng;
 
