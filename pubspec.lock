@@ -823,7 +823,11 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.2.16"
+=======
+    version: "0.2.15"
+>>>>>>> 2ef6c9cdda46a9e1fa9a4c6c51e82cac247b4112
   timing:
     dependency: transitive
     description:
@@ -909,5 +913,9 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
+<<<<<<< HEAD
   dart: ">=2.9.0-14.0.dev <3.0.0"
+=======
+  dart: ">=2.7.0 <3.0.0"
+>>>>>>> 2ef6c9cdda46a9e1fa9a4c6c51e82cac247b4112
   flutter: ">=1.16.0 <2.0.0"
