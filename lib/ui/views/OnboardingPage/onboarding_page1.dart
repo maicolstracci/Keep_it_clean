@@ -36,7 +36,7 @@ class OnboardingPage1 extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Flexible(
-                  flex: 8,
+                  flex: 9,
                   child: Container(),
                 ),
                 Flexible(
@@ -80,7 +80,7 @@ class OnboardingPage1 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Swipe",
+                    "Prosegui",
                     style: TextStyle(
                         color: Colors.green[400],
                         fontSize: 22,

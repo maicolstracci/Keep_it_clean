@@ -11,7 +11,7 @@ description: Keep it clean. Trova il cestino per la raccolta differenziata più 
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+3
+version: 1.1.0+5
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -27,7 +27,7 @@ dependencies:
   firebase_auth: ^0.15.2
   google_maps_flutter:
   permission_handler: 5.0.1
-  shared_preferences: ^0.5.6
+  shared_preferences: ">=0.5.0+1 <2.0.0"
   simple_animations:
   firebase_core: ^0.4.3+1
   cloud_firestore: ^0.13.0+1
@@ -63,7 +63,8 @@ flutter_icons:
   ios: true
   image_path: "assets/keep_it_clean_logo.png"
   image_path_ios: "assets/keep_it_clean_logo_ios.png"
-  adaptive_icon_background: "#FF5B9C64"
+#  adaptive_icon_background: "#FF5B9C64"
+  adaptive_icon_background: "#FF449E64"
   adaptive_icon_foreground: "assets/keep_it_clean_logo_adaptive.png"
 
 dev_dependencies:

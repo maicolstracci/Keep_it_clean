@@ -112,7 +112,7 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
             .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
       }
     } else {
-      //TODO: we dont have user permission to track location, show dialog explaining and asking to turn it on
+      _locationService.requestPermission();
     }
     setBusy(false);
   }

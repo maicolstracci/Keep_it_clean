@@ -78,7 +78,7 @@ class OnboardingPage2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Swipe",
+                    "Prosegui",
                     style: TextStyle(
                         color: Colors.green[400],
                         fontSize: 22,

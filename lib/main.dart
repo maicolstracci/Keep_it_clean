@@ -82,6 +82,7 @@ class _KeepItCleanState extends State<KeepItClean> {
         GlobalMaterialLocalizations.delegate,
         //provides RTL support
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
       ],
       supportedLocales: [
         const Locale('en', 'EN'),
