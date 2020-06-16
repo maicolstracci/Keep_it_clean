@@ -61,7 +61,7 @@ class ProfilePageView extends StatelessWidget {
                       child: Column(
                         children: [
                           Flexible(
-                            flex: 2,
+                            flex: 3,
                             child: ClipPath(
                               clipper: BottomCurveClipper(),
                               child: SizedBox.expand(
@@ -114,7 +114,7 @@ class ProfilePageView extends StatelessWidget {
                             ),
                           ),
                           Flexible(
-                            flex: 3,
+                            flex: 4,
                             child: Container(
                               color: Theme.of(context).backgroundColor,
                               child: model.isUserLoggedIn()
@@ -145,53 +145,55 @@ class ProfilePageView extends StatelessWidget {
                                         color: Theme.of(context).accentColor,
                                         borderRadius: BorderRadius.circular(18),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Text(
-                                            "Benvenuto nel tuo profilo personale!",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          AutoSizeText(
-                                            "In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!",
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          AutoSizeText(
-                                            "Per poter cominciare pero', devi tornare alla pagina principale e accedere",
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              "Benvenuto nel tuo profilo personale!",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            AutoSizeText(
+                                              "In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!",
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            AutoSizeText(
+                                              "Per poter cominciare pero', devi tornare alla pagina principale e accedere",
 
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          FlatButton.icon(
-                                              onPressed: () =>
-                                                  model.navigateToLoginPage(),
-                                              icon: Icon(
-                                                Icons.perm_identity,
-                                                color: Colors.green,
-                                              ),
-                                              label: Text(
-                                                "Accedi",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              )),
-                                        ],
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            FlatButton.icon(
+                                                onPressed: () =>
+                                                    model.navigateToLoginPage(),
+                                                icon: Icon(
+                                                  Icons.perm_identity,
+                                                  color: Colors.green,
+                                                ),
+                                                label: Text(
+                                                  "Accedi",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                )),
+                                          ],
+                                        ),
                                       ),
                                     ))),
                             ),
