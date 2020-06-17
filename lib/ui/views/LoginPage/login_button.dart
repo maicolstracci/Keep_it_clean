@@ -20,11 +20,11 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
 
     switch (buttonTypeName) {
       case 'facebook':
-        _icon = IconData(0xe901, fontFamily: "CustomIcons");
+        _icon = const IconData(0xe901, fontFamily: "CustomIcons");
         _color = Colors.lightBlue;
         break;
       case 'google':
-        _icon = IconData(0xe902, fontFamily: "CustomIcons");
+        _icon = const IconData(0xe902, fontFamily: "CustomIcons");
         _color = Colors.red;
         break;
       case 'guest':
