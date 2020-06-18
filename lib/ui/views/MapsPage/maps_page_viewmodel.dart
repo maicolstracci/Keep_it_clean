@@ -1,5 +1,8 @@
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/utils/utils.dart';
@@ -128,10 +131,10 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
   showUserNoLoggedInDialog() {
     _dialogService.showDialog(
-      title: "Accesso non consentito agli utenti ospiti",
-      description: "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni",
+      title: tr("Accesso non consentito agli utenti ospiti"),
+      description: tr("Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni"),
 
-      buttonTitle: "Ho capito"
+      buttonTitle: tr("Ho capito")
     );
   }
 

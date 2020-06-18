@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
@@ -17,8 +19,6 @@ class SelectBinPositionView extends StatelessWidget {
                       Flexible(
                         flex: 5,
                         child: GoogleMap(
-                          // Padding only applies to iPhone X to avoid obscuring the Google logo
-
                           mapType: MapType.normal,
                           myLocationEnabled: true,
                           myLocationButtonEnabled: false,
@@ -42,17 +42,17 @@ class SelectBinPositionView extends StatelessWidget {
                                   onPressed: !model.uploadingBin ? () {model.moveCameraToUserLocation();} : null,
                                   color: Colors.white.withOpacity(0.3),
                                   icon: Icon(Icons.refresh),
-                                  label: Text("Ricalcola posizione")),
+                                  label: Text(tr("Ricalcola posizione"))),
                             ),
                             Expanded(
                               child: Container(
                                 child: Center(
                                   child: Text(
                                     model.isBusy
-                                        ? "Sto ricercando la tua posizione..."
+                                        ? tr("Sto ricercando la tua posizione")
                                         : model.errorLoadingLocation
-                                            ? "ERRORE NEL CALCOLARE POSIZIONE"
-                                            : "Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla",
+                                            ? tr("ERRORE NEL CALCOLARE POSIZIONE")
+                                            : tr("Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla"),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white
@@ -67,7 +67,7 @@ class SelectBinPositionView extends StatelessWidget {
                                   : null,
                               color: Colors.blue,
                               disabledColor: Colors.blueGrey,
-                              child: Text("Invia"),
+                              child: Text(tr("Invia")),
                             )
                           ],
                         ),
@@ -90,7 +90,7 @@ class SelectBinPositionView extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.only(right: 8,left: 8),
                               child: Text(
-                                "Stiamo caricando la tua segnalazione online",
+                                tr("Stiamo caricando la tua segnalazione online"),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600),

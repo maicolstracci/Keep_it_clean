@@ -57,6 +57,8 @@ dependencies:
   stacked_hooks:
   observable_ish:
   blobs: ^1.2.0
+  easy_localization: ^2.3.2
+
 
 flutter_icons:
   android: true
@@ -80,9 +82,7 @@ flutter:
     - assets/illustrations/
     - assets/icons/
     - assets/maps_markers/
-    - assets/locale/localization_it.json
-    - assets/locale/localization_en.json
-    - assets/locale/localization_de.json
+    - assets/translations/
     - assets/default-bin-photo.png
     - assets/loading.gif
     - assets/badge.png

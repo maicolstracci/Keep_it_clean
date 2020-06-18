@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_viewmodel.dart';
@@ -62,8 +63,7 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
           SizedBox(
             width: 28,
           ),
-          Text(AppTranslations.of(context)
-              .text("${buttonTypeName}_login_string"),style: TextStyle(color: _color),),
+          Text(tr("${buttonTypeName}_login_string"),style: TextStyle(color: _color),),
         ],
       ),
     );

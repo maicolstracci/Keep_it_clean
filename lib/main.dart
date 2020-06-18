@@ -6,6 +6,7 @@ import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'app/router.gr.dart';
 
@@ -17,8 +18,18 @@ import 'app/router.gr.dart';
 void main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
+
   await setCustomMapPin();
-  runApp(KeepItClean());
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  runApp(EasyLocalization(
+      supportedLocales: [Locale('it', 'IT'),Locale('en', 'US')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en', 'US'),
+      preloaderColor: Color(0xff1e5540),
+      child: KeepItClean()));
 }
 
 class KeepItClean extends StatefulWidget {
@@ -29,27 +40,17 @@ class KeepItClean extends StatefulWidget {
 }
 
 class _KeepItCleanState extends State<KeepItClean> {
-  AppTranslationsDelegate _newLocaleDelegate;
+
 
   @override
   void initState() {
     super.initState();
 
-    _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
-    application.onLocaleChanged = onLocaleChange;
   }
 
-  void onLocaleChange(Locale locale) {
-    setState(() {
-      _newLocaleDelegate = AppTranslationsDelegate(newLocale: locale);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.black,
@@ -58,6 +59,9 @@ class _KeepItCleanState extends State<KeepItClean> {
     ));
 
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       title: 'Keep it clean',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -75,19 +79,21 @@ class _KeepItCleanState extends State<KeepItClean> {
       onGenerateRoute: Router().onGenerateRoute,
       navigatorKey: locator<NavigationService>().navigatorKey,
 
-      localizationsDelegates: [
-        _newLocaleDelegate,
-        const AppTranslationsDelegate(),
-        //provides localised strings
-        GlobalMaterialLocalizations.delegate,
-        //provides RTL support
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
-      ],
-      supportedLocales: [
-        const Locale('en', 'EN'),
-        const Locale('it', 'IT'),
-      ],
+//      initialRoute: Routes.onboardingPage,
+
+//      localizationsDelegates: [
+//        _newLocaleDelegate,
+//        const AppTranslationsDelegate(),
+//        //provides localised strings
+//        GlobalMaterialLocalizations.delegate,
+//        //provides RTL support
+//        GlobalWidgetsLocalizations.delegate,
+//        GlobalCupertinoLocalizations.delegate
+//      ],
+//      supportedLocales: [
+//        const Locale('en', 'EN'),
+//        const Locale('it', 'IT'),
+//      ],
     );
   }
 }

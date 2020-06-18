@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
@@ -47,7 +49,7 @@ class LikeButton extends StatelessWidget {
 
                                     model.clickButton(type);
                                   }
-                                : () => model.showNoLoggedInSnackbar()),
+                                : () => model.showNoLoggedInDialog()),
                       );
                     },
                     child: Icon(type == 1 ? Icons.thumb_up : Icons.thumb_down),
@@ -93,11 +95,11 @@ class LikeButtonModel extends BaseViewModel {
     prevModel.notifySourceChanged(clearOldData: true);
   }
 
-  showNoLoggedInSnackbar() {
+  showNoLoggedInDialog() {
     _dialogService.showDialog(
-        title: "Utente non autenticato",
+        title: tr("Utente non autenticato"),
         description:
-            "Solo gli utenti autenticati possono lasciare like/dislike",
-        buttonTitle: "Ho capito");
+        tr("Solo gli utenti autenticati possono lasciare like/dislike"),
+        buttonTitle: tr("Ho capito"));
   }
 }

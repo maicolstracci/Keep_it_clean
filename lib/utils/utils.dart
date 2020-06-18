@@ -35,7 +35,7 @@ Future<bool> setCustomMapPin() async {
 
 
 // Request permission method from permissions_handlers plugin
-void requestPermission() async {
+Future requestPermission() async {
   await Permission.location.request();
 }
 

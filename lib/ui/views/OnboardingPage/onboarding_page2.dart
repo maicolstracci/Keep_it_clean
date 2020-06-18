@@ -1,5 +1,6 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Localization/app_translation.dart';
 
@@ -44,7 +45,7 @@ class OnboardingPage2 extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       AutoSizeText(
-                        AppTranslations.of(context).text("report"),
+                        tr("report"),
                         maxLines: 1,
                         presetFontSizes: [58, 36, 22],
                         style: TextStyle(
@@ -56,7 +57,7 @@ class OnboardingPage2 extends StatelessWidget {
                         height: 10,
                       ),
                       AutoSizeText(
-                        AppTranslations.of(context).text("report_string"),
+                        tr("report_string"),
                         maxLines: 3,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Color(0xfff4f8f9), fontSize: 24),
@@ -78,7 +79,7 @@ class OnboardingPage2 extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "Prosegui",
+                    tr("Prosegui"),
                     style: TextStyle(
                         color: Colors.green[400],
                         fontSize: 22,

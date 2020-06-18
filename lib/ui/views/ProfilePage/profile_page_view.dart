@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_bin_report_container.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
@@ -11,20 +13,24 @@ import 'classifica_page_view.dart';
 class ProfilePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return ViewModelBuilder<ProfilePageViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               appBar: AppBar(
                 title: Text(
-                  model.currentIndex == 0 ? "Profilo personale" : "Classifica",
+                  model.currentIndex == 0 ? tr("Profilo personale") : tr("Classifica"),
                   style: TextStyle(color:model.currentIndex == 0 ? Colors.black: Colors.white),
                 ),
                 actions: [
                   model.currentIndex == 0
                       ? PopupMenuButton<String>(
-                          onSelected: choiceAction,
+                          onSelected:(string)=> choiceAction(string),
                           itemBuilder: (BuildContext context) {
-                            return choices.map((String choice) {
+                            return <String>[
+                              tr("Impostazioni"),
+                              tr("Chi siamo"),
+                            ].map((String choice) {
                               return PopupMenuItem<String>(
                                 value: choice,
                                 child: Text(choice),
@@ -48,12 +54,14 @@ class ProfilePageView extends StatelessWidget {
                 currentIndex: model.currentIndex,
                 selectedFontSize: 16,
                 unselectedFontSize: 16,
+                showUnselectedLabels: false,
+                showSelectedLabels: false,
                 onTap: (index) => model.changeCurrentIndex(index),
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person), title: Text("Profilo")),
+                      icon: Icon(Icons.person), title: Text("ME")),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.grade), title: Text("Classifica"))
+                      icon: Icon(Icons.grade), title: Text("TOP"))
                 ],
               ),
               body: model.currentIndex == 0
@@ -152,7 +160,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             Text(
-                                              "Benvenuto nel tuo profilo personale!",
+                                              tr("Benvenuto nel tuo profilo personale!") ,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontSize: 20,
@@ -162,7 +170,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             AutoSizeText(
-                                              "In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!",
+                                              tr("In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!")  ,
                                               textAlign: TextAlign.center,
                                               maxLines: 3,
                                             ),
@@ -170,7 +178,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             AutoSizeText(
-                                              "Per poter cominciare pero', devi tornare alla pagina principale e accedere",
+                                              tr("Per poter cominciare pero', devi tornare alla pagina principale e accedere") ,
 
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
@@ -186,7 +194,7 @@ class ProfilePageView extends StatelessWidget {
                                                   color: Colors.green,
                                                 ),
                                                 label: Text(
-                                                  "Accedi",
+                                                  tr("Accedi") ,
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
@@ -231,14 +239,9 @@ class BottomCurveClipper extends CustomClipper<Path> {
 }
 
 void choiceAction(String choice) {
-  if (choice == "Impostazioni") {
+  if (choice == tr("Impostazioni")) {
     print('Impostazioni');
-  } else if (choice == "Chi siamo") {
+  } else if (choice == tr("Chi siamo")) {
     print('Chi siamo');
   }
 }
-
-const List<String> choices = <String>[
-  "Impostazioni",
-  "Chi siamo",
-];

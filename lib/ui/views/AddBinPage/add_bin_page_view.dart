@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
@@ -14,7 +16,7 @@ class AddBinPageView extends StatelessWidget {
               appBar: AppBar(
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 0,
-                title: Text("Invia una segnalazione"),
+                title: Text(tr("Invia una segnalazione")),
                 centerTitle: true,
               ),
               body: SizedBox(
@@ -25,7 +27,7 @@ class AddBinPageView extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          "Quali tipologie?",
+                          tr("Quali tipologie?"),
                           style: TextStyle(
                               fontSize: 24,
                               color: Colors.white,
@@ -62,7 +64,7 @@ class AddBinPageView extends StatelessWidget {
                               children: [
                                 Container(
                                   child: Text(
-                                    "${model.getTypesSelectedLength} selezionate",
+                                    "${model.getTypesSelectedLength} " +  tr("selezionate"),
                                     style: TextStyle(
                                         color: model.getTypesSelectedLength != 0
                                             ? Colors.white
@@ -90,7 +92,8 @@ class AddBinPageView extends StatelessWidget {
                                     size: 26,
                                   ),
                                   label: Text(
-                                    "Prosegui",
+                                      tr("Prosegui")
+                                    ,
                                     style: TextStyle(
                                         fontSize: 22,
                                         color: Colors.white,

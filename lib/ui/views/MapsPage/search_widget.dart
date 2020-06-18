@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
@@ -24,7 +26,7 @@ class FilterBar extends StatelessWidget {
                     bottomLeft: Radius.circular(20))),
             child: Center(
                 child: Text(
-              "Cosa stai cercando?",
+                  tr("Cosa stai cercando?") ,
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             )),
@@ -162,9 +164,10 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
       BuildContext context, MapsPageViewModel viewModel) {
     return FlatButton(
       color: Colors.blue[800].withOpacity(.98),
-      onPressed: viewModel.isUserLoggedIn() ? () => viewModel.navigateToAddBinPage() : () => viewModel.showUserNoLoggedInDialog(),
-
-      padding: EdgeInsets.all(14),
+      onPressed: viewModel.isUserLoggedIn()
+          ? () => viewModel.navigateToAddBinPage()
+          : () => viewModel.showUserNoLoggedInDialog(),
+      padding: EdgeInsets.symmetric(vertical: 14),
       shape: CircleBorder(),
       child: Icon(
         Icons.add,
@@ -172,6 +175,5 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
         color: Colors.white,
       ),
     );
-
   }
 }

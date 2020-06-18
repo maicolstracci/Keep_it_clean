@@ -1,11 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_image.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_hooks/stacked_hooks.dart';
-
 import 'like_bar.dart';
-import 'like_button.dart';
 import 'bin_details_viewmodel.dart';
 
 class BinDetailsPageView extends StatelessWidget {
@@ -79,8 +77,8 @@ class BinDetailsPageView extends StatelessWidget {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                    'Segnalato da',
+                                  Text(tr('Segnalato da')
+                                    ,
                                     style: TextStyle(
                                       color: Colors.white,
                                         fontWeight: FontWeight.w500),
@@ -134,8 +132,8 @@ class BinDetailsPageView extends StatelessWidget {
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                    "In data",
+                                  Text(tr("In data")
+                                    ,
                                     style: TextStyle(
                                       color: Colors.white,
                                         fontWeight: FontWeight.w500),
@@ -178,8 +176,8 @@ class BinDetailsPageView extends StatelessWidget {
                                   ),
                                   color: Colors.blue[400],
                                   textColor: Colors.white,
-                                  child: Text(
-                                    "Portamici",
+                                  child: Text(tr("Portamici")
+                                    ,
                                     style: TextStyle(
                                         fontFamily: "Montserrat",
                                         fontWeight: FontWeight.w600,

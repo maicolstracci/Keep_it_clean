@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
@@ -18,7 +21,7 @@ class ProfilePageViewModel extends FutureViewModel<User> {
   String getUsername() {
     return (_authService.currentUser != null)
         ? _authService.currentUser.name
-        : "Utente ospite";
+        : tr("Utente ospite");
   }
 
   changeCurrentIndex(int index){
@@ -47,10 +50,10 @@ class ProfilePageViewModel extends FutureViewModel<User> {
 
   signOut() async {
     DialogResponse response = await _dialogService.showDialog(
-        title: "SIGN OUT",
-        description: "Vuoi davvero disconnetterti?",
-        cancelTitle: "NO",
-        buttonTitle: "SI");
+        title: tr('SIGN OUT'),
+        description: tr("Vuoi davvero disconnetterti?"),
+        cancelTitle: tr("NO"),
+        buttonTitle: tr("SI"));
 
     if (response.confirmed) {
       _authService.signOut();

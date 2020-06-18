@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -9,7 +10,7 @@ class PictureSelectionView extends StatelessWidget {
     return ViewModelBuilder<PictureSelectionViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
               appBar: AppBar(
-                title: Text("Scegli una immagine"),
+                title: Text(tr("Scegli una immagine")),
                 centerTitle: true,
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 0,
@@ -25,8 +26,8 @@ class PictureSelectionView extends StatelessWidget {
                   ),
                   Container(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "Carica una bella foto, tutti vedranno la tua opera d'arte!",
+                      child: Text(tr("Carica una bella foto, tutti vedranno la tua opera d'arte!")
+                        ,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                       )),
@@ -34,7 +35,7 @@ class PictureSelectionView extends StatelessWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Scegli come continuare",style: TextStyle(color: Colors.white),),
+                      Text(tr("Scegli come continuare"),style: TextStyle(color: Colors.white),),
                       SizedBox(height: 8,),
                       Row(
                         children: [SizedBox(width: 16,),
@@ -43,7 +44,7 @@ class PictureSelectionView extends StatelessWidget {
                             child: RaisedButton(
                               color: Theme.of(context).accentColor,
                               onPressed: () => model.takePicture("galleria"),
-                              child: Text("Galleria"),
+                              child: Text(tr("galleria")),
                             ),
                           ),
                           SizedBox(width: 16,),
@@ -52,7 +53,7 @@ class PictureSelectionView extends StatelessWidget {
                             child: RaisedButton(
                               color: Theme.of(context).accentColor,
                               onPressed: () => model.takePicture("camera"),
-                              child: Text("Camera"),
+                              child: Text(tr("camera")),
                             ),
                           ),SizedBox(width: 16,),
                         ],
