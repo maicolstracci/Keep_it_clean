@@ -6,21 +6,40 @@ import 'package:stacked_hooks/stacked_hooks.dart';
 class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
   @override
   Widget buildViewModelWidget(
-      BuildContext context, MapsPageViewModel viewModel) =>
+          BuildContext context, MapsPageViewModel viewModel) =>
       Align(
         alignment: Alignment.topRight,
-        child: Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 40),
-          ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
-          margin: EdgeInsets.only(top: 8, right: 8),
-          child: IconButton(
-            onPressed: viewModel.moveCameraToUserLocation,
-            icon: Icon(
-              Icons.my_location,
-              color: Colors.black54,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(color: Colors.black12, blurRadius: 40),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              margin: EdgeInsets.only(top: 8, right: 8),
+              child: IconButton(
+                onPressed: viewModel.moveCameraToUserLocation,
+                icon: Icon(
+                  Icons.my_location,
+                  color: Colors.black54,
+                ),
+              ),
             ),
-          ),
+            Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(color: Colors.black12, blurRadius: 40),
+              ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              margin: EdgeInsets.only(top: 8, right: 8),
+              child: IconButton(
+                onPressed: ()=> viewModel.showComingSoonReportFeatureDialog(),
+                icon: Icon(
+                  Icons.warning,
+                  color: Colors.redAccent.withOpacity(0.9),
+                ),
+              ),
+            ),
+          ],
         ),
       );
 }

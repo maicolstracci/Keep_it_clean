@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/Localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_viewmodel.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 

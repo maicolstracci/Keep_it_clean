@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:keep_it_clean/Localization/app_translation_delegate.dart';
-import 'package:keep_it_clean/Localization/application.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -28,7 +25,7 @@ void main() async {
       supportedLocales: [Locale('it', 'IT'),Locale('en', 'US')],
       path: 'assets/translations',
       fallbackLocale: Locale('en', 'US'),
-      preloaderColor: Color(0xff1e5540),
+      preloaderColor: Color(0xff06442d),
       child: KeepItClean()));
 }
 

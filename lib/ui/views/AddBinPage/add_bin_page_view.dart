@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';

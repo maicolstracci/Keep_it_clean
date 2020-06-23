@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_image.dart';
 import 'package:stacked/stacked.dart';
 import 'like_bar.dart';

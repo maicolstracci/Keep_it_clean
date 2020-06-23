@@ -1,8 +1,5 @@
-
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/utils/utils.dart';
@@ -15,9 +12,7 @@ import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-
-
-class MapsPageViewModel extends StreamViewModel<List<Bin>>{
+class MapsPageViewModel extends StreamViewModel<List<Bin>> {
   LocationService _locationService = locator<LocationService>();
   DatabaseService _databaseService = locator<DatabaseService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -31,42 +26,38 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   List<Bin> currentListOfBin = List<Bin>();
   String filterBinsForType;
 
-
   @override
   void onData(List<Bin> data) {
-  currentListOfBin = data;
+    currentListOfBin = data;
   }
 
-  void setFilterBinsForType(String filter){
-    if(filterBinsForType == filter){
+  void setFilterBinsForType(String filter) {
+    if (filterBinsForType == filter) {
       filterBinsForType = null;
-    } else filterBinsForType = filter;
+    } else
+      filterBinsForType = filter;
 
     notifyListeners();
   }
 
-  bool isUserLoggedIn(){
+  bool isUserLoggedIn() {
     return _authService.currentUser != null;
   }
 
   void _addMarker(String id, LatLng latLng, String type) {
-
-
     final MarkerId markerId = MarkerId(id);
     // creating a new MARKER
     final Marker marker = Marker(
-      markerId: markerId,
-      position: latLng,
-      icon: pinMap[type],
-      onTap: () => navigateToBinDetailsPage(id)
-    );
+        markerId: markerId,
+        position: latLng,
+        icon: pinMap[type],
+        onTap: () => navigateToBinDetailsPage(id));
 
     // adding a new marker to map
     markers.add(marker);
   }
 
-  void navigateToBinDetailsPage(String binID){
-
+  void navigateToBinDetailsPage(String binID) {
     _binDetailsService.setBinID(binID);
 
     _navigationService.navigateTo(Routes.binDetailsPage);
@@ -76,19 +67,20 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
     _navigationService.navigateTo(Routes.addBinPage);
   }
 
-
-  void setBinFilterType({String filterBinsForType}){
-
+  void setBinFilterType({String filterBinsForType}) {
     this.filterBinsForType = filterBinsForType;
     print('${this.filterBinsForType}');
     notifyListeners();
   }
 
-  Set<Marker> getMarkersSetWithFiltering(){
+  Set<Marker> getMarkersSetWithFiltering() {
     markers.clear();
-    for(Bin bin in currentListOfBin){
-      if(filterBinsForType == null || bin.type == filterBinsForType){
-        _addMarker(bin.id, new LatLng(bin.position.latitude, bin.position.longitude), bin.type);
+    for (Bin bin in currentListOfBin) {
+      if (filterBinsForType == null || bin.type == filterBinsForType) {
+        _addMarker(
+            bin.id,
+            new LatLng(bin.position.latitude, bin.position.longitude),
+            bin.type);
       }
     }
     return markers;
@@ -97,15 +89,13 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
   Future moveCameraToUserLocation() async {
     setBusy(true);
     if (await _locationService.getLocationPermissionStatus()) {
-
       LocationData location = await _locationService.getUserLocation();
 
       if (location == null) {
         //TODO: cant find user location, show error...
         setBusy(false);
         return;
-      } else{
-
+      } else {
         CameraPosition _userCameraPosition = CameraPosition(
           target: LatLng(location.latitude, location.longitude),
           zoom: 14.4746,
@@ -120,8 +110,7 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
     setBusy(false);
   }
 
-
-  void filterBin(String type){
+  void filterBin(String type) {
     _databaseService.typeOfBinToFilter = type;
     notifySourceChanged(clearOldData: true);
   }
@@ -131,14 +120,16 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>>{
 
   showUserNoLoggedInDialog() {
     _dialogService.showDialog(
-      title: tr("Accesso non consentito agli utenti ospiti"),
-      description: tr("Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni"),
-
-      buttonTitle: tr("Ho capito")
-    );
+        title: tr("Accesso non consentito agli utenti ospiti"),
+        description: tr(
+            "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni"),
+        buttonTitle: tr("Ho capito"));
   }
 
-
-
-
+  showComingSoonReportFeatureDialog() {
+    _dialogService.showDialog(
+        title: tr("Funzionalita' in arrivo!"),
+        description: tr("A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"),
+        buttonTitle: tr("Ho capito"));
+  }
 }

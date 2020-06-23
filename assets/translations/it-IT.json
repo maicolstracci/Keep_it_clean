@@ -29,11 +29,12 @@
   "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni": "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni",
   "Cosa stai cercando?": "Cosa stai cercando?",
   "CERCA": "CERCA",
-  "search_string": "TODO....",
+  "search_string": "Cerca il bidone di cui hai bisogno semplicemente muovendoti sulla mappa!",
   "report": "SEGNALA",
+  "report_string" : "Se trovi un bidone che non e' ancora presente, aiuta la comunita' segnalandolo a tutti!",
   "Cominciamo": "Cominciamo",
   "Permessi": "Permessi",
-  "permessi_string": "TODO",
+  "permessi_string": "Per velocizzare le tue ricerche abbiamo bisogno dei permessi di localizzazione, cosi' da poterti mostrare subito cosa puoi trovare intorno a te!",
   "PROSEGUI": "PROSEGUI",
   "COMINCIAMO": "COMINCIAMO!",
   "Profilo personale": "Profilo personale",
@@ -47,5 +48,9 @@
   "SIGN OUT": "SIGN OUT",
   "Vuoi davvero disconnetterti?": "Vuoi davvero disconnetterti?",
   "NO": "NO",
-  "SI": "SI"
+  "SI": "SI",
+  "Problema con il login!" : "Problema con il login!",
+  "Qualcosa e' andato storto, riprova tra poco." : "Qualcosa e' andato storto, riprova tra poco.",
+  "Funzionalita' in arrivo!" : "Funzionalita' in arrivo!",
+  "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"
 }

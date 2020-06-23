@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_bin_report_container.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
@@ -54,14 +53,13 @@ class ProfilePageView extends StatelessWidget {
                 currentIndex: model.currentIndex,
                 selectedFontSize: 16,
                 unselectedFontSize: 16,
-                showUnselectedLabels: false,
-                showSelectedLabels: false,
+
                 onTap: (index) => model.changeCurrentIndex(index),
-                items: const <BottomNavigationBarItem>[
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person), title: Text("ME")),
+                      icon: Icon(Icons.person), title: Text( tr("Profilo personale") )),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.grade), title: Text("TOP"))
+                      icon: Icon(Icons.grade), title: Text(tr("Classifica")))
                 ],
               ),
               body: model.currentIndex == 0

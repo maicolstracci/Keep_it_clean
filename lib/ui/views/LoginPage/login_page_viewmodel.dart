@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
@@ -19,7 +20,7 @@ class LoginPageViewModel extends BaseViewModel{
     if(_authService.currentUser != null){
       _navigateToNextPage();
     } else{
-      _dialogService.showDialog(title: "Problema!",description: "Ez");
+      _dialogService.showDialog(title: tr("Problema con il login!"), description: tr("Qualcosa e' andato storto, riprova tra poco."));
     }
 
   }
@@ -32,7 +33,7 @@ class LoginPageViewModel extends BaseViewModel{
     if(_authService.currentUser != null){
       _navigateToNextPage();
     } else{
-      _dialogService.showDialog(title: "Problema!",description: "Ez");
+      _dialogService.showDialog(title: tr("Problema con il login!"), description: tr("Qualcosa e' andato storto, riprova tra poco."));
     }
   }
 

@@ -22,8 +22,9 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
 
 Future<bool> setCustomMapPin() async {
   for (int i = 1; i <= typesOfBin.length; i++) {
+
     Uint8List val =
-    await getBytesFromAsset('assets/maps_markers/marker_$i.png', (400/3).floor());
+    await getBytesFromAsset('assets/maps_markers/marker_$i.png', (300/2).floor());
     BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
     pinMap[typesOfBin[i-1]] = pinLocationIcon;

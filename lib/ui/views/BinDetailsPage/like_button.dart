@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/app/locator.dart';
-import 'package:keep_it_clean/localization/app_translation.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
