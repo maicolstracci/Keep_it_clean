@@ -6,6 +6,7 @@ import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';
 import 'package:keep_it_clean/services/take_picture_service.dart';
+import 'package:keep_it_clean/services/type_of_report_service.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,7 +18,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
   Set<Marker> markers = Set.from([]);
 
   bool errorLoadingLocation = false;
-  bool uploadingBin = false;
+  bool uploading = false;
 
   LatLng currentLatLng;
 
@@ -29,6 +30,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
+  TypeOfReportService _typeOfReportService = locator<TypeOfReportService>();
 
   Future moveCameraToUserLocation() async {
     setBusy(true);
@@ -88,8 +90,19 @@ class SelectBinPositionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  createBin() async {
-    uploadingBin = true;
+  uploadReport(){
+    if(_typeOfReportService.typeOfReport == Report.Bin){
+      createBinReport();
+    } else if(_typeOfReportService.typeOfReport == Report.IllegalWaste) {
+      createIllegalWasteDisposalReport();
+    } else{
+      //TODO: show error message
+      _takePictureService.pic.delete();
+    }
+  }
+
+  createBinReport() async {
+    uploading = true;
     notifyListeners();
 
     String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
@@ -107,7 +120,22 @@ class SelectBinPositionViewModel extends BaseViewModel {
         _authService.currentUser, _addBinTypesListService.typesSelected);
 
     _addBinTypesListService.typesSelected.clear();
-    uploadingBin = false;
+    uploading = false;
+
+    _navigationService.clearStackAndShow(Routes.mapsPage);
+  }
+
+  createIllegalWasteDisposalReport() async {
+    uploading = true;
+    notifyListeners();
+
+    String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
+    String img = await _databaseService.uploadImage(
+        imgFile: _takePictureService.pic, imgName: _imgName);
+
+    await _databaseService.createIllegalWasteDisposalReport(imgName: img, binPos: currentLatLng, user: _authService.currentUser);
+
+    uploading = false;
 
     _navigationService.clearStackAndShow(Routes.mapsPage);
   }

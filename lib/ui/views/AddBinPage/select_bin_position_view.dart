@@ -38,7 +38,7 @@ class SelectBinPositionView extends StatelessWidget {
                           children: [
                             Container(
                               child: FlatButton.icon(
-                                  onPressed: !model.uploadingBin ? () {model.moveCameraToUserLocation();} : null,
+                                  onPressed: !model.uploading ? () {model.moveCameraToUserLocation();} : null,
                                   color: Colors.white.withOpacity(0.3),
                                   icon: Icon(Icons.refresh),
                                   label: Text(tr("Ricalcola posizione"))),
@@ -61,8 +61,8 @@ class SelectBinPositionView extends StatelessWidget {
                               ),
                             ),
                             MaterialButton(
-                              onPressed: model.currentLatLng != null && !model.uploadingBin
-                                  ? () => model.createBin()
+                              onPressed: model.currentLatLng != null && !model.uploading
+                                  ? () => model.uploadReport()
                                   : null,
                               color: Colors.blue,
                               disabledColor: Colors.blueGrey,
@@ -74,7 +74,7 @@ class SelectBinPositionView extends StatelessWidget {
                     ],
                   ),
                   Visibility(
-                    visible: model.uploadingBin,
+                    visible: model.uploading,
                     child: Center(
                       child: Container(
                         height: 150,

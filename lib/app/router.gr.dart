@@ -16,6 +16,7 @@ import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/picture_selection_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 
 abstract class Routes {
   static const loginPage = '/';
@@ -27,6 +28,7 @@ abstract class Routes {
   static const pictureSelectionPage = '/picture-selection-page';
   static const selectBinPositionPage = '/select-bin-position-page';
   static const reporterProfilePage = '/reporter-profile-page';
+  static const illegalWasteDisposalPage = '/illegal-waste-disposal-page';
   static const all = {
     loginPage,
     onboardingPage,
@@ -37,6 +39,7 @@ abstract class Routes {
     pictureSelectionPage,
     selectBinPositionPage,
     reporterProfilePage,
+    illegalWasteDisposalPage,
   };
 }
 
@@ -101,6 +104,11 @@ class Router extends RouterBase {
         return MaterialPageRoute<dynamic>(
           builder: (context) =>
               ReporterProfileView(reporterUid: typedArgs.reporterUid),
+          settings: settings,
+        );
+      case Routes.illegalWasteDisposalPage:
+        return MaterialPageRoute<dynamic>(
+          builder: (context) => IllegalWasteDisposalView(),
           settings: settings,
         );
       default:

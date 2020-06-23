@@ -132,4 +132,10 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
         description: tr("A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"),
         buttonTitle: tr("Ho capito"));
   }
+
+  navigateToReportIllegalWasteDisposal() {
+    
+    _navigationService.navigateTo(Routes.illegalWasteDisposalPage);
+    
+  }
 }

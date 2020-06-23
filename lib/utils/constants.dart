@@ -26,3 +26,8 @@ List<String> typesOfBin = [
   "Abiti",
   "Olio vegetale"
 ];
+
+enum Report{
+  Bin,
+  IllegalWaste
+}

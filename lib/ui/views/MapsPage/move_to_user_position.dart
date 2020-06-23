@@ -32,7 +32,9 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
               ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
               margin: EdgeInsets.only(top: 8, right: 8),
               child: IconButton(
-                onPressed: ()=> viewModel.showComingSoonReportFeatureDialog(),
+                onPressed: viewModel.isUserLoggedIn()
+                    ? () => viewModel.navigateToReportIllegalWasteDisposal()
+                    : () => viewModel.showUserNoLoggedInDialog(),
                 icon: Icon(
                   Icons.warning,
                   color: Colors.redAccent.withOpacity(0.9),
