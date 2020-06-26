@@ -13,34 +13,37 @@ class ProfilePicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User currentUser = _authService.currentUser;
-    return Positioned(
-      top: 10,
-      left: 10,
-      child: GestureDetector(
-        onTap: () {
-          _navigationService.navigateTo(Routes.profilePage);
-        },
-        child: Hero(
-          tag: "profilePic",
-          child: new Container(
-            width: 60,
-            height: 60,
-            decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10.0,
-                  ),
-                ]),
-            child: CircleAvatar(
-              backgroundImage: (currentUser != null)
-                  ? NetworkImage(
-                  currentUser.profilePic,
-                  scale: 1)
-                  : ExactAssetImage('assets/no-avatar.jpg'),
-              maxRadius: 40,
+    return Align(
+      alignment: Alignment.topLeft,
+    
+      child: Padding(
+        padding: const EdgeInsets.only(left:8.0),
+        child: GestureDetector(
+          onTap: () {
+            _navigationService.navigateTo(Routes.profilePage);
+          },
+          child: Hero(
+            tag: "profilePic",
+            child: new Container(
+              width: 60,
+              height: 60,
+              decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10.0,
+                    ),
+                  ]),
+              child: CircleAvatar(
+                backgroundImage: (currentUser != null)
+                    ? NetworkImage(
+                    currentUser.profilePic,
+                    scale: 1)
+                    : ExactAssetImage('assets/no-avatar.jpg'),
+                maxRadius: 40,
+              ),
             ),
           ),
         ),

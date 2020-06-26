@@ -18,6 +18,7 @@ class MapsPageView extends StatelessWidget {
               backgroundColor: Theme.of(context).backgroundColor,
               body: SafeArea(
                 bottom: false,
+                top: false,
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -26,7 +27,7 @@ class MapsPageView extends StatelessWidget {
                       GoogleMap(
                         // Padding only applies to iPhone X to avoid obscuring the Google logo
                         padding: EdgeInsets.only(
-                            bottom: Device.get().isIphoneX ? 50 : 0, left: 10),
+                            bottom: Device.get().isIphoneX ? 55 : 0, left: 10),
                         mapType: MapType.normal,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
@@ -38,9 +39,9 @@ class MapsPageView extends StatelessWidget {
                           model.moveCameraToUserLocation();
                         },
                       ),
-                      LoadingPositionBanner(),
-                      MoveToUserPosition(),
-                      ProfilePicture(),
+                      SafeArea(child: LoadingPositionBanner()),
+                      SafeArea(child: MoveToUserPosition()),
+                      SafeArea(child: ProfilePicture()),
                       FilterBar()
 
                     ],

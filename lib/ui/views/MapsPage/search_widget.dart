@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
@@ -24,8 +25,10 @@ class FilterBar extends StatelessWidget {
                     topLeft: Radius.circular(20),
                     bottomLeft: Radius.circular(20))),
             child: Center(
-                child: Text(
+                child: AutoSizeText(
+                
                   tr("Cosa stai cercando?") ,
+                  maxLines: 1,
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             )),
