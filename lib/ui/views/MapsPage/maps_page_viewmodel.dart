@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
+import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
@@ -12,7 +14,10 @@ import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class MapsPageViewModel extends StreamViewModel<List<Bin>> {
+const String _binDataKey = 'bin-data';
+const String _illegalWasteDisposalKey = 'illegal-waste-disposal-stream';
+
+class MapsPageViewModel extends MultipleStreamViewModel {
   LocationService _locationService = locator<LocationService>();
   DatabaseService _databaseService = locator<DatabaseService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -24,11 +29,16 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
   Set<Marker> markers = Set.from([]);
 
   List<Bin> currentListOfBin = List<Bin>();
+  List<IllegalWasteDisposal> currentListOfWasteDisposalReports =
+      List<IllegalWasteDisposal>();
+
   String filterBinsForType;
 
   @override
-  void onData(List<Bin> data) {
-    currentListOfBin = data;
+  void onData(key, data) {
+    if (key == _binDataKey) currentListOfBin = data;
+    if (key == _illegalWasteDisposalKey)
+      currentListOfWasteDisposalReports = data;
   }
 
   void setFilterBinsForType(String filter) {
@@ -51,7 +61,9 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
         markerId: markerId,
         position: latLng,
         icon: pinMap[type],
-        onTap: () => navigateToBinDetailsPage(id));
+        onTap: type != abbandonoRifiuto
+            ? (() => navigateToBinDetailsPage(id))
+            : () => navigateToIllegalWasteDetailsPage(id));
 
     // adding a new marker to map
     markers.add(marker);
@@ -63,13 +75,18 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
     _navigationService.navigateTo(Routes.binDetailsPage);
   }
 
+  void navigateToIllegalWasteDetailsPage(String reportID) {
+    _binDetailsService.setReportID(reportID);
+
+    _navigationService.navigateTo(Routes.illegalWasteDetailsPage);
+  }
+
   void navigateToAddBinPage() {
     _navigationService.navigateTo(Routes.addBinPage);
   }
 
   void setBinFilterType({String filterBinsForType}) {
     this.filterBinsForType = filterBinsForType;
-    print('${this.filterBinsForType}');
     notifyListeners();
   }
 
@@ -81,6 +98,16 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
             bin.id,
             new LatLng(bin.position.latitude, bin.position.longitude),
             bin.type);
+      }
+    }
+    if (dataReady(_illegalWasteDisposalKey) && filterBinsForType == null) {
+      for (IllegalWasteDisposal illegalWasteDisposal
+          in currentListOfWasteDisposalReports) {
+        _addMarker(
+            illegalWasteDisposal.id,
+            LatLng(illegalWasteDisposal.position.latitude,
+                illegalWasteDisposal.position.longitude),
+            abbandonoRifiuto);
       }
     }
     return markers;
@@ -116,7 +143,14 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
   }
 
   @override
-  Stream<List<Bin>> get stream => _databaseService.binStream();
+  Map<String, StreamData> get streamsMap => {
+        _binDataKey: StreamData<List<Bin>>(_databaseService.binStream()),
+        _illegalWasteDisposalKey: StreamData<List<IllegalWasteDisposal>>(
+            _databaseService.illegalWasteDisposalStream()),
+      };
+
+//  @override
+//  Stream<List<Bin>> get stream => _databaseService.binStream();
 
   showUserNoLoggedInDialog() {
     _dialogService.showDialog(
@@ -129,13 +163,12 @@ class MapsPageViewModel extends StreamViewModel<List<Bin>> {
   showComingSoonReportFeatureDialog() {
     _dialogService.showDialog(
         title: tr("Funzionalita' in arrivo!"),
-        description: tr("A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"),
+        description: tr(
+            "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"),
         buttonTitle: tr("Ho capito"));
   }
 
   navigateToReportIllegalWasteDisposal() {
-    
     _navigationService.navigateTo(Routes.illegalWasteDisposalPage);
-    
   }
 }

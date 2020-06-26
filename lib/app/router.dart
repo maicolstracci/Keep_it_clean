@@ -5,6 +5,7 @@ import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/picture_selection_view.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_view.dart';
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_view.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_view.dart';
@@ -25,4 +26,5 @@ class $Router{
   SelectBinPositionView selectBinPositionPage;
   ReporterProfileView reporterProfilePage;
   IllegalWasteDisposalView illegalWasteDisposalPage;
+  IllegalWasteDetailsView illegalWasteDetailsPage;
 }

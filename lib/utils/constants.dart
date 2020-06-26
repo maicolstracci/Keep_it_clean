@@ -27,6 +27,8 @@ List<String> typesOfBin = [
   "Olio vegetale"
 ];
 
+String abbandonoRifiuto = "Abbandono rifiuto";
+
 enum Report{
   Bin,
   IllegalWaste

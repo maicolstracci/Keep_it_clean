@@ -15,6 +15,7 @@ class FilterBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
+            padding: EdgeInsets.all(8),
             height: 50,
             width: 260,
             decoration: BoxDecoration(

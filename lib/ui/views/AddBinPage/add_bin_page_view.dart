@@ -18,94 +18,97 @@ class AddBinPageView extends StatelessWidget {
                 title: Text(tr("Invia una segnalazione")),
                 centerTitle: true,
               ),
-              body: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          tr("Quali tipologie?"),
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Center(
-                                child: Wrap(
-                                  alignment: WrapAlignment.start,
-                                  runAlignment: WrapAlignment.start,
-                                  spacing: 10,
-                                  runSpacing: 15,
-                                  children: List.generate(
-                                    typesOfBin.length,
-                                    (index) => _BuildButton(index),
+              body: SafeArea(
+                top: false,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            tr("Quali tipologie?"),
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Center(
+                                  child: Wrap(
+                                    alignment: WrapAlignment.start,
+                                    runAlignment: WrapAlignment.start,
+                                    spacing: 10,
+                                    runSpacing: 15,
+                                    children: List.generate(
+                                      typesOfBin.length,
+                                      (index) => _BuildButton(index),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    "${model.getTypesSelectedLength} " +  tr("selezionate"),
-                                    style: TextStyle(
-                                        color: model.getTypesSelectedLength != 0
-                                            ? Colors.white
-                                            : Colors.red),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      "${model.getTypesSelectedLength} " +  tr("selezionate"),
+                                      style: TextStyle(
+                                          color: model.getTypesSelectedLength != 0
+                                              ? Colors.white
+                                              : Colors.red),
+                                    ),
                                   ),
-                                ),
-                                RaisedButton.icon(
-                                  color: Colors.blue,
-                                  onPressed: model.getTypesSelectedLength != 0
-                                      ? () async {
-                                          model.navigateToPictureSelection();
-                                        }
-                                      : null,
-                                  disabledColor: Colors.blueGrey,
-                                  disabledElevation: 4,
-                                  elevation: 4,
-                                  padding: EdgeInsets.only(
-                                      top: 8, bottom: 8, left: 10, right: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  icon: Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.white,
-                                    size: 26,
-                                  ),
-                                  label: Text(
-                                      tr("Prosegui")
-                                    ,
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              ],
+                                  RaisedButton.icon(
+                                    color: Colors.blue,
+                                    onPressed: model.getTypesSelectedLength != 0
+                                        ? () async {
+                                            model.navigateToPictureSelection();
+                                          }
+                                        : null,
+                                    disabledColor: Colors.blueGrey,
+                                    disabledElevation: 4,
+                                    elevation: 4,
+                                    padding: EdgeInsets.only(
+                                        top: 8, bottom: 8, left: 10, right: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    icon: Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.white,
+                                      size: 26,
+                                    ),
+                                    label: Text(
+                                        tr("Prosegui")
+                                      ,
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

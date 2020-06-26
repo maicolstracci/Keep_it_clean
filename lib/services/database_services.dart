@@ -9,7 +9,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
+import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/models/user_model.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 
 import 'auth_service.dart';
@@ -26,7 +28,15 @@ class DatabaseService {
     }).toList();
   }
 
+  List<IllegalWasteDisposal> _wasteDisposalListFromSnap(
+      List<DocumentSnapshot> list) {
+    return list.map((doc) {
+      return IllegalWasteDisposal.fromFirestore(doc);
+    }).toList();
+  }
+
   Stream<List<Bin>> binStream() {
+    //TODO: CHANGE CENTER TO USER POSITION
     // Create a geoFirePoint
     GeoFirePoint center =
         _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
@@ -42,6 +52,25 @@ class DatabaseService {
         .collection(collectionRef: collectionReference)
         .within(center: center, radius: radius, field: field, strictMode: true)
         .map(_binListFromSnap);
+  }
+
+  Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStream() {
+    //TODO: CHANGE CENTER TO USER POSITION
+    // Create a geoFirePoint
+    GeoFirePoint center =
+        _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
+
+    // get the collection reference or query
+    var collectionReference = _db.collection('segnalazioniAbbandonoRifiuti');
+
+    // Search in a 'radius' km
+    double radius = 10;
+    String field = 'position';
+
+    return _geoflutterfire
+        .collection(collectionRef: collectionReference)
+        .within(center: center, radius: radius, field: field, strictMode: true)
+        .map(_wasteDisposalListFromSnap);
   }
 
   Future<void> createBin(
@@ -294,5 +323,13 @@ class DatabaseService {
       'reportDate': new DateTime.now().toString(),
       'uidUser': user.uid,
     });
+  }
+
+  Future<IllegalWasteDisposal> getIllegalWasteDisposalInfo(String binID) async {
+    DocumentSnapshot ds = await Firestore.instance
+        .collection('segnalazioniAbbandonoRifiuti')
+        .document(binID)
+        .get();
+    return IllegalWasteDisposal.fromFirestore(ds);
   }
 }

@@ -15,17 +15,20 @@ class IllegalWasteDisposalView extends StatelessWidget {
             elevation: 0,
           ),
               backgroundColor: Theme.of(context).backgroundColor,
-              body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(tr("A nessuno piace vedere rifiuti abbandonati")),
-                    RaisedButton(
-                      child: Text("foto"),
-                      onPressed: model.navigateToTakePicture,
-                      color: Colors.blue,
-                    )
-                  ],
+              body: SafeArea(
+                top: false,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(tr("A nessuno piace vedere rifiuti abbandonati")),
+                      RaisedButton(
+                        child: Text("foto"),
+                        onPressed: model.navigateToTakePicture,
+                        color: Colors.blue,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

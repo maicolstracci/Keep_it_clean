@@ -29,6 +29,13 @@ Future<bool> setCustomMapPin() async {
 
     pinMap[typesOfBin[i-1]] = pinLocationIcon;
   }
+
+  Uint8List val =
+  await getBytesFromAsset('assets/maps_markers/marker_abbandono_rifiuto.png', (300/2).floor());
+  BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
+
+  pinMap[abbandonoRifiuto] = pinLocationIcon;
+
   return true;
 }
 

@@ -56,6 +56,7 @@ class RankingProfileContainer extends HookViewModelWidget<ClassificaPageViewMode
                     )),
                 Expanded(
                     flex: 1,
+                    //TODO: change Circle avatar to square
                     child: CircleAvatar(
                       backgroundImage:
                       NetworkImage(user.data['profilePic'], scale: 1),
