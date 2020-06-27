@@ -20,7 +20,7 @@ import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_di
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_view.dart';
 
 abstract class Routes {
-  static const loginPage = '/';
+  static const loginPage = '/login-page';
   static const onboardingPage = '/onboarding-page';
   static const mapsPage = '/maps-page';
   static const profilePage = '/profile-page';

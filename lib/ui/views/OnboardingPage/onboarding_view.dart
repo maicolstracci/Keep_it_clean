@@ -22,7 +22,6 @@ class OnboardingView extends StatelessWidget {
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               body: SafeArea(
-                bottom: false,
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,

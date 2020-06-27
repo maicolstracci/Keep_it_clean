@@ -17,7 +17,7 @@ class ProfilePicture extends StatelessWidget {
       alignment: Alignment.topLeft,
     
       child: Padding(
-        padding: const EdgeInsets.only(left:8.0),
+        padding: const EdgeInsets.only(left:8.0,top: 8),
         child: GestureDetector(
           onTap: () {
             _navigationService.navigateTo(Routes.profilePage);
@@ -25,19 +25,18 @@ class ProfilePicture extends StatelessWidget {
           child: Hero(
             tag: "profilePic",
             child: new Container(
-              width: 60,
-              height: 60,
+              width: 70,
+              height: 70,
               decoration: new BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
+
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10.0,
+                      color: Colors.black26,
+                      blurRadius: 30.0,
                     ),
                   ]),
               child: CircleAvatar(
-                backgroundImage: (currentUser != null)
+                backgroundImage: (currentUser != null && currentUser.profilePic != null)
                     ? NetworkImage(
                     currentUser.profilePic,
                     scale: 1)

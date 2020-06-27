@@ -77,15 +77,18 @@ class OnboardingPage2 extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 2,
-                      child: AutoSizeText(
-                        tr("report_string"),
-                        maxLines: 3,
-                        minFontSize: 1,
-                        maxFontSize: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: AutoSizeText(
+                          tr("report_string"),
+                          maxLines: 3,
+                          minFontSize: 1,
+                          maxFontSize: 50,
 
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(color: Color(0xfff4f8f9)),
+                          textAlign: TextAlign.center,
+                          style:
+                          TextStyle(color: Color(0xfff4f8f9)),
+                        ),
                       ),
                     ),
                   ],

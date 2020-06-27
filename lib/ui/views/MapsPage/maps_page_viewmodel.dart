@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/services/search_here_button_service.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
@@ -26,6 +27,8 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   DialogService _dialogService = locator<DialogService>();
 
   GoogleMapController mapsController;
+  CameraPosition currentCameraPosition;
+
   Set<Marker> markers = Set.from([]);
 
   List<Bin> currentListOfBin = List<Bin>();
@@ -135,6 +138,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
       _locationService.requestPermission();
     }
     setBusy(false);
+    notifySourceChanged();
   }
 
   void filterBin(String type) {
@@ -142,15 +146,28 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     notifySourceChanged(clearOldData: true);
   }
 
+  searchHereButtonAction() {
+
+    if (currentCameraPosition == null) return;
+
+    _locationService.setCurrentUserGeoFirePoint(
+        latitude: currentCameraPosition.target.latitude,
+        longitude: currentCameraPosition.target.longitude);
+
+    locator<SearchHereButtonService>().setVisibility(false);
+
+    notifySourceChanged(clearOldData: true);
+  }
+
   @override
   Map<String, StreamData> get streamsMap => {
-        _binDataKey: StreamData<List<Bin>>(_databaseService.binStream()),
+        _binDataKey: StreamData<List<Bin>>(
+            _databaseService.binStreamFromPosition(
+                currentUserPoint: _locationService.currentUserGeoFirePoint)),
         _illegalWasteDisposalKey: StreamData<List<IllegalWasteDisposal>>(
-            _databaseService.illegalWasteDisposalStream()),
+            _databaseService.illegalWasteDisposalStreamFromPosition(
+                currentUserPoint: _locationService.currentUserGeoFirePoint)),
       };
-
-//  @override
-//  Stream<List<Bin>> get stream => _databaseService.binStream();
 
   showUserNoLoggedInDialog() {
     _dialogService.showDialog(
@@ -170,5 +187,33 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
   navigateToReportIllegalWasteDisposal() {
     _navigationService.navigateTo(Routes.illegalWasteDisposalPage);
+  }
+
+  setCameraPosition(CameraPosition cameraPosition) {
+    this.currentCameraPosition = cameraPosition;
+    searchHereButtonVisibility();
+  }
+
+  void searchHereButtonVisibility() {
+    SearchHereButtonService _searchHereService =
+        locator<SearchHereButtonService>();
+
+    if (_locationService.currentUserGeoFirePoint == null) {
+      if (_searchHereService.visibility != true)
+        _searchHereService.setVisibility(true);
+      return;
+    }
+    if (currentCameraPosition != null &&
+        _locationService.currentUserGeoFirePoint.distance(
+                lat: currentCameraPosition.target.latitude,
+                lng: currentCameraPosition.target.longitude) >
+            6) {
+      if (_searchHereService.visibility != true)
+      _searchHereService.setVisibility(true);
+      return;
+    }
+    if (_searchHereService.visibility != false)
+    _searchHereService.setVisibility(false);
+    return;
   }
 }

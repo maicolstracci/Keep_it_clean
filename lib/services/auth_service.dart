@@ -12,9 +12,9 @@ import 'package:http/http.dart' as http;
 import 'database_services.dart';
 
 @lazySingleton
-class AuthService{
-
+class AuthService {
   User _currentUser;
+
   User get currentUser => _currentUser;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -27,19 +27,16 @@ class AuthService{
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
     final FirebaseUser user =
-    (await _auth.signInWithCredential(credential)).user;
+        (await _auth.signInWithCredential(credential)).user;
 
     DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
-     _currentUser = User.fromFirestore(documentSnapshot);
-     print(_currentUser);
-
+    _currentUser = User.fromFirestore(documentSnapshot);
   }
 
   Future facebookLogin() async {
@@ -53,7 +50,7 @@ class AuthService{
         final token = result.accessToken.token;
 
         final AuthCredential cred =
-        FacebookAuthProvider.getCredential(accessToken: token);
+            FacebookAuthProvider.getCredential(accessToken: token);
 
         final FirebaseUser user = (await _auth.signInWithCredential(cred)).user;
 
@@ -61,18 +58,16 @@ class AuthService{
             'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=$token');
         Map<String, dynamic> facebookData = jsonDecode(graphResponse.body);
 
-        DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user, fbPic: facebookData['picture']['data']['url']);
+        DocumentSnapshot documentSnapshot = await _databaseService
+            .setupUser(user, fbPic: facebookData['picture']['data']['url']);
         _currentUser = User.fromFirestore(documentSnapshot);
 
         break;
       case FacebookLoginStatus.cancelledByUser:
-
         print("Cancelled");
         return null;
         break;
       case FacebookLoginStatus.error:
-
-
         print("Error");
         return null;
         break;
@@ -80,10 +75,20 @@ class AuthService{
     return null;
   }
 
-  signOut(){
+  signOut() {
     _auth.signOut();
     _currentUser = null;
   }
 
+  Future<bool> isUserLoggedIn() async {
+    var user = await _auth.currentUser();
 
+    if (user != null) {
+      DocumentSnapshot documentSnapshot =
+          await _databaseService.setupUser(user);
+      _currentUser = User.fromFirestore(documentSnapshot);
+    }
+
+    return user != null;
+  }
 }

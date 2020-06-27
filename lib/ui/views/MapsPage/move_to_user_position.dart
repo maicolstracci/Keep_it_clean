@@ -15,7 +15,7 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
           children: [
             Container(
               decoration: BoxDecoration(boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 40),
+                BoxShadow(color: Colors.black12, blurRadius: 5),
               ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
               margin: EdgeInsets.only(top: 8, right: 8),
               child: IconButton(
@@ -28,7 +28,7 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
             ),
             Container(
               decoration: BoxDecoration(boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 40),
+                BoxShadow(color: Colors.black12, blurRadius: 5,),
               ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
               margin: EdgeInsets.only(top: 8, right: 8),
               child: IconButton(
@@ -37,7 +37,7 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
                     : () => viewModel.showUserNoLoggedInDialog(),
                 icon: Icon(
                   Icons.warning,
-                  color: Colors.redAccent.withOpacity(0.9),
+                  color: Colors.red.withOpacity(0.9),
                 ),
               ),
             ),

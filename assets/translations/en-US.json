@@ -33,7 +33,7 @@
   "report": "REPORT",
   "report_string" : "If you find a bin that is not yet on the map, help the community and report it!",
   "Cominciamo": "Let's go!",
-  "Permessi": "PERMISSIONS",
+  "PERMESSI": "PERMISSIONS",
   "permessi_string": "To speed up your search we need location permissions, so we can show you what you can find around you right away!",
   "PROSEGUI": "CONTINUE",
   "COMINCIAMO": "LET'S GO!",
@@ -52,5 +52,8 @@
   "Problema con il login!" : "Problem with login!",
   "Qualcosa e' andato storto, riprova tra poco." : "Something went wrong, try again soon.",
   "Funzionalita' in arrivo!" : "Coming soon!",
-  "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "We are working on implementing a feature to allow report for illegally abandoned waste"
+  "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "We are working on implementing a feature to allow report for illegally abandoned waste",
+  "Cerca qui" : "Search here",
+  "Segnala come risolto" : "Report as solved",
+  "Report abbandono rifiuti" : "Report waste disposal"
 }

@@ -33,7 +33,7 @@
   "report": "SEGNALA",
   "report_string" : "Se trovi un bidone che non e' ancora presente, aiuta la comunita' segnalandolo a tutti!",
   "Cominciamo": "Cominciamo",
-  "Permessi": "Permessi",
+  "PERMESSI": "Permessi",
   "permessi_string": "Per velocizzare le tue ricerche abbiamo bisogno dei permessi di localizzazione, cosi' da poterti mostrare subito cosa puoi trovare intorno a te!",
   "PROSEGUI": "PROSEGUI",
   "COMINCIAMO": "COMINCIAMO!",
@@ -53,5 +53,8 @@
   "Qualcosa e' andato storto, riprova tra poco." : "Qualcosa e' andato storto, riprova tra poco.",
   "Funzionalita' in arrivo!" : "Funzionalita' in arrivo!",
   "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati",
-  "A nessuno piace vedere rifiuti abbandonati" : "A nessuno piace vedere rifiuti abbandonati"
+  "A nessuno piace vedere rifiuti abbandonati" : "A nessuno piace vedere rifiuti abbandonati",
+  "Cerca qui" : "Cerca qui",
+  "Segnala come risolto" : "Segnala come risolto",
+  "Report abbandono rifiuti" : "Report abbandono rifiuti"
 }

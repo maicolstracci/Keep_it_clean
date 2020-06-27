@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'app/router.gr.dart';
 
-
-//TODO: check ios google login
 //TODO: add translations for new strings
-//TODO: Check report before make it public
 
 void main() async {
   setupLocator();
@@ -22,7 +21,7 @@ void main() async {
   ]);
 
   runApp(EasyLocalization(
-      supportedLocales: [Locale('it', 'IT'),Locale('en', 'US')],
+      supportedLocales: [Locale('it', 'IT'), Locale('en', 'US')],
       path: 'assets/translations',
       fallbackLocale: Locale('en', 'US'),
       preloaderColor: Color(0xff06442d),
@@ -37,23 +36,17 @@ class KeepItClean extends StatefulWidget {
 }
 
 class _KeepItCleanState extends State<KeepItClean> {
-
-
   @override
   void initState() {
     super.initState();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.black,
         statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light
-    ));
+        statusBarBrightness: Brightness.light));
 
     return MaterialApp(
       localizationsDelegates: context.localizationDelegates,
@@ -75,22 +68,38 @@ class _KeepItCleanState extends State<KeepItClean> {
       ),
       onGenerateRoute: Router().onGenerateRoute,
       navigatorKey: locator<NavigationService>().navigatorKey,
-
+      home: StartUpView(),
 //      initialRoute: Routes.onboardingPage,
-
-//      localizationsDelegates: [
-//        _newLocaleDelegate,
-//        const AppTranslationsDelegate(),
-//        //provides localised strings
-//        GlobalMaterialLocalizations.delegate,
-//        //provides RTL support
-//        GlobalWidgetsLocalizations.delegate,
-//        GlobalCupertinoLocalizations.delegate
-//      ],
-//      supportedLocales: [
-//        const Locale('en', 'EN'),
-//        const Locale('it', 'IT'),
-//      ],
     );
+  }
+}
+
+class StartUpView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<StartUpViewModel>.reactive(
+        onModelReady: (model) => model.handleStartUpLogic(),
+        builder: (context, model, child) => Scaffold(
+              backgroundColor: Color(0xff06442d),
+          body: SizedBox.expand(),
+            ),
+        viewModelBuilder: () => StartUpViewModel());
+  }
+}
+
+class StartUpViewModel extends BaseViewModel {
+
+  final AuthService _authenticationService =
+  locator<AuthService>();
+  final NavigationService _navigationService = locator<NavigationService>();
+
+  Future handleStartUpLogic() async {
+    var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
+
+    if (hasLoggedInUser) {
+      _navigationService.replaceWith(Routes.mapsPage);
+    } else {
+      _navigationService.replaceWith(Routes.loginPage);
+    }
   }
 }

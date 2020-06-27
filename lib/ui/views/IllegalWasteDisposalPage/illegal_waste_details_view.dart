@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_image.dart';
 import 'package:stacked/stacked.dart';
-
 import 'illegal_waste_details_viewmodel.dart';
 
 class IllegalWasteDetailsView extends StatelessWidget {

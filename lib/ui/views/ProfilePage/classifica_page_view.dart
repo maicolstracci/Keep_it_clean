@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
@@ -26,21 +29,23 @@ class ClassificaPageView extends StatelessWidget {
   }
 }
 
-class RankingProfileContainer extends HookViewModelWidget<ClassificaPageViewModel> {
+class RankingProfileContainer
+    extends HookViewModelWidget<ClassificaPageViewModel> {
   final int ranking;
   final DocumentSnapshot user;
 
   RankingProfileContainer({this.ranking, this.user});
-  
+
   @override
-  Widget buildViewModelWidget(BuildContext context, ClassificaPageViewModel viewModel) {
+  Widget buildViewModelWidget(
+      BuildContext context, ClassificaPageViewModel viewModel) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 80,
       child: Padding(
         padding: EdgeInsets.all(8),
         child: GestureDetector(
-          onTap: ()=>viewModel.navigateToUserPage(user.documentID),
+          onTap: () => viewModel.navigateToUserPage(user.documentID),
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.7),
@@ -56,12 +61,15 @@ class RankingProfileContainer extends HookViewModelWidget<ClassificaPageViewMode
                     )),
                 Expanded(
                     flex: 1,
-                    //TODO: change Circle avatar to square
-                    child: CircleAvatar(
-                      backgroundImage:
-                      NetworkImage(user.data['profilePic'], scale: 1),
-                      radius: 30,
-                    )),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: user.data['profilePic'] == null
+                            ? Image.asset("assets/no-avatar.jpg")
+                            : FadeInImage.assetNetwork(
+                                fit: BoxFit.cover,
+                                placeholder: "assets/no-avatar.jpg",
+                                image: user.data['profilePic'],
+                              ))),
                 Expanded(
                     flex: 3,
                     child: Padding(
@@ -78,7 +86,6 @@ class RankingProfileContainer extends HookViewModelWidget<ClassificaPageViewMode
                       user.data['totalNumberOfReports'].toString(),
                       textAlign: TextAlign.center,
                     )),
-
               ],
             ),
           ),

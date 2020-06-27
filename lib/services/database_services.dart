@@ -11,8 +11,10 @@ import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/models/user_model.dart';
+import 'package:keep_it_clean/services/location_service.dart';
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
+import 'package:location/location.dart';
 
 import 'auth_service.dart';
 
@@ -21,6 +23,10 @@ class DatabaseService {
   final Firestore _db = Firestore.instance;
   Geoflutterfire _geoflutterfire = Geoflutterfire();
   String typeOfBinToFilter;
+
+  // Default geoFirePoint
+  GeoFirePoint defaultPoint =
+  Geoflutterfire().point(latitude: 44.170147, longitude: 8.3438333);
 
   List<Bin> _binListFromSnap(List<DocumentSnapshot> list) {
     return list.map((doc) {
@@ -35,45 +41,33 @@ class DatabaseService {
     }).toList();
   }
 
-  Stream<List<Bin>> binStream() {
-    //TODO: CHANGE CENTER TO USER POSITION
-    // Create a geoFirePoint
-    GeoFirePoint center =
-        _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
+  Stream<List<Bin>> binStreamFromPosition({GeoFirePoint currentUserPoint}) {
 
     // get the collection reference or query
     var collectionReference = _db.collection('cestini');
 
-    // Search in a 'radius' km
-    double radius = 10;
     String field = 'position';
 
     return _geoflutterfire
         .collection(collectionRef: collectionReference)
-        .within(center: center, radius: radius, field: field, strictMode: true)
+        .within(center: currentUserPoint ?? defaultPoint, radius: 10, field: field, strictMode: true)
         .map(_binListFromSnap);
   }
 
-  Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStream() {
-    //TODO: CHANGE CENTER TO USER POSITION
-    // Create a geoFirePoint
-    GeoFirePoint center =
-        _geoflutterfire.point(latitude: 44.170147, longitude: 8.3438333);
+  Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStreamFromPosition({GeoFirePoint currentUserPoint}) {
 
     // get the collection reference or query
     var collectionReference = _db.collection('segnalazioniAbbandonoRifiuti');
 
-    // Search in a 'radius' km
-    double radius = 10;
     String field = 'position';
 
     return _geoflutterfire
         .collection(collectionRef: collectionReference)
-        .within(center: center, radius: radius, field: field, strictMode: true)
+        .within(center: currentUserPoint ?? defaultPoint, radius: 10, field: field, strictMode: true)
         .map(_wasteDisposalListFromSnap);
   }
 
-  Future<void> createBin(
+  Future  createBin(
       {@required String type,
       @required String imgName,
       @required LatLng binPos,
@@ -81,7 +75,7 @@ class DatabaseService {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
-    DocumentReference doc = await _db.collection("cestini").add({
+    await _db.collection("cestini").add({
       'position': binLocation.data,
       'type': type,
       'photoUrl': imgName,
