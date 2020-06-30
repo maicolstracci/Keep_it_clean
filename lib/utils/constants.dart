@@ -29,7 +29,10 @@ List<String> typesOfBin = [
 
 String abbandonoRifiuto = "Abbandono rifiuto";
 
-enum Report{
-  Bin,
-  IllegalWaste
-}
+enum Report { Bin, IllegalWaste }
+
+GlobalKey moveToUserLocationKey = GlobalKey();
+GlobalKey reportIllegalWasteDisposalKey = GlobalKey();
+GlobalKey filterBarKey = GlobalKey();
+GlobalKey addNewBinKey = GlobalKey();
+GlobalKey personalProfileKey = GlobalKey();

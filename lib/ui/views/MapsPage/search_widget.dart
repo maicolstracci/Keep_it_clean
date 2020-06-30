@@ -10,8 +10,10 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
+
       alignment: Alignment.bottomCenter,
       child: Column(
+
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -42,6 +44,7 @@ class FilterBar extends StatelessWidget {
                 AddBinButton(),
                 Expanded(
                   child: ConstrainedBox(
+                    key: filterBarKey,
                     constraints: new BoxConstraints(
                       maxHeight: 60.0,
                     ),
@@ -80,6 +83,7 @@ class FilterButton extends HookViewModelWidget<MapsPageViewModel> {
   Widget buildViewModelWidget(
       BuildContext context, MapsPageViewModel viewModel) {
     return Container(
+
       width: 120,
       decoration: BoxDecoration(
           border: Border.all(
@@ -165,6 +169,7 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
   Widget buildViewModelWidget(
       BuildContext context, MapsPageViewModel viewModel) {
     return FlatButton(
+      key: addNewBinKey,
       color: Colors.blue[800].withOpacity(.98),
       onPressed: viewModel.isUserLoggedIn()
           ? () => viewModel.navigateToAddBinPage()

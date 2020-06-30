@@ -22,6 +22,7 @@ class IllegalWasteDisposalView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(tr("A nessuno piace vedere rifiuti abbandonati")),
+
                       RaisedButton(
                         child: Text("foto"),
                         onPressed: model.navigateToTakePicture,

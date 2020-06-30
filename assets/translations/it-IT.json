@@ -56,5 +56,16 @@
   "A nessuno piace vedere rifiuti abbandonati" : "A nessuno piace vedere rifiuti abbandonati",
   "Cerca qui" : "Cerca qui",
   "Segnala come risolto" : "Segnala come risolto",
-  "Report abbandono rifiuti" : "Report abbandono rifiuti"
+  "Report abbandono rifiuti" : "Report abbandono rifiuti",
+  "SALTA" : "SALTA TUTORIAL",
+  "tutorial_title_moveToUserLocation" : "Centra la mappa sulla tua posizione attuale",
+  "tutorial_moveToUserLocation" : "Se hai fornito i permessi di localizzazione, attraverso questo bottone potrai spostare la mappa precisamente sulla tua posizione attuale",
+  "tutorial_title_reportIllegalWasteDisposal" : "Segnala abbandoni di rifiuti illegali",
+  "tutorial_reportIllegalWasteDisposal" : "Con Keep it clean puoi aiutare a segnalare e mappare i luoghi dove vengono abbandonati abusivamente rifiuti",
+  "tutorial_title_filterBar" : "Filtra per cio' che stai cercando",
+  "tutorial_filterBar" : "Scorri verso sinistra sulla riga di bottoni se non trovi subito quello che stai cercando",
+  "tutorial_title_addNewBin" : "Aggiungi un nuovo punto di raccolta",
+  "tutorial_addNewBin" : "Aiuta la comunita' di Keep it clean segnalando nuovi punti di raccolta non ancora presenti sulla mappa",
+  "tutorial_title_personalProfile" : "Questo e' il tuo profilo personale",
+  "tutorial_personalProfile" : "Se hai effettuato l'accesso potrai tenere traccia delle tue segnalazioni.\n\nNon hai effettuato l'accesso? Nessun problema, entra nel tuo profilo personale e potrai loggarti"
 }
