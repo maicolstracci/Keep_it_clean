@@ -14,7 +14,7 @@ import 'app/router.gr.dart';
 void main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-
+  locator<NavigationService>().config(defaultTransition: NavigationTransition.RightToLeft);
   await setCustomMapPin();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

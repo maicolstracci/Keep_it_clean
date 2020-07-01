@@ -4,6 +4,7 @@ import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ProfilePicture extends StatelessWidget {
@@ -20,7 +21,8 @@ class ProfilePicture extends StatelessWidget {
         padding: const EdgeInsets.only(left:8.0,top: 8),
         child: GestureDetector(
           onTap: () {
-            _navigationService.navigateTo(Routes.profilePage);
+            _navigationService.navigateWithTransition(ProfilePageView(),transition: NavigationTransition.RightToLeft);
+
           },
           child: Hero(
             tag: "profilePic",

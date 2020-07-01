@@ -4,6 +4,11 @@ import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/search_here_button_service.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
+import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_view.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_viewmodel.dart';
+import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
@@ -75,17 +80,17 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   void navigateToBinDetailsPage(String binID) {
     _binDetailsService.setBinID(binID);
 
-    _navigationService.navigateTo(Routes.binDetailsPage);
+    _navigationService.navigateWithTransition(BinDetailsPageView(),transition: NavigationTransition.RightToLeft);
   }
 
   void navigateToIllegalWasteDetailsPage(String reportID) {
     _binDetailsService.setReportID(reportID);
 
-    _navigationService.navigateTo(Routes.illegalWasteDetailsPage);
+    _navigationService.navigateWithTransition(IllegalWasteDetailsView(),transition: NavigationTransition.RightToLeft);
   }
 
   void navigateToAddBinPage() {
-    _navigationService.navigateTo(Routes.addBinPage);
+    _navigationService.navigateWithTransition(AddBinPageView(),transition: NavigationTransition.RightToLeft);
   }
 
   void setBinFilterType({String filterBinsForType}) {
@@ -186,7 +191,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   }
 
   navigateToReportIllegalWasteDisposal() {
-    _navigationService.navigateTo(Routes.illegalWasteDisposalPage);
+    _navigationService.navigateWithTransition(IllegalWasteDisposalView(),transition: NavigationTransition.RightToLeft);
   }
 
   setCameraPosition(CameraPosition cameraPosition) {

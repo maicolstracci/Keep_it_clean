@@ -6,6 +6,7 @@ import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -62,8 +63,7 @@ class IllegalWasteDetailsViewModel extends FutureViewModel<IllegalWasteDisposal>
       _databaseService.getIllegalWasteDisposalInfo(_binDetailsService.reportID);
 
   navigateToReporterProfile() {
-    print(data.uidUser);
-    _navigationService.navigateTo(Routes.reporterProfilePage,
-        arguments: ReporterProfileViewArguments(reporterUid: data.uidUser));
+    _navigationService.navigateWithTransition(ReporterProfileView(reporterUid: data.uidUser,),
+        transition: NavigationTransition.RightToLeft);
   }
 }

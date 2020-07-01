@@ -1,5 +1,6 @@
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/take_picture_service.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/select_bin_position_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -13,7 +14,7 @@ class PictureSelectionViewModel extends BaseViewModel{
     await _takePictureService.takePicture(from);
 
     if(_takePictureService.pic != null ){
-      _navigationService.navigateTo(Routes.selectBinPositionPage);
+      _navigationService.navigateWithTransition(SelectBinPositionView(),transition: NavigationTransition.RightToLeft);
     }
 
   }

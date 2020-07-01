@@ -1,5 +1,6 @@
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/type_of_report_service.dart';
+import 'package:keep_it_clean/ui/views/AddBinPage/picture_selection_view.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -13,7 +14,7 @@ class IllegalWasteDisposalViewModel extends BaseViewModel{
 
   navigateToTakePicture() {
     _typeOfReportService.setTypeOfReport(type: Report.IllegalWaste);
-    _navigationService.navigateTo(Routes.pictureSelectionPage);
+    _navigationService.navigateWithTransition(PictureSelectionView(),transition: NavigationTransition.RightToLeft);
   }
 
 }
