@@ -66,7 +66,7 @@ class OnboardingPage1 extends StatelessWidget {
                       child: AutoSizeText(
                         tr("CERCA"),
                         maxLines: 1,
-                        presetFontSizes: [50,36, 22],
+                        maxFontSize: 50,
                         style: TextStyle(
                             color: Color(0xfff4f8f9),
                             fontWeight: FontWeight.w600),

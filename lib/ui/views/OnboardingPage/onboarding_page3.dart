@@ -73,7 +73,7 @@ class OnboardingPage3 extends StatelessWidget {
                       child: AutoSizeText(
                         tr("PERMESSI"),
                         maxLines: 1,
-                        presetFontSizes: [50,36, 22],
+                        maxFontSize: 50,
                         style: TextStyle(
                             color: Color(0xfff4f8f9),
                             fontWeight: FontWeight.w600),
