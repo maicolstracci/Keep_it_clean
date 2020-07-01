@@ -55,5 +55,17 @@
   "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "We are working on implementing a feature to allow report for illegally abandoned waste",
   "Cerca qui" : "Search here",
   "Segnala come risolto" : "Report as solved",
-  "Report abbandono rifiuti" : "Report waste disposal"
+  "Report abbandono rifiuti" : "Report waste disposal",
+  "SALTA" : "SKIP TUTORIAL",
+  "tutorial_title_moveToUserLocation" : "Center the map on your current location",
+  "tutorial_moveToUserLocation" : "If you allowed us to know your location, with this button you can center the map on your location",
+  "tutorial_title_reportIllegalWasteDisposal" : "Report an illegal waste disposal",
+  "tutorial_reportIllegalWasteDisposal" : "With Keep it clean you can help report and map places where waste is illegally dumped",
+  "tutorial_title_filterBar" : "Filter for what you want",
+  "tutorial_filterBar" : "Swipe left on the button row if you don't find what you need",
+  "tutorial_title_addNewBin" : "Add a new waste collection point",
+  "tutorial_addNewBin" : "Help the Keep it clean community by reporting new collection points not yet on the map",
+  "tutorial_title_personalProfile" : "This is your personal profile",
+  "tutorial_personalProfile" : "If you are logged in, you will be able to keep track of your reports.\n\nDidn't you log in? No problem, enter your personal profile and you can log in."
+
 }

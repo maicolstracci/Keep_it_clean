@@ -10,6 +10,8 @@ class BinDetailsService{
   String _reportID;
   String get reportID => _reportID;
 
+
+
   void setBinID(String id){
     _binID = id;
   }
@@ -17,6 +19,7 @@ class BinDetailsService{
   void setReportID(String id){
     _reportID = id;
   }
+
 
 
 }

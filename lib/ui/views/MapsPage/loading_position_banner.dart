@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_viewmodel.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
 class LoadingPositionBanner extends HookViewModelWidget<MapsPageViewModel> {
