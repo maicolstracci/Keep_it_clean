@@ -13,6 +13,8 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		C16B81C1A1DE1A40E951E6BC /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87144D026EACAB0B95BEDE83 /* Pods_Runner.framework */; };
+		DB26DF8824AE2393001DC99E /* ApiKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB26DF8724AE2393001DC99E /* ApiKeys.swift */; };
+		DB26DF8A24AE23B6001DC99E /* ApiKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB26DF8924AE23B6001DC99E /* ApiKeys.swift */; };
 		DB6487292418F3D200F188B7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB6487282418F3D200F188B7 /* GoogleService-Info.plist */; };
 		DBD1BF602497A0360046B151 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBD1BF5F2497A0360046B151 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -46,6 +48,8 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9A70C0CCE909AC29BFB0EAFF /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D19136C7679807A5ECFC73EA /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		DB26DF8724AE2393001DC99E /* ApiKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiKeys.swift; sourceTree = "<group>"; };
+		DB26DF8924AE23B6001DC99E /* ApiKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiKeys.swift; sourceTree = "<group>"; };
 		DB6487282418F3D200F188B7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DB64872A241919DD00F188B7 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DB64872B241919DD00F188B7 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				DB26DF8924AE23B6001DC99E /* ApiKeys.swift */,
 				DBD1BF5F2497A0360046B151 /* Assets.xcassets */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -123,6 +128,7 @@
 		97C146F11CF9000F007C117D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DB26DF8724AE2393001DC99E /* ApiKeys.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -349,6 +355,8 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				DB26DF8A24AE23B6001DC99E /* ApiKeys.swift in Sources */,
+				DB26DF8824AE2393001DC99E /* ApiKeys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

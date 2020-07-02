@@ -35,7 +35,7 @@ class MapsPageView extends StatelessWidget {
                       GoogleMap(
                         // Padding only applies to iPhone X to avoid obscuring the Google logo
                         padding: EdgeInsets.only(
-                            bottom: Device.get().isIphoneX ? 55 : 0, left: 10),
+                             left: 10),
                         mapType: MapType.normal,
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,

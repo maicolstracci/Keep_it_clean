@@ -73,3 +73,6 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .flutter-plugins-dependencies
 android/app/src/main/res/values/api_key.xml
+ios/Runner/ApiKeys.swift
+ios/Flutter/.last_build_id
+ios/Podfile.lock
