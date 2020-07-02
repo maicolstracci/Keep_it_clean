@@ -5,11 +5,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 @lazySingleton
 class LocationService {
-
   GeoFirePoint currentUserGeoFirePoint;
 
-  void setCurrentUserGeoFirePoint({double latitude, double longitude}){
-    currentUserGeoFirePoint = Geoflutterfire().point(latitude: latitude, longitude: longitude);
+  void setCurrentUserGeoFirePoint({double latitude, double longitude}) {
+    currentUserGeoFirePoint =
+        Geoflutterfire().point(latitude: latitude, longitude: longitude);
   }
 
 // Request permission method from permissions_handlers plugin
@@ -23,14 +23,18 @@ class LocationService {
   }
 
   Future<LocationData> getUserLocation() async {
-
-
-    LocationData userPosition = await Location().getLocation().timeout(Duration(seconds: 15),
-        onTimeout: () {
+    print('Get user location');
+    LocationData userPosition = await Location()
+        .getLocation()
+        .timeout(Duration(seconds: 15), onTimeout: () {
+      print('15s elapsed returning null');
       return null;
     });
 
-    setCurrentUserGeoFirePoint(latitude: userPosition.latitude, longitude: userPosition.longitude);
+    if (userPosition != null) {
+      setCurrentUserGeoFirePoint(
+          latitude: userPosition.latitude, longitude: userPosition.longitude);
+    }
 
     return userPosition;
   }

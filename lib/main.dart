@@ -9,7 +9,6 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'app/router.gr.dart';
 
-//TODO: add translations for new strings
 
 void main() async {
   setupLocator();

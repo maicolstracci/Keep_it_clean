@@ -58,6 +58,8 @@
   "Segnala come risolto" : "Segnala come risolto",
   "Report abbandono rifiuti" : "Report abbandono rifiuti",
   "SALTA" : "SALTA TUTORIAL",
+  "Si e' verificato un errore" : "Si e' verificato un errore",
+  "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con segnale debole." : "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole.",
   "tutorial_title_moveToUserLocation" : "Centra la mappa sulla tua posizione attuale",
   "tutorial_moveToUserLocation" : "Se hai fornito i permessi di localizzazione, attraverso questo bottone potrai spostare la mappa precisamente sulla tua posizione attuale",
   "tutorial_title_reportIllegalWasteDisposal" : "Segnala abbandoni di rifiuti illegali",
@@ -67,5 +69,16 @@
   "tutorial_title_addNewBin" : "Aggiungi un nuovo punto di raccolta",
   "tutorial_addNewBin" : "Aiuta la comunita' di Keep it clean segnalando nuovi punti di raccolta non ancora presenti sulla mappa",
   "tutorial_title_personalProfile" : "Questo e' il tuo profilo personale",
-  "tutorial_personalProfile" : "Se hai effettuato l'accesso potrai tenere traccia delle tue segnalazioni.\n\nNon hai effettuato l'accesso? Nessun problema, entra nel tuo profilo personale e potrai loggarti"
+  "tutorial_personalProfile" : "Se hai effettuato l'accesso potrai tenere traccia delle tue segnalazioni.\n\nNon hai effettuato l'accesso? Nessun problema, entra nel tuo profilo personale e potrai loggarti",
+  "Plastica": "Plastica",
+  "Vetro": "Vetro",
+  "Alluminio" : "Alluminio",
+  "Carta" :  "Carta",
+  "Umido" : "Umido" ,
+  "Indifferenziata" :  "Indifferenziata",
+  "Batterie" : "Batterie",
+  "Medicinali" : "Medicinali",
+  "Verde" : "Verde",
+  "Abiti" : "Abiti",
+  "Olio vegetale" : "Olio vegetale"
 }

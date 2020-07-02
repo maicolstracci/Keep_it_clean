@@ -49,6 +49,8 @@
   "Vuoi davvero disconnetterti?": "Would you like to sign out?",
   "NO": "NO",
   "SI": "YES",
+  "Si e' verificato un errore" : "An error has occurred",
+  "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole." : "We haven't been able to calculate your current position.\nYou're probably in an area with a weak signal.",
   "Problema con il login!" : "Problem with login!",
   "Qualcosa e' andato storto, riprova tra poco." : "Something went wrong, try again soon.",
   "Funzionalita' in arrivo!" : "Coming soon!",
@@ -66,6 +68,17 @@
   "tutorial_title_addNewBin" : "Add a new waste collection point",
   "tutorial_addNewBin" : "Help the Keep it clean community by reporting new collection points not yet on the map",
   "tutorial_title_personalProfile" : "This is your personal profile",
-  "tutorial_personalProfile" : "If you are logged in, you will be able to keep track of your reports.\n\nDidn't you log in? No problem, enter your personal profile and you can log in."
+  "tutorial_personalProfile" : "If you are logged in, you will be able to keep track of your reports.\n\nDidn't you log in? No problem, enter your personal profile and you can log in.",
+  "Plastica": "Plastic",
+  "Vetro": "Glass",
+  "Alluminio" : "Alluminum",
+  "Carta" :  "Paper",
+  "Umido" : "Organic" ,
+  "Indifferenziata" :  "Other",
+  "Batterie" : "Batteries",
+  "Medicinali" : "Drugs",
+  "Verde" : "Greenery",
+  "Abiti" : "Clothes",
+  "Olio vegetale" : "Vegetable oil"
 
 }

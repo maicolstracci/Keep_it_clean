@@ -80,17 +80,20 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   void navigateToBinDetailsPage(String binID) {
     _binDetailsService.setBinID(binID);
 
-    _navigationService.navigateWithTransition(BinDetailsPageView(),transition: NavigationTransition.RightToLeft);
+    _navigationService.navigateWithTransition(BinDetailsPageView(),
+        transition: NavigationTransition.RightToLeft);
   }
 
   void navigateToIllegalWasteDetailsPage(String reportID) {
     _binDetailsService.setReportID(reportID);
 
-    _navigationService.navigateWithTransition(IllegalWasteDetailsView(),transition: NavigationTransition.RightToLeft);
+    _navigationService.navigateWithTransition(IllegalWasteDetailsView(),
+        transition: NavigationTransition.RightToLeft);
   }
 
   void navigateToAddBinPage() {
-    _navigationService.navigateWithTransition(AddBinPageView(),transition: NavigationTransition.RightToLeft);
+    _navigationService.navigateWithTransition(AddBinPageView(),
+        transition: NavigationTransition.RightToLeft);
   }
 
   void setBinFilterType({String filterBinsForType}) {
@@ -128,9 +131,17 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
       if (location == null) {
         //TODO: cant find user location, show error...
+
         setBusy(false);
+
+        _dialogService.showDialog(
+            title: tr("Si e' verificato un errore"),
+            description: tr("Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole."),
+            buttonTitle: tr("Ho capito"));
+
         return;
       } else {
+        print('ENTERING THE LOCATION NOT NULL BRANCH');
         CameraPosition _userCameraPosition = CameraPosition(
           target: LatLng(location.latitude, location.longitude),
           zoom: 14.4746,
@@ -152,7 +163,6 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   }
 
   searchHereButtonAction() {
-
     if (currentCameraPosition == null) return;
 
     _locationService.setCurrentUserGeoFirePoint(
@@ -191,7 +201,8 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   }
 
   navigateToReportIllegalWasteDisposal() {
-    _navigationService.navigateWithTransition(IllegalWasteDisposalView(),transition: NavigationTransition.RightToLeft);
+    _navigationService.navigateWithTransition(IllegalWasteDisposalView(),
+        transition: NavigationTransition.RightToLeft);
   }
 
   setCameraPosition(CameraPosition cameraPosition) {
@@ -214,11 +225,11 @@ class MapsPageViewModel extends MultipleStreamViewModel {
                 lng: currentCameraPosition.target.longitude) >
             6) {
       if (_searchHereService.visibility != true)
-      _searchHereService.setVisibility(true);
+        _searchHereService.setVisibility(true);
       return;
     }
     if (_searchHereService.visibility != false)
-    _searchHereService.setVisibility(false);
+      _searchHereService.setVisibility(false);
     return;
   }
 }

@@ -16,7 +16,7 @@ class BinDetailsPageView extends StatelessWidget {
                     .of(context)
                     .backgroundColor,
                 elevation: 0,
-                title: model.isBusy ? Text("") : Text(model.data.type.toUpperCase()),
+                title: model.isBusy ? Text("") : Text(tr(model.data.type)),
                 centerTitle: true,
                 actions: [IconButton(
                   padding: EdgeInsets.all(0),
