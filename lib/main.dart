@@ -9,6 +9,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'app/router.gr.dart';
 
+//TODO: translation for text in dialogs
+//TODO: Test Sign in with Apple
 
 void main() async {
   setupLocator();

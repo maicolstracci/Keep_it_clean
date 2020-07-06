@@ -151,13 +151,18 @@ class _BuildButton extends HookViewModelWidget<AddBinPageViewModel> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AutoSizeText(
-                    typesOfBin[index],
-                    maxLines: 1,
-                    minFontSize: 1,
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      typesOfBin[index],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
                   ),
                   Expanded(
+                    flex: 3,
                       child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(

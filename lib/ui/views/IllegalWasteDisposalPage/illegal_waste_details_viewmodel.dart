@@ -62,6 +62,26 @@ class IllegalWasteDetailsViewModel extends FutureViewModel<IllegalWasteDisposal>
   Future<IllegalWasteDisposal> futureToRun() =>
       _databaseService.getIllegalWasteDisposalInfo(_binDetailsService.reportID);
 
+  showReportSolvedDialog() async {
+    if(_authService.currentUser != null){
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+          title: "E' tutto pulito?",
+          description: "Facci sapere se qualcuno ha ripulito!",
+          cancelTitle: "No, non inviare",
+          confirmationTitle: "Si, e' tutto pulito");
+      if(response.confirmed){
+        _databaseService.reportSolvedWasteDisposal(data.id, _authService.currentUser);
+      }
+      return;
+    } else {
+      _dialogService.showDialog(title: "Utente non autenticato",
+          description:
+          "Solo gli utenti autenticati possono segnalare",
+          buttonTitle: "Ho capito");
+    }
+
+  }
+
   navigateToReporterProfile() {
     _navigationService.navigateWithTransition(ReporterProfileView(reporterUid: data.uidUser,),
         transition: NavigationTransition.RightToLeft);

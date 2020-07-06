@@ -152,7 +152,7 @@ class IllegalWasteDetailsView extends StatelessWidget {
                                     Center(
                                       child: FlatButton(
                                         padding: const EdgeInsets.all(10),
-                                        onPressed: model.launchMaps,
+                                        onPressed: model.showReportSolvedDialog,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               new BorderRadius.circular(6.0),

@@ -1,4 +1,3 @@
-
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,6 @@ import 'package:keep_it_clean/ui/views/LoginPage/login_page_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginPageView extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LoginPageViewModel>.reactive(
@@ -38,7 +35,9 @@ class LoginPageView extends StatelessWidget {
                                   Text(
                                     "Keep it clean",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 28, fontWeight: FontWeight.w600),
+                                        color: Colors.white,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w600),
                                   )
                                 ],
                               ),
@@ -56,17 +55,21 @@ class LoginPageView extends StatelessWidget {
                                     tr("login_desc_string"),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color:
-                                            Theme.of(context).accentColor),
+                                        color: Theme.of(context).accentColor),
                                   ),
-
                                   LoginButton(
                                     buttonTypeName: "facebook",
                                   ),
                                   LoginButton(buttonTypeName: "google"),
-                                  if(model.appleSignInAvailable) AppleSignInButton(
-                                      onPressed: () async => model.appleSignIn()
-                                  ),
+                                  if (model.appleSignInAvailable)
+                                    SizedBox(
+                                      width: 240,
+                                      height: 60,
+                                      child: AppleSignInButton(
+                                          cornerRadius: 20,
+                                          onPressed: () async =>
+                                              model.appleSignIn()),
+                                    ),
                                   LoginButton(buttonTypeName: "guest"),
                                 ],
                               ),

@@ -141,7 +141,6 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
         return;
       } else {
-        print('ENTERING THE LOCATION NOT NULL BRANCH');
         CameraPosition _userCameraPosition = CameraPosition(
           target: LatLng(location.latitude, location.longitude),
           zoom: 14.4746,
