@@ -14,6 +14,7 @@ void main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   locator<NavigationService>().config(defaultTransition: NavigationTransition.RightToLeft);
+  await locator<AuthService>().retriveAppleSignInAvailable();
   await setCustomMapPin();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

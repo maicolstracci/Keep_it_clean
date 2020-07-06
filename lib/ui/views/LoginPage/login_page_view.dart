@@ -1,4 +1,5 @@
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_button.dart';
@@ -10,7 +11,7 @@ class LoginPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
+    return ViewModelBuilder<LoginPageViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               resizeToAvoidBottomPadding: false,
@@ -58,10 +59,14 @@ class LoginPageView extends StatelessWidget {
                                         color:
                                             Theme.of(context).accentColor),
                                   ),
+                                  model.appleSignInAvailable ? AppleSignInButton(
+                                      onPressed: () async => model.appleSignIn()
+                                  ): SizedBox(),
                                   LoginButton(
                                     buttonTypeName: "facebook",
                                   ),
                                   LoginButton(buttonTypeName: "google"),
+
                                   LoginButton(buttonTypeName: "guest"),
                                 ],
                               ),

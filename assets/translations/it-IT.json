@@ -11,7 +11,7 @@
   "Ricalcola posizione": "Ricalcola posizione",
   "Sto ricercando la tua posizione": "Sto ricercando la tua posizione",
   "ERRORE NEL CALCOLARE POSIZIONE": "ERRORE NEL CALCOLARE POSIZIONE",
-  "Sembra che questa sia la tua posizione attuale\\nTrascina il cursore per modificarla": "Sembra che questa sia la tua posizione attuale\\nTrascina il cursore per modificarla",
+  "Sembra che questa sia la tua posizione attuale": "Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla",
   "Invia": "Invia",
   "Stiamo caricando la tua segnalazione online": "Stiamo caricando la tua segnalazione online",
   "Segnalato da": "Segnalato da",
@@ -53,7 +53,6 @@
   "Qualcosa e' andato storto, riprova tra poco." : "Qualcosa e' andato storto, riprova tra poco.",
   "Funzionalita' in arrivo!" : "Funzionalita' in arrivo!",
   "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati" : "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati",
-  "A nessuno piace vedere rifiuti abbandonati" : "A nessuno piace vedere rifiuti abbandonati",
   "Cerca qui" : "Cerca qui",
   "Segnala come risolto" : "Segnala come risolto",
   "Report abbandono rifiuti" : "Report abbandono rifiuti",
@@ -80,5 +79,9 @@
   "Medicinali" : "Medicinali",
   "Verde" : "Verde",
   "Abiti" : "Abiti",
-  "Olio vegetale" : "Olio vegetale"
+  "Olio vegetale" : "Olio vegetale",
+  "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!" : "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!",
+  "Abbiamo bisogno di una foto del problema": "Abbiamo bisogno di una foto del problema",
+  "Segnala abbandono rifiuti": "Segnala abbandono rifiuti"
+
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -20,7 +22,44 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  bool appleSignInAvailable = false;
+
+  //Show Apple Sign in only for iOS device
+  Future retriveAppleSignInAvailable() async {
+    appleSignInAvailable = (await AppleSignIn.isAvailable()) && (Platform.isIOS);
+  }
+
   DatabaseService _databaseService = locator<DatabaseService>();
+
+
+
+  Future appleSignIn() async {
+    try {
+      final AuthorizationResult appleResult = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+
+      if (appleResult.error != null) {
+        // handle errors from Apple here
+      }
+
+      final AuthCredential credential = OAuthProvider(providerId: 'apple.com').getCredential(
+        accessToken: String.fromCharCodes(appleResult.credential.authorizationCode),
+        idToken: String.fromCharCodes(appleResult.credential.identityToken),
+      );
+
+      AuthResult firebaseResult = await _auth.signInWithCredential(credential);
+      FirebaseUser user = firebaseResult.user;
+
+      DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
+      _currentUser = User.fromFirestore(documentSnapshot);
+
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
 
   Future googleLogin() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -31,6 +70,7 @@ class AuthService {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;

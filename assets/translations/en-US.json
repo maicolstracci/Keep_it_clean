@@ -11,7 +11,7 @@
   "Ricalcola posizione": "Recalculate position",
   "Sto ricercando la tua posizione": "I am searching for your location",
   "ERRORE NEL CALCOLARE POSIZIONE": "ERROR IN LOCATION SEARCH",
-  "Sembra che questa sia la tua posizione attuale\\nTrascina il cursore per modificarla": "This looks like your current position\\nMove the cursor on the map to change it",
+  "Sembra che questa sia la tua posizione attuale": "This looks like your current position\\nMove the cursor on the map to change it",
   "Invia": "Send",
   "Stiamo caricando la tua segnalazione online": "We are uploading your report online",
   "Segnalato da": "Reported by",
@@ -79,6 +79,8 @@
   "Medicinali" : "Drugs",
   "Verde" : "Greenery",
   "Abiti" : "Clothes",
-  "Olio vegetale" : "Vegetable oil"
-
+  "Olio vegetale" : "Vegetable oil",
+  "Abbiamo bisogno di una foto del problema": "We need a photo of the problem",
+  "Segnala abbandono rifiuti": "Report waste disposal",
+  "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!" : "No one likes to see trash everywhere, Let's hope someone will come to pick that up!"
 }

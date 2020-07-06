@@ -53,7 +53,7 @@ class SelectBinPositionView extends StatelessWidget {
                                           ? tr("Sto ricercando la tua posizione")
                                           : model.errorLoadingLocation
                                               ? tr("ERRORE NEL CALCOLARE POSIZIONE")
-                                              : tr("Sembra che questa sia la tua posizione attuale\nTrascina il cursore per modificarla"),
+                                              : tr("Sembra che questa sia la tua posizione attuale"),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white

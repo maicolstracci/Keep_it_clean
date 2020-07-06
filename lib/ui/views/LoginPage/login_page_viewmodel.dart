@@ -12,6 +12,8 @@ class LoginPageViewModel extends BaseViewModel{
   DialogService _dialogService = locator<DialogService>();
   NavigationService _navigationService = locator<NavigationService>();
 
+  bool get appleSignInAvailable => _authService.appleSignInAvailable;
+
   Future googleLogin() async{
     setBusy(true);
     await _authService.googleLogin();
@@ -23,6 +25,18 @@ class LoginPageViewModel extends BaseViewModel{
       _dialogService.showDialog(title: tr("Problema con il login!"), description: tr("Qualcosa e' andato storto, riprova tra poco."));
     }
 
+  }
+
+  Future appleSignIn() async {
+    setBusy(true);
+    await _authService.appleSignIn();
+    setBusy(false);
+
+    if(_authService.currentUser != null){
+      _navigateToNextPage();
+    } else{
+      _dialogService.showDialog(title: tr("Problema con il login!"), description: tr("Qualcosa e' andato storto, riprova tra poco."));
+    }
   }
 
   Future facebookLogin() async {
