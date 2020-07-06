@@ -59,14 +59,14 @@ class LoginPageView extends StatelessWidget {
                                         color:
                                             Theme.of(context).accentColor),
                                   ),
-                                  model.appleSignInAvailable ? AppleSignInButton(
-                                      onPressed: () async => model.appleSignIn()
-                                  ): SizedBox(),
+
                                   LoginButton(
                                     buttonTypeName: "facebook",
                                   ),
                                   LoginButton(buttonTypeName: "google"),
-
+                                  if(model.appleSignInAvailable) AppleSignInButton(
+                                      onPressed: () async => model.appleSignIn()
+                                  ),
                                   LoginButton(buttonTypeName: "guest"),
                                 ],
                               ),

@@ -15,7 +15,6 @@ import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.da
 
 @MaterialAutoRouter()
 class $Router{
-
   LoginPageView loginPage;
   OnboardingView onboardingPage;
   MapsPageView mapsPage;
