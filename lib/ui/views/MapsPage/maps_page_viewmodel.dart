@@ -7,12 +7,10 @@ import 'package:keep_it_clean/services/search_here_button_service.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_view.dart';
-import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:keep_it_clean/app/locator.dart';
-import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';
@@ -79,6 +77,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
   void navigateToBinDetailsPage(String binID) {
     _binDetailsService.setBinID(binID);
+
 
     _navigationService.navigateWithTransition(BinDetailsPageView(),
         transition: NavigationTransition.RightToLeft);

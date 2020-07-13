@@ -35,38 +35,3 @@ class AddBinPageViewModel extends BaseViewModel{
   }
 
 }
-
-//Future<void> takePicture() async {
-//    compressedImage = await ImagePicker.pickImage(
-//            source: ImageSource.camera, imageQuality: 30)
-//        .catchError((e) {
-//      print(e.code);
-//      if (e.code == "camera_access_denied") {
-//        _scaffoldKey.currentState.showSnackBar(SnackBar(
-//          duration: Duration(seconds: 6),
-//          content: Text(AppTranslations.of(context).text("camera_error")),
-//          action: SnackBarAction(
-//            label: AppTranslations.of(context).text("settings_string"),
-//            onPressed: () {
-//              PermissionHandler().openAppSettings();
-//            },
-//          ),
-//        ));
-//      }
-//    });
-//    if (compressedImage != null) {
-//      LatLng lat = await Navigator.push(
-//        context,
-//        MaterialPageRoute(builder: (context) => SelectPosition()),
-//      );
-//      if (lat != null) {
-//        setState(() {
-//          _uploadInProgress = true;
-//        });
-//        _uploadImage(compressedImage).then((imgName) async {
-//          Bin bin = await addBin(_selected, imgName, lat);
-//          Navigator.pop(context, bin);
-//        });
-//      }
-//    }
-//  }

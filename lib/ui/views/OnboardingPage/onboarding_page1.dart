@@ -8,11 +8,10 @@ class OnboardingPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       child: Stack(
         children: <Widget>[
-          Center(
-            child: Image.asset("assets/illustrations/background.png"),
-          ),
+          Center(child: SizedBox.expand(child: Image.asset("assets/illustrations/background.png",fit: BoxFit.cover,))),
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(
@@ -78,15 +77,18 @@ class OnboardingPage1 extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 2,
-                      child: AutoSizeText(
-                        tr("search_string"),
-                        maxLines: 3,
-                        minFontSize: 1,
-                        maxFontSize: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: AutoSizeText(
+                          tr("search_string"),
+                          maxLines: 3,
+                          minFontSize: 1,
+                          maxFontSize: 50,
 
-                        textAlign: TextAlign.center,
-                        style:
-                        TextStyle(color: Color(0xfff4f8f9)),
+                          textAlign: TextAlign.center,
+                          style:
+                          TextStyle(color: Color(0xfff4f8f9)),
+                        ),
                       ),
                     ),
                   ],

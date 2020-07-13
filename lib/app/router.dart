@@ -13,7 +13,7 @@ import 'package:keep_it_clean/ui/views/OnboardingPage/onboarding_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_view.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 
-@MaterialAutoRouter()
+@CustomAutoRouter()
 class $Router{
   LoginPageView loginPage;
   OnboardingView onboardingPage;

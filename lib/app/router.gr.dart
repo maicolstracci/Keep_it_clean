@@ -59,43 +59,51 @@ class Router extends RouterBase {
     final args = settings.arguments;
     switch (settings.name) {
       case Routes.loginPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => LoginPageView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              LoginPageView(),
           settings: settings,
         );
       case Routes.onboardingPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => OnboardingView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              OnboardingView(),
           settings: settings,
         );
       case Routes.mapsPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => MapsPageView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              MapsPageView(),
           settings: settings,
         );
       case Routes.profilePage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => ProfilePageView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              ProfilePageView(),
           settings: settings,
         );
       case Routes.binDetailsPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => BinDetailsPageView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              BinDetailsPageView(),
           settings: settings,
         );
       case Routes.addBinPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => AddBinPageView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              AddBinPageView(),
           settings: settings,
         );
       case Routes.pictureSelectionPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => PictureSelectionView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              PictureSelectionView(),
           settings: settings,
         );
       case Routes.selectBinPositionPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => SelectBinPositionView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              SelectBinPositionView(),
           settings: settings,
         );
       case Routes.reporterProfilePage:
@@ -104,19 +112,21 @@ class Router extends RouterBase {
         }
         final typedArgs = args as ReporterProfileViewArguments ??
             ReporterProfileViewArguments();
-        return MaterialPageRoute<dynamic>(
-          builder: (context) =>
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
               ReporterProfileView(reporterUid: typedArgs.reporterUid),
           settings: settings,
         );
       case Routes.illegalWasteDisposalPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => IllegalWasteDisposalView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              IllegalWasteDisposalView(),
           settings: settings,
         );
       case Routes.illegalWasteDetailsPage:
-        return MaterialPageRoute<dynamic>(
-          builder: (context) => IllegalWasteDetailsView(),
+        return PageRouteBuilder<dynamic>(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              IllegalWasteDetailsView(),
           settings: settings,
         );
       default:

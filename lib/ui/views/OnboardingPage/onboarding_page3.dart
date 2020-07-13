@@ -18,8 +18,11 @@ class OnboardingPage3 extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Center(
-            child: Image.asset("assets/illustrations/background.png"),
-          ),
+              child: SizedBox.expand(
+                  child: Image.asset(
+            "assets/illustrations/background.png",
+            fit: BoxFit.cover,
+          ))),
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(
@@ -58,7 +61,10 @@ class OnboardingPage3 extends StatelessWidget {
               ),
               Expanded(
                 flex: 8,
-                child: Image.asset("assets/illustrations/page3.png",fit: BoxFit.fitWidth,),
+                child: Image.asset(
+                  "assets/illustrations/page3.png",
+                  fit: BoxFit.fitWidth,
+                ),
               ),
               Expanded(
                 flex: 4,
@@ -92,10 +98,8 @@ class OnboardingPage3 extends StatelessWidget {
                           maxLines: 4,
                           minFontSize: 1,
                           maxFontSize: 50,
-
                           textAlign: TextAlign.center,
-                          style:
-                          TextStyle(color: Color(0xfff4f8f9)),
+                          style: TextStyle(color: Color(0xfff4f8f9)),
                         ),
                       ),
                     ),
@@ -104,7 +108,6 @@ class OnboardingPage3 extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );

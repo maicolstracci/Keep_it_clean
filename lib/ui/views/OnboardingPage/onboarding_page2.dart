@@ -10,9 +10,8 @@ class OnboardingPage2 extends StatelessWidget {
 
       child: Stack(
         children: <Widget>[
-          Center(
-            child: Image.asset("assets/illustrations/background.png"),
-          ),
+          Center(child: SizedBox.expand(child: Image.asset("assets/illustrations/background.png",fit: BoxFit.cover,))),
+
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(

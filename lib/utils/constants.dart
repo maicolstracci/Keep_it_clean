@@ -27,10 +27,12 @@ List<String> typesOfBin = [
   "Olio vegetale"
 ];
 
-String abbandonoRifiuto = "Abbandono rifiuto";
+const String abbandonoRifiuto = "Abbandono rifiuto";
 
 enum Report { Bin, IllegalWaste }
 
+
+// Global keys used in the starting tutorial
 GlobalKey moveToUserLocationKey = GlobalKey();
 GlobalKey reportIllegalWasteDisposalKey = GlobalKey();
 GlobalKey filterBarKey = GlobalKey();
