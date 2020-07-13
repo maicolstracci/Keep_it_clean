@@ -64,8 +64,14 @@ class LoginPageView extends StatelessWidget {
                                     buttonTypeName: "facebook",
                                   ),
                                   LoginButton(buttonTypeName: "google"),
-                                  if(model.appleSignInAvailable) AppleSignInButton(
-                                      onPressed: () async => model.appleSignIn()
+                                  if(model.appleSignInAvailable) SizedBox(
+                                    width: 240,
+                                    height: 60,
+                                                                      child: AppleSignInButton(
+                                                                        cornerRadius: 20,
+                                      
+                                        onPressed: () async => model.appleSignIn()
+                                    ),
                                   ),
                                   LoginButton(buttonTypeName: "guest"),
                                 ],
