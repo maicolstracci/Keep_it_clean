@@ -302,6 +302,39 @@ class DatabaseService {
     documentReference.updateData({'reports': map});
   }
 
+  void reportSolvedWasteDisposal(String documentId, User user) async {
+    DocumentReference documentReference =
+        _db.collection("segnalazioniAbbandonoRifiuti").document(documentId);
+
+    DocumentSnapshot doc = await documentReference.get();
+
+    Map<String, dynamic> map = doc.data['reports'] != null
+        ? Map<String, dynamic>.from(doc.data['reports'])
+        : Map<String, dynamic>();
+
+    if (map.isNotEmpty) {
+      List<String> userThatReportedThisBin =
+          (map['userThatReportedThis'] as List)
+                  ?.map((item) => item as String)
+                  ?.toList() ??
+              [];
+
+      if (!userThatReportedThisBin.contains(user.uid)) {
+        map.update('numberOfReports', (value) => value + 1);
+        userThatReportedThisBin.add(user.uid);
+        map.update(
+            "userThatReportedThis", (value) => userThatReportedThisBin);
+      } else {
+        return;
+      }
+    } else {
+      map.putIfAbsent("numberOfReports", () => 1);
+      map.putIfAbsent("userThatReportedThis", () => [user.uid]);
+    }
+
+    documentReference.updateData({'reports': map});
+  }
+
   void createIllegalWasteDisposalReport(
       {@required String imgName,
       @required LatLng binPos,

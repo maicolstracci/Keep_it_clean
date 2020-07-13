@@ -23,11 +23,10 @@ class LocationService {
   }
 
   Future<LocationData> getUserLocation() async {
-    print('Get user location');
+
     LocationData userPosition = await Location()
         .getLocation()
         .timeout(Duration(seconds: 15), onTimeout: () {
-      print('15s elapsed returning null');
       return null;
     });
 

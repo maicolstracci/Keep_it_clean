@@ -1,4 +1,5 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
@@ -31,19 +32,19 @@ class IllegalWasteDetailsViewModel extends FutureViewModel<IllegalWasteDisposal>
   showReportDialog() async {
     if(_authService.currentUser != null){
       DialogResponse response = await _dialogService.showConfirmationDialog(
-          title: "C'e' qualche problema?",
-          description: "Invia una segnalazione se qualcosa non va",
-          cancelTitle: "No, non inviare",
-          confirmationTitle: "Si, voglio segnalare");
+          title: tr("C'e' qualche problema?"),
+          description: tr("Invia una segnalazione se qualcosa non va"),
+          cancelTitle: tr("No, non inviare"),
+          confirmationTitle: tr("Si, voglio segnalare"));
       if(response.confirmed){
         _databaseService.reportBinProblem(data.id, _authService.currentUser);
       }
       return;
     } else {
-      _dialogService.showDialog(title: "Utente non autenticato",
+      _dialogService.showDialog(title: tr("Utente non autenticato"),
           description:
-          "Solo gli utenti autenticati possono segnalare problemi",
-          buttonTitle: "Ho capito");
+          tr("Solo gli utenti autenticati possono segnalare problemi"),
+          buttonTitle: tr("Ho capito"));
     }
 
   }
@@ -61,6 +62,26 @@ class IllegalWasteDetailsViewModel extends FutureViewModel<IllegalWasteDisposal>
   @override
   Future<IllegalWasteDisposal> futureToRun() =>
       _databaseService.getIllegalWasteDisposalInfo(_binDetailsService.reportID);
+
+  showReportSolvedDialog() async {
+    if(_authService.currentUser != null){
+      DialogResponse response = await _dialogService.showConfirmationDialog(
+          title: tr("E' tutto pulito?"),
+          description: tr("Facci sapere se qualcuno ha ripulito!"),
+          cancelTitle: tr("No, non inviare"),
+          confirmationTitle: tr("Si, e' tutto pulito"));
+      if(response.confirmed){
+        _databaseService.reportSolvedWasteDisposal(data.id, _authService.currentUser);
+      }
+      return;
+    } else {
+      _dialogService.showDialog(title: tr("Utente non autenticato"),
+          description:
+          tr("Solo gli utenti autenticati possono segnalare"),
+          buttonTitle: tr("Ho capito"));
+    }
+
+  }
 
   navigateToReporterProfile() {
     _navigationService.navigateWithTransition(ReporterProfileView(reporterUid: data.uidUser,),

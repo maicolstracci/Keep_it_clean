@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,25 +22,29 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
 
 
 Future<bool> setCustomMapPin() async {
+
+
+  int pinSize = (60*Device.devicePixelRatio).floor();
+  //To avoid ultra small pins bug
+  if(pinSize < 150) pinSize = 150;
+
   for (int i = 1; i <= typesOfBin.length; i++) {
 
     Uint8List val =
-    await getBytesFromAsset('assets/maps_markers/marker_$i.png', (300/2).floor());
+    await getBytesFromAsset('assets/maps_markers/marker_$i.png', pinSize);
     BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
     pinMap[typesOfBin[i-1]] = pinLocationIcon;
   }
 
   Uint8List val =
-  await getBytesFromAsset('assets/maps_markers/marker_abbandono_rifiuto.png', (300/2).floor());
+  await getBytesFromAsset('assets/maps_markers/marker_abbandono_rifiuto.png', pinSize);
   BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
   pinMap[abbandonoRifiuto] = pinLocationIcon;
 
   return true;
 }
-
-
 
 
 // Request permission method from permissions_handlers plugin

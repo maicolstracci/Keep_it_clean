@@ -9,188 +9,183 @@ class BinDetailsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<BinDetailsPageViewModel>.reactive(
-        builder: (context, model, child) =>
-            Scaffold(
+        builder: (context, model, child) => Scaffold(
               appBar: AppBar(
-                backgroundColor: Theme
-                    .of(context)
-                    .backgroundColor,
+                backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 0,
                 title: model.isBusy ? Text("") : Text(tr(model.data.type)),
                 centerTitle: true,
-                actions: [IconButton(
-                  padding: EdgeInsets.all(0),
-                  onPressed: () =>
-                  model.showReportDialog(),
-                  icon: Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
+                actions: [
+                  IconButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () => model.showReportDialog(),
+                    icon: Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                    ),
                   ),
-                ),],
+                ],
               ),
-              backgroundColor: Theme
-                  .of(context)
-                  .backgroundColor,
+              backgroundColor: Theme.of(context).backgroundColor,
               body: model.isBusy
                   ? Center(child: CircularProgressIndicator())
                   : SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  child: Column(
-                    children: <Widget>[
-                      Flexible(
-                        flex: 6,
-                        child: Stack(
-                          children: <Widget>[
-                            ClipPath(
-                              clipper: BottomCurveClipper(),
-                              child: BinImageView(imgName: model.data.photoUrl,),
-                            ),
-
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 60,
-                                child: LikeBar(binID: model.data.id,),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 3,
-                        child: Padding(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(tr('Segnalato da')
-                                    ,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4.0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                          BorderRadius.circular(5),
-                                          color: Colors.white),
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Flexible(
-                                            child: Container(
-                                              child: Text(
-                                                model.data.username,
-                                                overflow:
-                                                TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black87,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () =>model.navigateToReporterProfile(),
-                                            icon: Icon(
-                                              Icons.launch,
-                                              color: Colors.blue,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(tr("In data")
-                                    ,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4.0,
-                                          ),
-                                        ],
-                                        borderRadius:
-                                        BorderRadius.circular(5),
-                                        color: Colors.white),
-                                    padding: EdgeInsets.all(12),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(
-                                          model.data.reportDate.substring(0, 10),
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Center(
-                                child: FlatButton(
-                                  padding: const EdgeInsets.all(10),
-                                      onPressed: model.launchMaps,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    new BorderRadius.circular(6.0),
-                                  ),
-                                  color: Colors.blue[400],
-                                  textColor: Colors.white,
-                                  child: Text(tr("Portamici")
-                                    ,
-                                    style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 22),
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: <Widget>[
+                          Flexible(
+                            flex: 6,
+                            child: Stack(
+                              children: <Widget>[
+                                ClipPath(
+                                  clipper: BottomCurveClipper(),
+                                  child: BinImageView(
+                                    imgName: model.data.photoUrl,
                                   ),
                                 ),
-                              )
-                            ],
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: 60,
+                                    child: LikeBar(
+                                      binID: model.data.id,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-              ),
+                          Flexible(
+                            flex: 3,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        tr('Segnalato da'),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 4.0,
+                                                ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: Colors.white),
+                                          padding: EdgeInsets.only(left: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Flexible(
+                                                child: Container(
+                                                  child: Text(
+                                                    model.data.username,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () => model
+                                                    .navigateToReporterProfile(),
+                                                icon: Icon(
+                                                  Icons.launch,
+                                                  color: Colors.blue,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        tr("In data"),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                blurRadius: 4.0,
+                                              ),
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: Colors.white),
+                                        padding: EdgeInsets.all(12),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Text(
+                                              model.data.reportDate
+                                                  .substring(0, 10),
+                                              style: TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Center(
+                                    child: FlatButton.icon(
+                                      padding: const EdgeInsets.all(10),
+                                      onPressed: model.launchMaps,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(6.0),
+                                      ),
+                                      color: Colors.blue[400],
+                                      textColor: Theme.of(context).accentColor,
+                                      icon: Icon(Icons.public),
+                                      label: Text(
+                                        tr("Mostra su maps"),
+                                        style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
             ),
         viewModelBuilder: () => BinDetailsPageViewModel());
   }

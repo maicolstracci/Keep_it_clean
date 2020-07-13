@@ -126,7 +126,7 @@ class FilterButton extends HookViewModelWidget<MapsPageViewModel> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      typesOfBin[index - 1],
+                      tr(typesOfBin[index - 1]),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 16,

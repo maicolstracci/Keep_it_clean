@@ -9,6 +9,8 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'app/router.gr.dart';
 
+//TODO: Test Sign in with Apple
+//TODO: Check Device preview package
 
 void main() async {
   setupLocator();

@@ -31,7 +31,7 @@ class BinImageView extends StatelessWidget {
                         bottom: 12.0, left: 6.0, right: 6.0),
                     child: Image.asset(
                       'assets/default-bin-photo.png',
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                       alignment: Alignment.bottomCenter,
                     ),
                   )

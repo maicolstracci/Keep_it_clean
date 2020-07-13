@@ -16,7 +16,7 @@
   "Stiamo caricando la tua segnalazione online": "Stiamo caricando la tua segnalazione online",
   "Segnalato da": "Segnalato da",
   "In data": "In data",
-  "Portamici": "Portamici",
+  "Mostra su maps": "Mostra su maps",
   "Utente non autenticato": "Utente non autenticato",
   "Solo gli utenti autenticati possono lasciare like/dislike": "Solo gli utenti autenticati possono lasciare like/dislike",
   "Ho capito": "Ho capito",
@@ -83,6 +83,17 @@
   "Olio vegetale" : "Olio vegetale",
   "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!" : "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!",
   "Abbiamo bisogno di una foto del problema": "Abbiamo bisogno di una foto del problema",
-  "Segnala abbandono rifiuti": "Segnala abbandono rifiuti"
-
+  "Segnala abbandono rifiuti": "Segnala abbandono rifiuti",
+  "Permessi di localizzazione disattivati" : "Permessi di localizzazione disattivati",
+  "E' necessario fornire i permessi di localizzazione per completare l'operazione" : "E' necessario fornire i permessi di localizzazione per completare l'operazione",
+  "Non voglio" : "Non voglio",
+  "Portami alle impostazioni" : "Portami alle impostazioni",
+  "C'e' qualche problema?" : "C'e' qualche problema?",
+  "Invia una segnalazione se qualcosa non va" : "Invia una segnalazione se qualcosa non va",
+  "No, non inviare" : "No, non inviare",
+  "Si, voglio segnalare" : "Si, voglio segnalare",
+  "Solo gli utenti autenticati possono segnalare problemi" :"Solo gli utenti autenticati possono segnalare problemi",
+  "E' tutto pulito?" : "E' tutto pulito?",
+  "Facci sapere se qualcuno ha ripulito!" : "Facci sapere se qualcuno ha ripulito!",
+  "Si, e' tutto pulito" : "Si, e' tutto pulito"
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
@@ -48,7 +49,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
 
         CameraPosition _userCameraPosition = CameraPosition(
           target: currentLatLng,
-          zoom: 14.4746,
+          zoom: 28.4746,
         );
 
         markers.add(Marker(
@@ -61,11 +62,11 @@ class SelectBinPositionViewModel extends BaseViewModel {
       }
     } else {
       DialogResponse dialogResponse = await _dialogService.showConfirmationDialog(
-          title: "Permessi di localizzazione disattivati",
+          title: tr("Permessi di localizzazione disattivati"),
           description:
-              "E' necessario fornire i permessi di localizzazione per completare l'operazione",
-          cancelTitle: "Non voglio",
-          confirmationTitle: "Portami alle impostazioni");
+              tr("E' necessario fornire i permessi di localizzazione per completare l'operazione"),
+          cancelTitle: tr("Non voglio"),
+          confirmationTitle: tr("Portami alle impostazioni"));
       if (dialogResponse.confirmed) {
         await openAppSettings();
       } else {
