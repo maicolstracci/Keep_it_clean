@@ -12,7 +12,6 @@ void main() {
       locator.registerSingleton<TypeOfReportService>(typeOfReportService);
       var model = AddBinPageViewModel();
 
-      model.
 
 
     });

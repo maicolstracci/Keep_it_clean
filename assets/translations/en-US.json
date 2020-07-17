@@ -60,6 +60,8 @@
   "Segnala come risolto" : "Report as solved",
   "Report abbandono rifiuti" : "Report waste disposal",
   "SALTA" : "SKIP TUTORIAL",
+  "tutorial_starter" : "Welcome!",
+  "tutorial_starter_2" : "We have prepared a quick tutorial to explain to you the main features of the app.",
   "tutorial_title_moveToUserLocation" : "Center the map on your current location",
   "tutorial_moveToUserLocation" : "If you allowed us to know your location, with this button you can center the map on your location",
   "tutorial_title_reportIllegalWasteDisposal" : "Report an illegal waste disposal",

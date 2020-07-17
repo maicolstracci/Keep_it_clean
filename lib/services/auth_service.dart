@@ -26,74 +26,56 @@ class AuthService {
 
   //Show Apple Sign in only for iOS device
   Future retriveAppleSignInAvailable() async {
-    appleSignInAvailable = (await AppleSignIn.isAvailable()) && (Platform.isIOS);
+    appleSignInAvailable =
+        (await AppleSignIn.isAvailable()) && (Platform.isIOS);
   }
 
   DatabaseService _databaseService = locator<DatabaseService>();
 
-
-
   Future appleSignIn() async {
     try {
-      final AuthorizationResult appleResult = await AppleSignIn.performRequests([
+      final AuthorizationResult appleResult =
+          await AppleSignIn.performRequests([
         AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
       ]);
 
       if (appleResult.error != null) {
-        // handle errors from Apple here
+        print(appleResult.error);
       }
 
       final AppleIdCredential appleIdCredential = appleResult.credential;
 
-        OAuthProvider oAuthProvider =
-            new OAuthProvider(providerId: "apple.com");
-        final AuthCredential credential = oAuthProvider.getCredential(
-          idToken:
-              String.fromCharCodes(appleIdCredential.identityToken),
-          accessToken:
-              String.fromCharCodes(appleIdCredential.authorizationCode),
-        );
+      OAuthProvider oAuthProvider = new OAuthProvider(providerId: "apple.com");
+      final AuthCredential credential = oAuthProvider.getCredential(
+        idToken: String.fromCharCodes(appleIdCredential.identityToken),
+        accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
+      );
 
-        final AuthResult _res = await FirebaseAuth.instance
-            .signInWithCredential(credential);
+      final AuthResult _res =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-        FirebaseUser user = _res.user;
+      FirebaseUser user = _res.user;
 
-        UserUpdateInfo updateUser = UserUpdateInfo();
-  updateUser.displayName =
-      "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
-  //TODO: CHANGE LATER!
-  updateUser.photoUrl =
-      "https://support.plymouth.edu/kb_images/Yammer/default.jpeg"; 
-  await user.updateProfile(updateUser);
-  print("name: ${updateUser.displayName}");print("photoURL: ${updateUser.photoUrl}");
+      UserUpdateInfo updateUser = UserUpdateInfo();
+      updateUser.displayName =
+          "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+      updateUser.photoUrl =
+          "https://firebasestorage.googleapis.com/v0/b/trova-cestino.appspot.com/o/A-img.png?alt=media&token=61e89908-435b-4b4e-8963-088bd8e784e7";
+      await user.updateProfile(updateUser);
 
-  await user.reload();
+      await user.reload();
 
-  user = await _auth.currentUser();
+      user = await _auth.currentUser();
 
-  print("USER: ${user.photoUrl} ${user.displayName}");
-DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
+      DocumentSnapshot documentSnapshot =
+          await _databaseService.setupUser(user);
       _currentUser = User.fromFirestore(documentSnapshot);
-     
-
-      // final AuthCredential credential = OAuthProvider(providerId: 'apple.com').getCredential(
-      //   accessToken: String.fromCharCodes(appleResult.credential.authorizationCode),
-      //   idToken: String.fromCharCodes(appleResult.credential.identityToken),
-      // );
-
-      // AuthResult firebaseResult = await _auth.signInWithCredential(credential);
-      // FirebaseUser user = firebaseResult.user;
-
-      // DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
-      // _currentUser = User.fromFirestore(documentSnapshot);
 
     } catch (error) {
       print(error);
       return null;
     }
   }
-
 
   Future googleLogin() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -104,7 +86,6 @@ DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
 
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;

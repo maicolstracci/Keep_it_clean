@@ -9,8 +9,43 @@ List<TargetFocus> targets = List();
 showTutorial(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-  if (!sharedPreferences.containsKey("alreadyShowedTutorial")) {
-    await sharedPreferences.setBool('alreadyShowedTutorial', true);
+//  if (!sharedPreferences.containsKey("alreadyShowedTutorial")) {
+//    await sharedPreferences.setBool('alreadyShowedTutorial', true);
+if(true){
+    targets.add(
+      TargetFocus(identify: "Filter bar", keyTarget: filterBarKey, contents: [
+        ContentTarget(
+            align: AlignContent.top,
+            child: Container(
+              padding: EdgeInsets.only(bottom: 180),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[Text(
+                  tr("tutorial_starter"),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 26.0),
+                ),
+                  SizedBox(height: 24,),
+                  Text(
+                    tr("tutorial_title_filterBar"),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),SizedBox(height: 8,),
+                  Text(
+                    tr("tutorial_filterBar"),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  )
+                ],
+              ),
+            ))
+      ]),
+    );
     targets.add(
       TargetFocus(
           identify: "Move to user location target",
@@ -74,40 +109,11 @@ showTutorial(BuildContext context) async {
           ]),
     );
     targets.add(
-      TargetFocus(identify: "Filter bar", keyTarget: filterBarKey, contents: [
-        ContentTarget(
-            align: AlignContent.top,
-            child: Container(
-              padding: EdgeInsets.only(bottom: 180),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    tr("tutorial_title_filterBar"),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 20.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      tr("tutorial_filterBar"),
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  )
-                ],
-              ),
-            ))
-      ]),
-    );
-    targets.add(
       TargetFocus(identify: "Add new bin", keyTarget: addNewBinKey, contents: [
         ContentTarget(
             align: AlignContent.top,
             child: Container(
+              padding: EdgeInsets.only(bottom: 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,6 +175,8 @@ showTutorial(BuildContext context) async {
         targets: targets,
         opacityShadow: 0.9,
         colorShadow: Theme.of(context).backgroundColor,
+        textStyleSkip: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+
         textSkip: tr("SALTA"), finish: () {
       return;
     })

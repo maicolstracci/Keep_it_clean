@@ -60,6 +60,8 @@
   "SALTA" : "SALTA TUTORIAL",
   "Si e' verificato un errore" : "Si e' verificato un errore",
   "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con segnale debole." : "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole.",
+  "tutorial_starter" : "Benvenuto!",
+  "tutorial_starter_2" : "Abbiamo preparato un veloce tutorial per spiegarti le principali funzionalita' dell'app.",
   "tutorial_title_moveToUserLocation" : "Centra la mappa sulla tua posizione attuale",
   "tutorial_moveToUserLocation" : "Se hai fornito i permessi di localizzazione, attraverso questo bottone potrai spostare la mappa precisamente sulla tua posizione attuale",
   "tutorial_title_reportIllegalWasteDisposal" : "Segnala abbandoni di rifiuti illegali",

@@ -51,11 +51,14 @@ class LoginPageView extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(
-                                    tr("login_desc_string"),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Theme.of(context).accentColor),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                    child: Text(
+                                      tr("login_desc_string"),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
                                   ),
                                   LoginButton(
                                     buttonTypeName: "facebook",
