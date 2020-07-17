@@ -9,9 +9,9 @@ List<TargetFocus> targets = List();
 showTutorial(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-//  if (!sharedPreferences.containsKey("alreadyShowedTutorial")) {
-//    await sharedPreferences.setBool('alreadyShowedTutorial', true);
-if(true){
+  if (!sharedPreferences.containsKey("alreadyShowedTutorial")) {
+    await sharedPreferences.setBool('alreadyShowedTutorial', true);
+
     targets.add(
       TargetFocus(identify: "Filter bar", keyTarget: filterBarKey, contents: [
         ContentTarget(
