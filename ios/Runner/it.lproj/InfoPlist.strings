@@ -1,0 +1,15 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by maicol on 13/07/2020.
+  Copyright © 2020 The Chromium Authors. All rights reserved.
+*/
+NSCameraUsageDescription = "La camera del dispositivo viene utilizzata per scattare foto delle segnalazioni";
+NSLocationAlwaysAndWhenInUseUsageDescription= "La posizione del dispositivo viene utilizzata per centrare la mappa sulla posizione dell'utente";
+
+NSLocationAlwaysUsageDescription= "La posizione del dispositivo viene utilizzata per centrare la mappa sulla posizione dell'utente";
+
+NSLocationWhenInUseUsageDescription="La posizione del dispositivo viene utilizzata per centrare la mappa sulla posizione dell'utente";
+
+NSPhotoLibraryUsageDescription="L'utilizzo della galleria è legato alla possibilitá di utilizzare immagini già scattate per le segnalazioni";

@@ -43,16 +43,50 @@ class AuthService {
         // handle errors from Apple here
       }
 
-      final AuthCredential credential = OAuthProvider(providerId: 'apple.com').getCredential(
-        accessToken: String.fromCharCodes(appleResult.credential.authorizationCode),
-        idToken: String.fromCharCodes(appleResult.credential.identityToken),
-      );
+      final AppleIdCredential appleIdCredential = appleResult.credential;
 
-      AuthResult firebaseResult = await _auth.signInWithCredential(credential);
-      FirebaseUser user = firebaseResult.user;
+        OAuthProvider oAuthProvider =
+            new OAuthProvider(providerId: "apple.com");
+        final AuthCredential credential = oAuthProvider.getCredential(
+          idToken:
+              String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode),
+        );
 
-      DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
+        final AuthResult _res = await FirebaseAuth.instance
+            .signInWithCredential(credential);
+
+        FirebaseUser user = _res.user;
+
+        UserUpdateInfo updateUser = UserUpdateInfo();
+  updateUser.displayName =
+      "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+  //TODO: CHANGE LATER!
+  updateUser.photoUrl =
+      "https://support.plymouth.edu/kb_images/Yammer/default.jpeg"; 
+  await user.updateProfile(updateUser);
+  print("name: ${updateUser.displayName}");print("photoURL: ${updateUser.photoUrl}");
+
+  await user.reload();
+
+  user = await _auth.currentUser();
+
+  print("USER: ${user.photoUrl} ${user.displayName}");
+DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
       _currentUser = User.fromFirestore(documentSnapshot);
+     
+
+      // final AuthCredential credential = OAuthProvider(providerId: 'apple.com').getCredential(
+      //   accessToken: String.fromCharCodes(appleResult.credential.authorizationCode),
+      //   idToken: String.fromCharCodes(appleResult.credential.identityToken),
+      // );
+
+      // AuthResult firebaseResult = await _auth.signInWithCredential(credential);
+      // FirebaseUser user = firebaseResult.user;
+
+      // DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
+      // _currentUser = User.fromFirestore(documentSnapshot);
 
     } catch (error) {
       print(error);

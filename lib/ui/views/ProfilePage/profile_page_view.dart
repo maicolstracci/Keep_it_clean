@@ -85,7 +85,8 @@ class ProfilePageView extends StatelessWidget {
                                               ? NetworkImage(
                                                   model.getProfilePhotoUrl(),
                                                   scale: 1)
-                                              : ExactAssetImage(
+                                              : 
+                                           ExactAssetImage(
                                                   'assets/no-avatar.jpg'),
                                           maxRadius: 50,
                                         ),
