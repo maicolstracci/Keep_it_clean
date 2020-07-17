@@ -62,7 +62,6 @@ class BinDetailsPageViewModel extends FutureViewModel<Bin> {
       _databaseService.getBinInfo(_binDetailsService.binID);
 
   navigateToReporterProfile() {
-    print(data.uidUser);
     _navigationService.navigateWithTransition(ReporterProfileView(reporterUid: data.uidUser,),
         transition: NavigationTransition.RightToLeft);
   }

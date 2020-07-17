@@ -21,24 +21,24 @@ class ProfilePageView extends StatelessWidget {
                   model.currentIndex == 0 ? tr("Profilo personale") : tr("Classifica"),
                   style: TextStyle(color:model.currentIndex == 0 ? Colors.black: Colors.white),
                 ),
-                actions: [
-                  model.currentIndex == 0
-                      ? PopupMenuButton<String>(
-                          onSelected:(string)=> choiceAction(string),
-                          itemBuilder: (BuildContext context) {
-                            return <String>[
-                              tr("Impostazioni"),
-                              tr("Chi siamo"),
-                            ].map((String choice) {
-                              return PopupMenuItem<String>(
-                                value: choice,
-                                child: Text(choice),
-                              );
-                            }).toList();
-                          },
-                        )
-                      : Container()
-                ],
+//                actions: [
+//                  model.currentIndex == 0
+//                      ? PopupMenuButton<String>(
+//                          onSelected:(string)=> choiceAction(string),
+//                          itemBuilder: (BuildContext context) {
+//                            return <String>[
+//                              tr("Impostazioni"),
+//                              tr("Chi siamo"),
+//                            ].map((String choice) {
+//                              return PopupMenuItem<String>(
+//                                value: choice,
+//                                child: Text(choice),
+//                              );
+//                            }).toList();
+//                          },
+//                        )
+//                      : Container()
+//                ],
                 centerTitle: true,
                 elevation: 0,
                 backgroundColor: model.currentIndex == 0 ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,

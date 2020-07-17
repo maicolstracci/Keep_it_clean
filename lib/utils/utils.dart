@@ -24,7 +24,7 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
 Future<bool> setCustomMapPin() async {
 
 
-  int pinSize = (60*Device.devicePixelRatio).floor();
+  int pinSize = (55*Device.devicePixelRatio).floor();
   //To avoid ultra small pins bug
   if(pinSize < 150) pinSize = 150;
 
