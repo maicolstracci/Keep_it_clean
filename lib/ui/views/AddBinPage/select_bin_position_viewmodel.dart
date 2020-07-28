@@ -49,7 +49,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
 
         CameraPosition _userCameraPosition = CameraPosition(
           target: currentLatLng,
-          zoom: 28.4746,
+          zoom: 24.4746,
         );
 
         markers.add(Marker(
