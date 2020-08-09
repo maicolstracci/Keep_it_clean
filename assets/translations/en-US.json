@@ -85,5 +85,11 @@
   "Olio vegetale" : "Vegetable oil",
   "Abbiamo bisogno di una foto del problema": "We need a photo of the problem",
   "Segnala abbandono rifiuti": "Report waste disposal",
-  "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!" : "No one likes to see trash everywhere, Let's hope someone will come to pick that up!"
+  "A nessuno piace vedere rifiuti abbandonati. Speriamo che qualcuno li venga a recuperare!" : "No one likes to see trash everywhere, Let's hope someone will come to pick that up!",
+  "Nessuna immagine presente" : "No image yet",
+  "Aggiungi una foto" : "Add a photo",
+  "Scegli come proseguire": "Select how to continue",
+  "Cancella" : "Cancel","Grazi!" : "Thank you!",
+  "Stiamo elaborando la tua immagine, appena verra' caricata sui nostri server la mostreremo a tutto il mondo!" :   "We are processing your image, as soon as it is uploaded on our servers we will show it to the whole world!"
+
 }

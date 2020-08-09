@@ -63,8 +63,8 @@ class SelectBinPositionViewModel extends BaseViewModel {
     } else {
       DialogResponse dialogResponse = await _dialogService.showConfirmationDialog(
           title: tr("Permessi di localizzazione disattivati"),
-          description:
-              tr("E' necessario fornire i permessi di localizzazione per completare l'operazione"),
+          description: tr(
+              "E' necessario fornire i permessi di localizzazione per completare l'operazione"),
           cancelTitle: tr("Non voglio"),
           confirmationTitle: tr("Portami alle impostazioni"));
       if (dialogResponse.confirmed) {
@@ -91,12 +91,12 @@ class SelectBinPositionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  uploadReport(){
-    if(_typeOfReportService.typeOfReport == Report.Bin){
+  uploadReport() {
+    if (_typeOfReportService.typeOfReport == Report.Bin) {
       createBinReport();
-    } else if(_typeOfReportService.typeOfReport == Report.IllegalWaste) {
+    } else if (_typeOfReportService.typeOfReport == Report.IllegalWaste) {
       createIllegalWasteDisposalReport();
-    } else{
+    } else {
       //TODO: show error message
       _takePictureService.pic.delete();
     }
@@ -134,7 +134,8 @@ class SelectBinPositionViewModel extends BaseViewModel {
     String img = await _databaseService.uploadImage(
         imgFile: _takePictureService.pic, imgName: _imgName);
 
-    await _databaseService.createIllegalWasteDisposalReport(imgName: img, binPos: currentLatLng, user: _authService.currentUser);
+    _databaseService.createIllegalWasteDisposalReport(
+        imgName: img, binPos: currentLatLng, user: _authService.currentUser);
 
     uploading = false;
 

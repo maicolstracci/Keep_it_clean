@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_viewmodel.dart';
@@ -61,15 +60,18 @@ class AddBinPageView extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     child: Text(
-                                      "${model.getTypesSelectedLength} " +  tr("selezionate"),
+                                      "${model.getTypesSelectedLength} " +
+                                          tr("selezionate"),
                                       style: TextStyle(
-                                          color: model.getTypesSelectedLength != 0
-                                              ? Colors.white
-                                              : Colors.red),
+                                          color:
+                                              model.getTypesSelectedLength != 0
+                                                  ? Colors.white
+                                                  : Colors.red),
                                     ),
                                   ),
                                   RaisedButton.icon(
@@ -93,8 +95,7 @@ class AddBinPageView extends StatelessWidget {
                                       size: 26,
                                     ),
                                     label: Text(
-                                        tr("Prosegui")
-                                      ,
+                                      tr("Prosegui"),
                                       style: TextStyle(
                                           fontSize: 22,
                                           color: Colors.white,
@@ -158,18 +159,19 @@ class _BuildButton extends HookViewModelWidget<AddBinPageViewModel> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                   ),
                   Expanded(
-                    flex: 3,
+                      flex: 3,
                       child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      "assets/icons/icon_type_${index + 1}.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ))
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/icons/icon_type_${index + 1}.png",
+                          fit: BoxFit.contain,
+                        ),
+                      ))
                 ],
               ),
               Align(

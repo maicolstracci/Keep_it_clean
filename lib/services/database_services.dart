@@ -7,16 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
-import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/models/user_model.dart';
-import 'package:keep_it_clean/services/location_service.dart';
-import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
-import 'package:location/location.dart';
-
-import 'auth_service.dart';
 
 @lazySingleton
 class DatabaseService {
@@ -26,7 +20,7 @@ class DatabaseService {
 
   // Default geoFirePoint
   GeoFirePoint defaultPoint =
-  Geoflutterfire().point(latitude: 44.170147, longitude: 8.3438333);
+      Geoflutterfire().point(latitude: 44.170147, longitude: 8.3438333);
 
   List<Bin> _binListFromSnap(List<DocumentSnapshot> list) {
     return list.map((doc) {
@@ -42,7 +36,6 @@ class DatabaseService {
   }
 
   Stream<List<Bin>> binStreamFromPosition({GeoFirePoint currentUserPoint}) {
-
     // get the collection reference or query
     var collectionReference = _db.collection('cestini');
 
@@ -50,12 +43,16 @@ class DatabaseService {
 
     return _geoflutterfire
         .collection(collectionRef: collectionReference)
-        .within(center: currentUserPoint ?? defaultPoint, radius: 10, field: field, strictMode: true)
+        .within(
+            center: currentUserPoint ?? defaultPoint,
+            radius: 10,
+            field: field,
+            strictMode: true)
         .map(_binListFromSnap);
   }
 
-  Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStreamFromPosition({GeoFirePoint currentUserPoint}) {
-
+  Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStreamFromPosition(
+      {GeoFirePoint currentUserPoint}) {
     // get the collection reference or query
     var collectionReference = _db.collection('segnalazioniAbbandonoRifiuti');
 
@@ -63,11 +60,15 @@ class DatabaseService {
 
     return _geoflutterfire
         .collection(collectionRef: collectionReference)
-        .within(center: currentUserPoint ?? defaultPoint, radius: 10, field: field, strictMode: true)
+        .within(
+            center: currentUserPoint ?? defaultPoint,
+            radius: 10,
+            field: field,
+            strictMode: true)
         .map(_wasteDisposalListFromSnap);
   }
 
-  Future  createBin(
+  Future createBin(
       {@required String type,
       @required String imgName,
       @required LatLng binPos,
@@ -87,6 +88,19 @@ class DatabaseService {
       'userListLikes': [],
       'userListDislikes': []
     });
+  }
+
+  Future modifyPhotoUrl(String binID, String photoUrl) async {
+    var bin = await getBinInfo(binID);
+
+    var querySnap = await _db
+        .collection("cestini")
+        .where("photoUrl", isEqualTo: bin.photoUrl)
+        .getDocuments();
+
+    for (DocumentSnapshot doc in querySnap.documents) {
+      doc.reference.updateData({'photoUrl': photoUrl});
+    }
   }
 
   Future<String> uploadImage(
@@ -322,8 +336,7 @@ class DatabaseService {
       if (!userThatReportedThisBin.contains(user.uid)) {
         map.update('numberOfReports', (value) => value + 1);
         userThatReportedThisBin.add(user.uid);
-        map.update(
-            "userThatReportedThis", (value) => userThatReportedThisBin);
+        map.update("userThatReportedThis", (value) => userThatReportedThisBin);
       } else {
         return;
       }

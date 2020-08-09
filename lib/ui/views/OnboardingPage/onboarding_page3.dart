@@ -2,8 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/app/locator.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class OnboardingPage3 extends StatelessWidget {
   final FirebaseUser user;
@@ -12,8 +10,6 @@ class OnboardingPage3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    NavigationService _navigationService = locator<NavigationService>();
-
     return Container(
       child: Stack(
         children: <Widget>[

@@ -1,6 +1,4 @@
-
 import 'package:keep_it_clean/app/locator.dart';
-import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
@@ -28,23 +26,22 @@ class BinDetailsPageViewModel extends FutureViewModel<Bin> {
   }
 
   showReportDialog() async {
-    if(_authService.currentUser != null){
+    if (_authService.currentUser != null) {
       DialogResponse response = await _dialogService.showConfirmationDialog(
           title: "C'e' qualche problema?",
           description: "Invia una segnalazione se qualcosa non va",
           cancelTitle: "No, non inviare",
           confirmationTitle: "Si, voglio segnalare");
-      if(response.confirmed){
+      if (response.confirmed) {
         _databaseService.reportBinProblem(data.id, _authService.currentUser);
       }
       return;
     } else {
-      _dialogService.showDialog(title: "Utente non autenticato",
-          description:
-          "Solo gli utenti autenticati possono segnalare problemi",
+      _dialogService.showDialog(
+          title: "Utente non autenticato",
+          description: "Solo gli utenti autenticati possono segnalare problemi",
           buttonTitle: "Ho capito");
     }
-
   }
 
   launchMaps() async {
@@ -62,7 +59,10 @@ class BinDetailsPageViewModel extends FutureViewModel<Bin> {
       _databaseService.getBinInfo(_binDetailsService.binID);
 
   navigateToReporterProfile() {
-    _navigationService.navigateWithTransition(ReporterProfileView(reporterUid: data.uidUser,),
+    _navigationService.navigateWithTransition(
+        ReporterProfileView(
+          reporterUid: data.uidUser,
+        ),
         transition: NavigationTransition.RightToLeft);
   }
 }
