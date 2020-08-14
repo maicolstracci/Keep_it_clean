@@ -1,8 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/services/bin_details_service.dart';
+import 'package:keep_it_clean/services/database_services.dart';
+import 'package:keep_it_clean/services/location_service.dart';
 import 'package:keep_it_clean/services/search_here_button_service.dart';
 import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
@@ -10,10 +14,6 @@ import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_de
 import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
-import 'package:keep_it_clean/app/locator.dart';
-import 'package:keep_it_clean/services/bin_details_service.dart';
-import 'package:keep_it_clean/services/database_services.dart';
-import 'package:keep_it_clean/services/location_service.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -78,7 +78,6 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   void navigateToBinDetailsPage(String binID) {
     _binDetailsService.setBinID(binID);
 
-
     _navigationService.navigateWithTransition(BinDetailsPageView(),
         transition: NavigationTransition.RightToLeft);
   }
@@ -135,7 +134,8 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
         _dialogService.showDialog(
             title: tr("Si e' verificato un errore"),
-            description: tr("Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole."),
+            description: tr(
+                "Non siamo riusciti a calcolare la tua posizione attuale.\nProbabilmente sei in un'area con un segnale debole."),
             buttonTitle: tr("Ho capito"));
 
         return;

@@ -30,7 +30,10 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
             ),
             Container(
               decoration: BoxDecoration(boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 5,),
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                ),
               ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
               margin: EdgeInsets.only(top: 8, right: 8),
               child: IconButton(

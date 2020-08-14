@@ -355,8 +355,7 @@ class DatabaseService {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
-    DocumentReference doc =
-        await _db.collection("segnalazioniAbbandonoRifiuti").add({
+    await _db.collection("segnalazioniAbbandonoRifiuti").add({
       'position': binLocation.data,
       'photoUrl': imgName,
       'username': user.name,
