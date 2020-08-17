@@ -18,8 +18,6 @@ void main() async {
   locator<NavigationService>().config(
       defaultTransition: NavigationTransition.RightToLeft,
       defaultDurationTransition: Duration(milliseconds: 200));
-  await locator<AuthService>().retriveAppleSignInAvailable();
-  await setCustomMapPin();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -215,9 +213,10 @@ class StartUpViewModel extends BaseViewModel {
       AnimationController controller,
       AnimationController animationContController,
       AnimationController opacityController) async {
+    await locator<AuthService>().retriveAppleSignInAvailable();
+    await setCustomMapPin();
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
 
-    await Future.delayed(Duration(seconds: 4));
     animationContController.stop();
     controller.reverse();
     opacityController.reverse().then((value) {

@@ -10,7 +10,7 @@ class LoginPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<LoginPageViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
-              backgroundColor: Theme.of(context).backgroundColor,
+              backgroundColor: Color(0xff06442d),
               resizeToAvoidBottomPadding: false,
               body: SafeArea(
                 bottom: false,
@@ -52,7 +52,8 @@ class LoginPageView extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal:8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
                                     child: Text(
                                       tr("login_desc_string"),
                                       textAlign: TextAlign.center,
