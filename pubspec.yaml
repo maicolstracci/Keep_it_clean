@@ -86,9 +86,7 @@ flutter:
     - assets/icons/
     - assets/maps_markers/
     - assets/translations/
-    - assets/default-bin-photo.png
     - assets/loading.gif
-    - assets/badge.png
     - assets/keep_it_clean_logo.png
     - assets/keep_it_clean_logo_ios.png
     - assets/keep_it_clean_logo_adaptive.png

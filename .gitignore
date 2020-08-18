@@ -76,3 +76,4 @@ android/app/src/main/res/values/api_key.xml
 ios/Runner/ApiKeys.swift
 ios/Flutter/.last_build_id
 ios/Podfile.lock
+ios/Flutter/GoogleService-Info.plist

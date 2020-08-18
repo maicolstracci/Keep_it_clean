@@ -216,6 +216,7 @@ class StartUpViewModel extends BaseViewModel {
     await locator<AuthService>().retriveAppleSignInAvailable();
     await setCustomMapPin();
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
+    
 
     animationContController.stop();
     controller.reverse();
