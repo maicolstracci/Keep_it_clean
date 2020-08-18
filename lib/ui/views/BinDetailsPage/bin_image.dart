@@ -125,7 +125,8 @@ class BinImageViewModel extends FutureViewModel<String> {
         return "NO IMAGE";
       else
         return result;
-    }
+    } else
+      return "NO IMAGE";
   }
 }
 

@@ -62,7 +62,7 @@ class _KeepItCleanState extends State<KeepItClean> {
         accentColor: Color(0xfff4f8f9),
         fontFamily: 'Montserrat',
         textTheme: TextTheme(
-          body1: TextStyle(
+          bodyText2: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.w100,
               color: Colors.black87),
