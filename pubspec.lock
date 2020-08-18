@@ -42,7 +42,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   auto_route:
     dependency: "direct main"
     description:
@@ -384,7 +384,7 @@ packages:
       name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.10.2"
+    version: "3.4.4"
   get_it:
     dependency: "direct main"
     description:
@@ -802,7 +802,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.3"
+    version: "1.9.5"
   stacked:
     dependency: "direct main"
     description:
@@ -823,7 +823,7 @@ packages:
       name: stacked_services
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2+1"
+    version: "0.5.2"
   stream_channel:
     dependency: transitive
     description:

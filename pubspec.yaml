@@ -24,7 +24,7 @@ dependencies:
 
   intl:
   cupertino_icons: ^0.1.2
-  google_maps_flutter:
+  google_maps_flutter: ^0.5.3
   permission_handler: 5.0.1
   shared_preferences: ">=0.5.0+1 <2.0.0"
   simple_animations:
@@ -49,7 +49,7 @@ dependencies:
   ### REFACTORING ###
   stacked:
   auto_route: 0.5.0
-  stacked_services:
+  stacked_services: 0.5.2
   get_it:
   injectable:
   geoflutterfire: ^2.1.0

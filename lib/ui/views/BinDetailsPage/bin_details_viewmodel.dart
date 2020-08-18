@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
@@ -25,13 +26,16 @@ class BinDetailsPageViewModel extends FutureViewModel<Bin> {
     notifyListeners();
   }
 
+  //TODO: Add translations
   showReportDialog() async {
     if (_authService.currentUser != null) {
       DialogResponse response = await _dialogService.showConfirmationDialog(
           title: "C'e' qualche problema?",
           description: "Invia una segnalazione se qualcosa non va",
           cancelTitle: "No, non inviare",
-          confirmationTitle: "Si, voglio segnalare");
+          confirmationTitle: "Si, voglio segnalare",
+      barrierDismissible: true);
+
       if (response.confirmed) {
         _databaseService.reportBinProblem(data.id, _authService.currentUser);
       }
@@ -39,8 +43,10 @@ class BinDetailsPageViewModel extends FutureViewModel<Bin> {
     } else {
       _dialogService.showDialog(
           title: "Utente non autenticato",
-          description: "Solo gli utenti autenticati possono segnalare problemi",
-          buttonTitle: "Ho capito");
+          description: tr(
+              "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni"),
+          buttonTitle: "Ho capito",
+      barrierDismissible: true);
     }
   }
 

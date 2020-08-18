@@ -26,7 +26,7 @@ class BinImageView extends StatelessWidget {
       builder: (context, model, child) => Container(
         width: MediaQuery.of(context).size.width,
         height: double.infinity,
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: BoxDecoration(color: Theme.of(context).accentColor),
         child: model.data != null
             ? model.data != 'NO IMAGE'
                 ? FadeInImage.assetNetwork(
@@ -37,7 +37,7 @@ class BinImageView extends StatelessWidget {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(tr("Nessuna immagine presente")),
+                      Text(tr("Nessuna immagine presente"),style: TextStyle(fontWeight: FontWeight.bold),),
                       SizedBox(
                         height: 8,
                       ),
@@ -74,6 +74,7 @@ class BinImageViewModel extends FutureViewModel<String> {
     } else {
       _dialogService.showDialog(
           title: tr("Accesso non consentito agli utenti ospiti"),
+          barrierDismissible: true,
           description: tr(
               "Solo gli utenti che hanno effettuato l'accesso possono effettuare segnalazioni"),
           buttonTitle: tr("Ho capito"));
