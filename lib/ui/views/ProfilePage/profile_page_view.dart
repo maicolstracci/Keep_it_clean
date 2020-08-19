@@ -12,14 +12,18 @@ import 'classifica_page_view.dart';
 class ProfilePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return ViewModelBuilder<ProfilePageViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               appBar: AppBar(
                 title: Text(
-                  model.currentIndex == 0 ? tr("Profilo personale") : tr("Classifica"),
-                  style: TextStyle(color:model.currentIndex == 0 ? Colors.black: Colors.white),
+                  model.currentIndex == 0
+                      ? tr("Profilo personale")
+                      : tr("Classifica"),
+                  style: TextStyle(
+                      color: model.currentIndex == 0
+                          ? Colors.black
+                          : Colors.white),
                 ),
 //                actions: [
 //                  model.currentIndex == 0
@@ -41,9 +45,13 @@ class ProfilePageView extends StatelessWidget {
 //                ],
                 centerTitle: true,
                 elevation: 0,
-                backgroundColor: model.currentIndex == 0 ? Theme.of(context).accentColor : Theme.of(context).backgroundColor,
+                backgroundColor: model.currentIndex == 0
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).backgroundColor,
 
-                iconTheme: IconThemeData(color: model.currentIndex == 0 ? Colors.black : Colors.white),
+                iconTheme: IconThemeData(
+                    color:
+                        model.currentIndex == 0 ? Colors.black : Colors.white),
               ),
               bottomNavigationBar: BottomNavigationBar(
                 backgroundColor: Theme.of(context).backgroundColor,
@@ -53,11 +61,11 @@ class ProfilePageView extends StatelessWidget {
                 currentIndex: model.currentIndex,
                 selectedFontSize: 16,
                 unselectedFontSize: 16,
-
                 onTap: (index) => model.changeCurrentIndex(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person), title: Text( tr("Profilo personale") )),
+                      icon: Icon(Icons.person),
+                      title: Text(tr("Profilo personale"))),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.grade), title: Text(tr("Classifica")))
                 ],
@@ -79,16 +87,18 @@ class ProfilePageView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
-                                          backgroundImage: model
-                                                  .isUserLoggedIn()
-                                              ? NetworkImage(
-                                                  model.getProfilePhotoUrl(),
-                                                  scale: 1)
-                                              : 
-                                           ExactAssetImage(
-                                                  'assets/no-avatar.jpg'),
-                                          maxRadius: 50,
+                                        Hero(
+                                          tag: "profilePic",
+                                          child: CircleAvatar(
+                                            backgroundImage: model
+                                                    .isUserLoggedIn()
+                                                ? NetworkImage(
+                                                    model.getProfilePhotoUrl(),
+                                                    scale: 1)
+                                                : ExactAssetImage(
+                                                    'assets/no-avatar.jpg'),
+                                            maxRadius: 50,
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 8,
@@ -159,7 +169,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             Text(
-                                              tr("Benvenuto nel tuo profilo personale!") ,
+                                              tr("Benvenuto nel tuo profilo personale!"),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontSize: 20,
@@ -169,7 +179,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             AutoSizeText(
-                                              tr("In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!")  ,
+                                              tr("In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!"),
                                               textAlign: TextAlign.center,
                                               maxLines: 3,
                                             ),
@@ -177,8 +187,7 @@ class ProfilePageView extends StatelessWidget {
                                               height: 8,
                                             ),
                                             AutoSizeText(
-                                              tr("Per poter cominciare pero', devi tornare alla pagina principale e accedere") ,
-
+                                              tr("Per poter cominciare pero', devi tornare alla pagina principale e accedere"),
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
                                             ),
@@ -193,7 +202,7 @@ class ProfilePageView extends StatelessWidget {
                                                   color: Colors.green,
                                                 ),
                                                 label: Text(
-                                                  tr("Accedi") ,
+                                                  tr("Accedi"),
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:

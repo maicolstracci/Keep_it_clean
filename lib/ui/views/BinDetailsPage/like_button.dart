@@ -42,10 +42,11 @@ class LikeButton extends StatelessWidget {
                         child: IconButton(
                             disabledColor: Colors.white,
                             color: Colors.white,
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             icon: child,
                             onPressed: model.authService.currentUser != null
                                 ? () async {
-
                                     model.clickButton(type);
                                   }
                                 : () => model.showNoLoggedInDialog()),
@@ -72,8 +73,6 @@ class LikeButtonModel extends BaseViewModel {
   double endValueScale = 0;
   double endValue = 0;
 
-
-
   clickButton(int type) async {
     if (endValue == 0) {
       endValue = pi * 5;
@@ -98,7 +97,7 @@ class LikeButtonModel extends BaseViewModel {
     _dialogService.showDialog(
         title: tr("Utente non autenticato"),
         description:
-        tr("Solo gli utenti autenticati possono lasciare like/dislike"),
+            tr("Solo gli utenti autenticati possono lasciare like/dislike"),
         buttonTitle: tr("Ho capito"));
   }
 }

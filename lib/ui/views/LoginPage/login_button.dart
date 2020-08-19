@@ -5,8 +5,6 @@ import 'package:stacked_hooks/stacked_hooks.dart';
 
 class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
   final String buttonTypeName;
-  IconData _icon;
-  MaterialColor _color;
 
   LoginButton({Key key, this.buttonTypeName})
       : super(key: key, reactive: false);
@@ -16,8 +14,8 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
     BuildContext context,
     LoginPageViewModel model,
   ) {
-
-
+    IconData _icon;
+    MaterialColor _color;
     switch (buttonTypeName) {
       case 'facebook':
         _icon = const IconData(0xe901, fontFamily: "CustomIcons");
@@ -58,11 +56,17 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(_icon,color: _color,),
+          Icon(
+            _icon,
+            color: _color,
+          ),
           SizedBox(
             width: 28,
           ),
-          Text(tr("${buttonTypeName}_login_string"),style: TextStyle(color: _color),),
+          Text(
+            tr("${buttonTypeName}_login_string"),
+            style: TextStyle(color: _color),
+          ),
         ],
       ),
     );
