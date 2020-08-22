@@ -83,23 +83,23 @@ class DatabaseService {
       'username': user.name,
       'reportDate': new DateTime.now().toString(),
       'uidUser': user.uid,
-      'likes': 0,
-      'dislikes': 0,
-      'userListLikes': [],
-      'userListDislikes': []
     });
   }
 
   Future modifyPhotoUrl(String binID, String photoUrl) async {
     var bin = await getBinInfo(binID);
 
-    var querySnap = await _db
-        .collection("cestini")
-        .where("photoUrl", isEqualTo: bin.photoUrl)
-        .getDocuments();
+    if (bin.photoUrl != null) {
+      var querySnap = await _db
+          .collection("cestini")
+          .where("photoUrl", isEqualTo: bin.photoUrl)
+          .getDocuments();
 
-    for (DocumentSnapshot doc in querySnap.documents) {
-      doc.reference.updateData({'photoUrl': photoUrl});
+      for (DocumentSnapshot doc in querySnap.documents) {
+        doc.reference.updateData({'photoUrl': photoUrl});
+      }
+    } else {
+      await _db.collection("cestini").document(binID).updateData({'photoUrl': photoUrl});
     }
   }
 
