@@ -11,19 +11,25 @@ class ClassificaPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ClassificaPageViewModel>.reactive(
-        builder: (context, model, child) => SizedBox.expand(
-              child: model.isBusy
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ListView(
-                      scrollDirection: Axis.vertical,
-                      children: List.generate(
-                        model.data.length,
-                        (index) => RankingProfileContainer(
-                            ranking: index + 1, user: model.data[index]),
-                      )),
-            ),
+        builder: (context, model, child) {
+          return SizedBox.expand(
+              child: AnimatedList(
+            key: model.listKey,
+            itemBuilder: (context, index, animation) {
+              return SlideTransition(
+                position: CurvedAnimation(parent: animation, curve: Curves.ease)
+                    .drive(
+                  Tween(
+                    begin: Offset(-2, 0),
+                    end: Offset(0, 0),
+                  ),
+                ),
+                child: RankingProfileContainer(
+                    ranking: index + 1, user: model.data[index]),
+              );
+            },
+          ));
+        },
         viewModelBuilder: () => ClassificaPageViewModel());
   }
 }
@@ -54,9 +60,20 @@ class RankingProfileContainer
               children: [
                 Expanded(
                     flex: 1,
-                    child: Text(
-                      (ranking).toString(),
-                      textAlign: TextAlign.center,
+                    child: Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context)
+                              .backgroundColor
+                              .withOpacity(.9)),
+                      child: Text(
+                        (ranking).toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.w600),
+                      ),
                     )),
                 Expanded(
                     flex: 1,
@@ -77,6 +94,7 @@ class RankingProfileContainer
                         user.data['name'],
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     )),
                 Expanded(
@@ -84,6 +102,7 @@ class RankingProfileContainer
                     child: Text(
                       user.data['totalNumberOfReports'].toString(),
                       textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     )),
               ],
             ),
