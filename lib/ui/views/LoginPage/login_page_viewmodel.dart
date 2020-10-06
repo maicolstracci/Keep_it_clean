@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/appconfig.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -59,7 +60,7 @@ class LoginPageViewModel extends BaseViewModel{
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    if(!sharedPreferences.containsKey("returningUser")){
+    if(!sharedPreferences.containsKey("returningUser") || AppConfig.alwaysShowOnBoarding){
 
       await sharedPreferences.setBool('returningUser', true);
       _navigationService.replaceWith(Routes.onboardingPage);

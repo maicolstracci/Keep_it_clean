@@ -22,6 +22,7 @@ class OnboardingView extends StatelessWidget {
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               body: SafeArea(
+                top: false,
                 child: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -38,7 +39,7 @@ class OnboardingView extends StatelessWidget {
                                 model.changeCurrentPage(index.toDouble());
                               },
                               scrollDirection: Axis.horizontal,
-                              physics: PageScrollPhysics(),
+                              physics: ClampingScrollPhysics(),
                               children: <Widget>[
                                 OnboardingPage1(),
                                 OnboardingPage2(),
@@ -56,7 +57,7 @@ class OnboardingView extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  padding: const EdgeInsets.only(bottom: 24.0,top: 18),
                                   child: SmoothPageIndicator(
                                     controller: model.pageController, // PageController
                                     count: 3,
@@ -68,7 +69,10 @@ class OnboardingView extends StatelessWidget {
                                         dotColor: Color(
                                             0xfff4f8f9)), // your preferred effect
                                   )),
-                              ProseguiButton()
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: ProseguiButton(),
+                              )
                             ],
                           ),
                         ),
@@ -99,7 +103,7 @@ class ProseguiButton extends HookViewModelWidget<OnboardingPageViewModel> {
           }
         },
         color: Theme.of(context).accentColor,
-        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 18),
+        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
         child: Text(
           viewModel.currentPage != 2.0 ? tr("PROSEGUI") : tr("COMINCIAMO"),
           style:

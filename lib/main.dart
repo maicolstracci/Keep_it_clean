@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -177,26 +178,62 @@ class _StartUpViewState extends State<StartUpView>
                       height: 36,
                     ),
                     Expanded(
-                      flex: 2,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: AnimatedBuilder(
-                          animation: textOpacityAnimation,
-                          builder: (_, child) => Opacity(
-                            opacity: textOpacityAnimation.value,
-                            child: child,
-                          ),
-                          child: Text(
-                            tr("Caricamento in corso"),
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.1,
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedBuilder(
+                              animation: textOpacityAnimation,
+                              builder: (_, child) => Opacity(
+                                opacity: textOpacityAnimation.value,
+                                child: child,
+                              ),
+                              child: Text(
+                                tr("Caricamento in corso"),
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.1,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 24.0),
+                              child: AnimatedBuilder(
+                                animation: textOpacityAnimation,
+                                builder: (_, child) => Opacity(
+                                  opacity: textOpacityAnimation.value,
+                                  child: child,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height:70,
+                                      width:70,
+                                      child: Hero(
+                                        tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
+                                        child: Image.asset(
+                                          "assets/keep_it_clean_only_logo.png",
+                                          fit: BoxFit.contain
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 24,),
+                                    Text(
+                                      "Keep it clean",
+                                      style: TextStyle(textBaseline: TextBaseline.alphabetic,
+                                          color: Theme.of(context).accentColor,
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -209,19 +246,27 @@ class StartUpViewModel extends BaseViewModel {
   final AuthService _authenticationService = locator<AuthService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
+  Future<void> minimumWait(Duration duration) async {
+    await Future.delayed(duration, () {});
+  }
+
   Future handleStartUpLogic(
       AnimationController controller,
       AnimationController animationContController,
       AnimationController opacityController) async {
-    await locator<AuthService>().retriveAppleSignInAvailable();
-    await setCustomMapPin();
-    var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
-    
+    var hasLoggedInUser;
+
+    await Future.wait([
+      locator<AuthService>().retriveAppleSignInAvailable(),
+      setCustomMapPin(),
+      minimumWait(Duration(seconds: 4)),
+      hasLoggedInUser = _authenticationService.isUserLoggedIn(),
+    ]);
 
     animationContController.stop();
     controller.reverse();
-    opacityController.reverse().then((value) {
-      if (hasLoggedInUser) {
+    opacityController.reverse().then((value) async {
+      if (await hasLoggedInUser) {
         _navigationService.replaceWith(Routes.mapsPage);
       } else {
         _navigationService.replaceWith(Routes.loginPage);

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_button.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_page_viewmodel.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginPageView extends StatelessWidget {
@@ -29,8 +30,11 @@ class LoginPageView extends StatelessWidget {
                                   SizedBox(
                                       width: 100,
                                       height: 100,
-                                      child: Image.asset(
-                                        "assets/keep_it_clean_only_logo.png",
+                                      child: Hero(
+                                        tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
+                                        child: Image.asset(
+                                          "assets/keep_it_clean_only_logo.png",
+                                        ),
                                       )),
                                   Text(
                                     "Keep it clean",
