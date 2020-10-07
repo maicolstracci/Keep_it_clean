@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/leaderboard_circular_container.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
@@ -13,21 +14,69 @@ class ClassificaPageView extends StatelessWidget {
     return ViewModelBuilder<ClassificaPageViewModel>.reactive(
         builder: (context, model, child) {
           return SizedBox.expand(
-              child: AnimatedList(
-            key: model.listKey,
-            itemBuilder: (context, index, animation) {
-              return SlideTransition(
-                position: CurvedAnimation(parent: animation, curve: Curves.ease)
-                    .drive(
-                  Tween(
-                    begin: Offset(-2, 0),
-                    end: Offset(0, 0),
-                  ),
+              child: Column(
+            children: [
+              Expanded(
+                child: model.isBusy
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    : Container(
+                        margin: EdgeInsets.only(bottom: 20),
+                        child: Container(
+                          width: 390,
+                          child: Stack(
+                            overflow: Overflow.clip,
+                            children: [
+                              Positioned(
+                                right: 50,
+                                bottom: 20,
+                                child: LeaderboardCircularContainer(
+                                  ranking: 3,
+                                  user: model.data[2],
+                                ),
+                              ),
+                              Positioned(
+                                left: 50,
+                                bottom: 20,
+                                child: LeaderboardCircularContainer(
+                                  ranking: 2,
+                                  user: model.data[1],
+                                ),
+                              ),
+                              Center(
+                                child: LeaderboardCircularContainer(
+                                  ranking: 1,
+                                  user: model.data[0],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+              ),
+              Expanded(
+                child: AnimatedList(
+                  key: model.listKey,
+                  itemBuilder: (context, index, animation) {
+                    return SlideTransition(
+                      position:
+                          CurvedAnimation(parent: animation, curve: Curves.ease)
+                              .drive(
+                        Tween(
+                          begin: Offset(-2, 0),
+                          end: Offset(0, 0),
+                        ),
+                      ),
+                      child: RankingProfileContainer(
+                          ranking: index + 4, user: model.data[index + 3]),
+                    );
+                  },
                 ),
-                child: RankingProfileContainer(
-                    ranking: index + 1, user: model.data[index]),
-              );
-            },
+              ),
+            ],
           ));
         },
         viewModelBuilder: () => ClassificaPageViewModel());

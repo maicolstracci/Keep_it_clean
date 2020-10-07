@@ -13,11 +13,13 @@ class ClassificaPageViewModel extends FutureViewModel<List<DocumentSnapshot>> {
 
   GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
+  AnimationController animationController;
+
   @override
   void onData(List data) async {
-    for (int index = 0; index < data.length; index++) {
+    for (int index = 0; index < data.length-3; index++) {
 
-      listKey.currentState.insertItem(index, duration: Duration(milliseconds: 400));
+      listKey.currentState.insertItem(index, duration: Duration(milliseconds: 500));
 
       await Future.delayed(
         Duration(milliseconds: 100),
