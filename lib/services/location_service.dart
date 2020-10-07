@@ -1,6 +1,6 @@
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:injectable/injectable.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as perm;
 import 'package:permission_handler/permission_handler.dart';
 
 @lazySingleton
@@ -22,9 +22,8 @@ class LocationService {
     return permission == PermissionStatus.granted;
   }
 
-  Future<LocationData> getUserLocation() async {
-
-    LocationData userPosition = await Location()
+  Future<perm.LocationData> getUserLocation() async {
+    perm.LocationData userPosition = await perm.Location()
         .getLocation()
         .timeout(Duration(seconds: 15), onTimeout: () {
       return null;

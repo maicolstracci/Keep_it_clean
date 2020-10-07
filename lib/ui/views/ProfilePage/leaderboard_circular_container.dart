@@ -48,7 +48,7 @@ class LeaderboardCircularContainer
                     color: Theme.of(context).backgroundColor,
                     boxShadow: [
                       BoxShadow(
-                          color: Color(0xff98FB98).withOpacity(0.4),
+                          color: Color(0xff98FB98).withOpacity(0.3),
                           spreadRadius: 1,
                           blurRadius: 35)
                     ]),

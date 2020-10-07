@@ -16,29 +16,25 @@ class ClassificaPageView extends StatelessWidget {
           return SizedBox.expand(
               child: Column(
             children: [
-              Expanded(
+              Container(
+                height: 270,
                 child: model.isBusy
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: Center(child: CircularProgressIndicator()),
-                      )
+                    ? Center(child: CircularProgressIndicator())
                     : Container(
                         margin: EdgeInsets.only(bottom: 20),
                         child: Container(
-                          width: 390,
+                          width: 250,
                           child: Stack(
-                            overflow: Overflow.clip,
                             children: [
                               Positioned(
-                                right: 50,
+                                right: 0,
                                 child: LeaderboardCircularContainer(
                                   ranking: 3,
                                   user: model.data[2],
                                 ),
                               ),
                               Positioned(
-                                left: 50,
+                                left: 0,
                                 child: LeaderboardCircularContainer(
                                   ranking: 2,
                                   user: model.data[1],
@@ -55,7 +51,16 @@ class ClassificaPageView extends StatelessWidget {
                         ),
                       ),
               ),
+              model.isBusy
+                  ? SizedBox.shrink()
+                  : Container(
+                      height: 1,
+                      width: (MediaQuery.of(context).size.width * 0.75),
+                      color: Colors.white70,
+                      margin: EdgeInsets.only(bottom: 8),
+                    ),
               Expanded(
+                flex: 4,
                 child: AnimatedList(
                   key: model.listKey,
                   itemBuilder: (context, index, animation) {

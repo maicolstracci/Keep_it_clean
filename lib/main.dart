@@ -8,7 +8,7 @@ import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'app/router.gr.dart';
+import 'app/router.gr.dart' as r;
 
 //TODO: Test Sign in with Apple
 //TODO: Check Device preview package
@@ -69,7 +69,7 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      onGenerateRoute: Router().onGenerateRoute,
+      onGenerateRoute: r.Router().onGenerateRoute,
       navigatorKey: locator<NavigationService>().navigatorKey,
       home: StartUpView(),
 //      initialRoute: Routes.onboardingPage,
@@ -210,20 +210,22 @@ class _StartUpViewState extends State<StartUpView>
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Container(
-                                      height:70,
-                                      width:70,
+                                      height: 70,
+                                      width: 70,
                                       child: Hero(
                                         tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
                                         child: Image.asset(
-                                          "assets/keep_it_clean_only_logo.png",
-                                          fit: BoxFit.contain
-                                        ),
+                                            "assets/keep_it_clean_only_logo.png",
+                                            fit: BoxFit.contain),
                                       ),
                                     ),
-                                    SizedBox(width: 24,),
+                                    SizedBox(
+                                      width: 24,
+                                    ),
                                     Text(
                                       "Keep it clean",
-                                      style: TextStyle(textBaseline: TextBaseline.alphabetic,
+                                      style: TextStyle(
+                                          textBaseline: TextBaseline.alphabetic,
                                           color: Theme.of(context).accentColor,
                                           fontSize: 26,
                                           fontWeight: FontWeight.w600),
@@ -267,9 +269,9 @@ class StartUpViewModel extends BaseViewModel {
     controller.reverse();
     opacityController.reverse().then((value) async {
       if (await hasLoggedInUser) {
-        _navigationService.replaceWith(Routes.mapsPage);
+        _navigationService.replaceWith(r.Routes.mapsPage);
       } else {
-        _navigationService.replaceWith(Routes.loginPage);
+        _navigationService.replaceWith(r.Routes.loginPage);
       }
     });
   }

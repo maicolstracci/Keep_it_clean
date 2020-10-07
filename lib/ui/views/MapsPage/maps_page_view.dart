@@ -33,6 +33,7 @@ class MapsPageView extends StatelessWidget {
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
                         mapToolbarEnabled: false,
+                        zoomControlsEnabled: false,
                         onCameraMove: (cameraPosition) {
                           model.setCameraPosition(cameraPosition);
                         },
