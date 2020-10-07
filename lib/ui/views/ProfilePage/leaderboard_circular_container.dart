@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
 import 'classifica_page_viewmodel.dart';
@@ -16,16 +15,16 @@ class LeaderboardCircularContainer
   Widget buildViewModelWidget(
       BuildContext context, ClassificaPageViewModel viewModel) {
     return TweenAnimationBuilder<Offset>(
-      tween: Tween<Offset>(begin: Offset(0, (ranking * -500).toDouble()), end: Offset(0, 0)),
-     curve: Curves.fastLinearToSlowEaseIn,
-      duration: Duration(milliseconds: ranking*350),
+      tween: Tween<Offset>(
+          begin: Offset(0, (ranking * -500).toDouble()), end: Offset(0, 0)),
+      curve: Curves.fastLinearToSlowEaseIn,
+      duration: Duration(milliseconds: ranking * 350),
       builder: (context, offset, child) => Transform.translate(
         offset: offset,
         child: child,
       ),
       child: GestureDetector(
         onTap: () => viewModel.navigateToUserPage(user.documentID),
-
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -41,17 +40,17 @@ class LeaderboardCircularContainer
                 height: 18,
               ),
               Container(
-                height: ranking == 1 ? 120 : 100,
-                width: ranking == 1 ? 120 : 100,
+                height: ranking == 1 ? 100 : 80,
+                width: ranking == 1 ? 100 : 80,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xff98FB98), width: 3),
+                    border: Border.all(color: Color(0xff98FB98), width: 2),
                     borderRadius: BorderRadius.circular(300.0),
                     color: Theme.of(context).backgroundColor,
                     boxShadow: [
                       BoxShadow(
                           color: Color(0xff98FB98).withOpacity(0.4),
                           spreadRadius: 1,
-                          blurRadius: 50)
+                          blurRadius: 35)
                     ]),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(300.0),

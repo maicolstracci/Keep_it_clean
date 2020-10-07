@@ -32,7 +32,6 @@ class ClassificaPageView extends StatelessWidget {
                             children: [
                               Positioned(
                                 right: 50,
-                                bottom: 20,
                                 child: LeaderboardCircularContainer(
                                   ranking: 3,
                                   user: model.data[2],
@@ -40,7 +39,6 @@ class ClassificaPageView extends StatelessWidget {
                               ),
                               Positioned(
                                 left: 50,
-                                bottom: 20,
                                 child: LeaderboardCircularContainer(
                                   ranking: 2,
                                   user: model.data[1],
