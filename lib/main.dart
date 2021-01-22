@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-import 'app/router.gr.dart';
+import 'app/router.gr.dart' as r;
 
 //TODO: Test Sign in with Apple
 //TODO: Check Device preview package
@@ -68,7 +69,7 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      onGenerateRoute: Router().onGenerateRoute,
+      onGenerateRoute: r.Router().onGenerateRoute,
       navigatorKey: locator<NavigationService>().navigatorKey,
       home: StartUpView(),
 //      initialRoute: Routes.onboardingPage,
@@ -177,26 +178,64 @@ class _StartUpViewState extends State<StartUpView>
                       height: 36,
                     ),
                     Expanded(
-                      flex: 2,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: AnimatedBuilder(
-                          animation: textOpacityAnimation,
-                          builder: (_, child) => Opacity(
-                            opacity: textOpacityAnimation.value,
-                            child: child,
-                          ),
-                          child: Text(
-                            tr("Caricamento in corso"),
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.1,
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedBuilder(
+                              animation: textOpacityAnimation,
+                              builder: (_, child) => Opacity(
+                                opacity: textOpacityAnimation.value,
+                                child: child,
+                              ),
+                              child: Text(
+                                tr("Caricamento in corso"),
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.1,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 24.0),
+                              child: AnimatedBuilder(
+                                animation: textOpacityAnimation,
+                                builder: (_, child) => Opacity(
+                                  opacity: textOpacityAnimation.value,
+                                  child: child,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 70,
+                                      width: 70,
+                                      child: Hero(
+                                        tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
+                                        child: Image.asset(
+                                            "assets/keep_it_clean_only_logo.png",
+                                            fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 24,
+                                    ),
+                                    Text(
+                                      "Keep it clean",
+                                      style: TextStyle(
+                                          textBaseline: TextBaseline.alphabetic,
+                                          color: Theme.of(context).accentColor,
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -228,11 +267,11 @@ class StartUpViewModel extends BaseViewModel {
 
     animationContController.stop();
     controller.reverse();
-    opacityController.reverse().then((value) {
-      if (hasLoggedInUser) {
-        _navigationService.replaceWith(Routes.mapsPage);
+    opacityController.reverse().then((value) async {
+      if (await hasLoggedInUser) {
+        _navigationService.replaceWith(r.Routes.mapsPage);
       } else {
-        _navigationService.replaceWith(Routes.loginPage);
+        _navigationService.replaceWith(r.Routes.loginPage);
       }
     });
   }

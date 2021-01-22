@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +6,21 @@ class OnboardingPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       child: Stack(
         children: <Widget>[
-          Center(child: SizedBox.expand(child: Image.asset("assets/illustrations/background.png",fit: BoxFit.cover,))),
-
+          Center(
+              child: SizedBox.expand(
+                  child: Image.asset(
+            "assets/illustrations/background.png",
+            fit: BoxFit.cover,
+          ))),
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(
               clipper: CurveClipper(),
               child: Container(
                 color: Color(0xff06442d).withOpacity(.90),
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height / 2.2,
               ),
             ),
           ),
@@ -26,7 +28,7 @@ class OnboardingPage2 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +52,15 @@ class OnboardingPage2 extends StatelessWidget {
               ),
               Expanded(
                 flex: 8,
-                child: Image.asset("assets/illustrations/page2.png",fit: BoxFit.fitWidth,),
+                child: Container(
+                    height: 310,
+                    width: 310,                    child: Padding(
+                      padding: const EdgeInsets.only(bottom:16.0),
+                      child: Image.asset(
+                        "assets/illustrations/page2.png",
+                        fit: BoxFit.fitWidth,
+                      ),
+                    )),
               ),
               Expanded(
                 flex: 4,
@@ -84,10 +94,8 @@ class OnboardingPage2 extends StatelessWidget {
                           maxLines: 3,
                           minFontSize: 1,
                           maxFontSize: 50,
-
                           textAlign: TextAlign.center,
-                          style:
-                          TextStyle(color: Color(0xfff4f8f9)),
+                          style: TextStyle(color: Color(0xfff4f8f9)),
                         ),
                       ),
                     ),
@@ -96,7 +104,6 @@ class OnboardingPage2 extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );

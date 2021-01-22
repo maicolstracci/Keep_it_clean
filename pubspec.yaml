@@ -11,10 +11,10 @@ description: Keep it clean. Trova il cestino per la raccolta differenziata più 
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.1+12
+version: 1.2.1+13
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -24,7 +24,7 @@ dependencies:
 
   intl:
   cupertino_icons: ^0.1.2
-  google_maps_flutter:
+  google_maps_flutter: 0.5.28
   permission_handler: 5.0.1
   shared_preferences: ">=0.5.0+1 <2.0.0"
   simple_animations:
@@ -47,10 +47,10 @@ dependencies:
   flutter_device_type: ^0.2.0
 
   ### REFACTORING ###
-  stacked:
+  stacked: 1.5.2
   auto_route: 0.5.0
   stacked_services:
-  get_it:
+  get_it: 2.0.0
   injectable:
   geoflutterfire: ^2.1.0
   flutter_hooks:

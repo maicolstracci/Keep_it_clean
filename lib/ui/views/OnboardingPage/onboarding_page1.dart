@@ -18,7 +18,7 @@ class OnboardingPage1 extends StatelessWidget {
               clipper: CurveClipper(),
               child: Container(
                 color: Color(0xff06442d).withOpacity(.90),
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height / 2.2,
               ),
             ),
           ),
@@ -26,7 +26,7 @@ class OnboardingPage1 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +50,9 @@ class OnboardingPage1 extends StatelessWidget {
               ),
               Expanded(
                 flex: 8,
-                child: Image.asset("assets/illustrations/page1.png",fit: BoxFit.fitWidth,),
+                child: Container(
+                    height: 270,
+                    width: 270,child: Image.asset("assets/illustrations/page1.png",fit: BoxFit.fitWidth,)),
               ),
               Expanded(
                 flex: 4,
@@ -79,15 +81,17 @@ class OnboardingPage1 extends StatelessWidget {
                       flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: AutoSizeText(
-                          tr("search_string"),
-                          maxLines: 3,
-                          minFontSize: 1,
-                          maxFontSize: 50,
+                        child: Center(
+                          child: AutoSizeText(
+                            tr("search_string"),
+                            maxLines: 3,
+                            minFontSize: 1,
+                            maxFontSize: 50,
 
-                          textAlign: TextAlign.center,
-                          style:
-                          TextStyle(color: Color(0xfff4f8f9)),
+                            textAlign: TextAlign.center,
+                            style:
+                            TextStyle(color: Color(0xfff4f8f9)),
+                          ),
                         ),
                       ),
                     ),
@@ -108,7 +112,7 @@ class CurveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     var path = new Path();
 
-    var controlPoint = Offset(size.width / 2, 70);
+    var controlPoint = Offset(size.width / 2.0, 70);
 
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);
