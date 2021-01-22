@@ -209,14 +209,22 @@ class StartUpViewModel extends BaseViewModel {
   final AuthService _authenticationService = locator<AuthService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
+  Future<void> minimumTimeWait(Duration duration) async {
+    await Future.delayed(duration, () {});
+  }
+
   Future handleStartUpLogic(
       AnimationController controller,
       AnimationController animationContController,
       AnimationController opacityController) async {
-    await locator<AuthService>().retriveAppleSignInAvailable();
-    await setCustomMapPin();
-    var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
-    
+    var hasLoggedInUser;
+
+    await Future.wait([
+      locator<AuthService>().retriveAppleSignInAvailable(),
+      setCustomMapPin(),
+      hasLoggedInUser = _authenticationService.isUserLoggedIn(),
+      minimumTimeWait(Duration(seconds: 3)),
+    ]);
 
     animationContController.stop();
     controller.reverse();
