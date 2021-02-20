@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/take_picture_service.dart';
-import 'package:stacked/stacked.dart';
+import 'package:keep_it_clean/utils/bloc_utils.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class BinImageView extends StatelessWidget {
@@ -18,46 +19,67 @@ class BinImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<BinImageViewModel>.reactive(
-      onModelReady: (model) {
-        model.imgName = this.imgName;
-        model.runFuture();
-      },
-      builder: (context, model, child) => Container(
-        width: MediaQuery.of(context).size.width,
-        height: double.infinity,
-        decoration: BoxDecoration(color: Colors.white),
-        child: model.data != null
-            ? model.data != 'NO IMAGE'
-                ? FadeInImage.assetNetwork(
-                    placeholder: 'assets/loading.gif',
-                    image: model.data,
-                    fit: BoxFit.fitWidth,
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(tr("Nessuna immagine presente")),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      RaisedButton.icon(
-                          onPressed: () =>
-                              model.showActionSheetIfAuthed(context),
-                          icon: Icon(Icons.camera_alt),
-                          label: Text(tr("Aggiungi una foto")))
-                    ],
-                  )
-            : Container(
-                color: Colors.transparent,
-              ),
-      ),
-      viewModelBuilder: () => BinImageViewModel(),
+    return BlocProvider(
+      create: (BuildContext context) =>
+          BinImageBloc(BlocState(state: BlocStateEnum.IDLE), imgName),
+      child: BlocBuilder<BinImageBloc, BlocState<String>>(
+          builder: (context, state) {
+        switch (state.state) {
+          case BlocStateEnum.LOADING:
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.white),
+            );
+          case BlocStateEnum.IDLE:
+            context.watch<BinImageBloc>().loadImage();
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.white),
+            );
+          case BlocStateEnum.DONE:
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.white),
+              child: state.data != null
+                  ? state.data != 'NO IMAGE'
+                      ? FadeInImage.assetNetwork(
+                          placeholder: 'assets/loading.gif',
+                          image: state.data,
+                          fit: BoxFit.fitWidth,
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(tr("Nessuna immagine presente")),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            RaisedButton.icon(
+                                onPressed: () => context
+                                    .watch<BinImageBloc>()
+                                    .showActionSheetIfAuthed(context),
+                                icon: Icon(Icons.camera_alt),
+                                label: Text(tr("Aggiungi una foto")))
+                          ],
+                        )
+                  : Container(
+                      color: Colors.transparent,
+                    ),
+            );
+          default:
+            return Center(
+              child: Text("LOADING"),
+            );
+        }
+      }),
     );
   }
 }
 
-class BinImageViewModel extends FutureViewModel<String> {
+class BinImageBloc extends Cubit<BlocState<String>> {
   DatabaseService _databaseService = locator<DatabaseService>();
   DialogService _dialogService = locator<DialogService>();
   TakePictureService _takePictureService = locator<TakePictureService>();
@@ -65,6 +87,8 @@ class BinImageViewModel extends FutureViewModel<String> {
   BinDetailsService _binDetailsService = locator<BinDetailsService>();
 
   String imgName;
+
+  BinImageBloc(BlocState<String> state, this.imgName) : super(state);
 
   showActionSheetIfAuthed(BuildContext context) {
     if (_authService.currentUser != null) {
@@ -116,17 +140,16 @@ class BinImageViewModel extends FutureViewModel<String> {
     }
   }
 
-  @override
-  Future<String> futureToRun() async {
+  Future loadImage() async {
     if (imgName != null) {
       String result =
           await _databaseService.getDownloadUrlImageFromName(imgName);
       if (result == null)
-        return "NO IMAGE";
+        emit(BlocState(data: "NO IMAGE", state: BlocStateEnum.DONE));
       else
-        return result;
+        emit(BlocState(data: result, state: BlocStateEnum.DONE));
     } else
-      return null;
+      emit(BlocState(data: "NO IMAGE", state: BlocStateEnum.DONE));
   }
 }
 

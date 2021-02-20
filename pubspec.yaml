@@ -24,7 +24,7 @@ dependencies:
 
   intl:
   cupertino_icons: ^0.1.2
-  google_maps_flutter: 0.5.28
+  google_maps_flutter: 1.2.0
   permission_handler: 5.0.1
   shared_preferences: ">=0.5.0+1 <2.0.0"
   simple_animations:
@@ -47,10 +47,10 @@ dependencies:
   flutter_device_type: ^0.2.0
 
   ### REFACTORING ###
-  stacked: 1.5.2
+  stacked: 1.7.7
   auto_route: 0.5.0
   stacked_services:
-  get_it: 2.0.0
+  get_it: 5.0.6
   injectable:
   geoflutterfire: ^2.1.0
   flutter_hooks:
@@ -60,6 +60,7 @@ dependencies:
   tutorial_coach_mark: ^0.3.0
   apple_sign_in: ^0.1.0
   device_info: ^0.4.1+4
+  flutter_bloc: ^6.1.2
 
 
 flutter_icons:

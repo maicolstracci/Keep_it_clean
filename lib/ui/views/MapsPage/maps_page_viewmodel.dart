@@ -99,14 +99,26 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     notifyListeners();
   }
 
+  bool markerAlreadyPresentInSameLocation(LatLng binLatLng) {
+    for (Marker marker in markers) {
+      if (marker.position == binLatLng) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Set<Marker> getMarkersSetWithFiltering() {
     markers.clear();
     for (Bin bin in currentListOfBin) {
       if (filterBinsForType == null || bin.type == filterBinsForType) {
-        _addMarker(
-            bin.id,
-            new LatLng(bin.position.latitude, bin.position.longitude),
-            bin.type);
+        if (!markerAlreadyPresentInSameLocation(
+            LatLng(bin.position.latitude, bin.position.longitude))) {
+          _addMarker(
+              bin.id,
+              new LatLng(bin.position.latitude, bin.position.longitude),
+              bin.type);
+        }
       }
     }
     if (dataReady(_illegalWasteDisposalKey) && filterBinsForType == null) {
