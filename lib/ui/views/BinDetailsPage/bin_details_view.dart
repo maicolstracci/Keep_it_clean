@@ -1,24 +1,38 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_it_clean/models/bin_model.dart';
+import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_image.dart';
-import 'package:stacked/stacked.dart';
-import 'like_bar.dart';
-import 'bin_details_viewmodel.dart';
+import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
+import 'package:keep_it_clean/utils/bloc_utils.dart';
 
-class BinDetailsPageView extends StatelessWidget {
+class BinDetailsPageView extends StatefulWidget {
+  @override
+  _BinDetailsPageViewState createState() => _BinDetailsPageViewState();
+}
+
+class _BinDetailsPageViewState extends State<BinDetailsPageView> {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<BinDetailsPageViewModel>.reactive(
-        builder: (context, model, child) => Scaffold(
+    return BlocProvider(
+        create: (BuildContext context) =>
+            BinDetailsBloc(BlocState(state: BlocStateEnum.IDLE))..getBinInfo(),
+        child: BlocBuilder<BinDetailsBloc, BlocState<Bin>>(
+          builder: (context, state) {
+            return Scaffold(
               appBar: AppBar(
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 0,
-                title: model.isBusy ? Text("") : Text(tr(model.data.type)),
+                title: state.state != BlocStateEnum.DONE
+                    ? Text("")
+                    : Text(tr(state.data.type)),
                 centerTitle: true,
                 actions: [
                   IconButton(
                     padding: EdgeInsets.all(0),
-                    onPressed: () => model.showReportDialog(),
+                    onPressed: () => BlocProvider.of<BinDetailsBloc>(context)
+                        .showReportDialog(),
                     icon: Icon(
                       Icons.error_outline,
                       color: Colors.red,
@@ -27,7 +41,7 @@ class BinDetailsPageView extends StatelessWidget {
                 ],
               ),
               backgroundColor: Theme.of(context).backgroundColor,
-              body: model.isBusy
+              body: state.state != BlocStateEnum.DONE
                   ? Center(child: CircularProgressIndicator())
                   : SizedBox(
                       height: MediaQuery.of(context).size.height,
@@ -41,7 +55,7 @@ class BinDetailsPageView extends StatelessWidget {
                                 ClipPath(
                                   clipper: BottomCurveClipper(),
                                   child: BinImageView(
-                                    imgName: model.data.photoUrl,
+                                    imgName: state.data.photoUrl,
                                   ),
                                 ),
                                 Align(
@@ -49,7 +63,7 @@ class BinDetailsPageView extends StatelessWidget {
                                   child: Container(
                                     height: 60,
                                     child: LikeBar(
-                                      binID: model.data.id,
+                                      binID: state.data.id,
                                     ),
                                   ),
                                 ),
@@ -96,7 +110,7 @@ class BinDetailsPageView extends StatelessWidget {
                                               Flexible(
                                                 child: Container(
                                                   child: Text(
-                                                    model.data.username,
+                                                    state.data.username,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: TextStyle(
@@ -108,7 +122,9 @@ class BinDetailsPageView extends StatelessWidget {
                                                 ),
                                               ),
                                               IconButton(
-                                                onPressed: () => model
+                                                onPressed: () => BlocProvider
+                                                        .of<BinDetailsBloc>(
+                                                            context)
                                                     .navigateToReporterProfile(),
                                                 icon: Icon(
                                                   Icons.launch,
@@ -149,7 +165,7 @@ class BinDetailsPageView extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text(
-                                              model.data.reportDate
+                                              state.data.reportDate
                                                   .substring(0, 10),
                                               style: TextStyle(
                                                   color: Colors.black87,
@@ -163,7 +179,10 @@ class BinDetailsPageView extends StatelessWidget {
                                   Center(
                                     child: FlatButton.icon(
                                       padding: const EdgeInsets.all(10),
-                                      onPressed: model.launchMaps,
+                                      onPressed:
+                                          BlocProvider.of<BinDetailsBloc>(
+                                                  context)
+                                              .launchMaps,
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
                                             new BorderRadius.circular(6.0),
@@ -186,8 +205,9 @@ class BinDetailsPageView extends StatelessWidget {
                           )
                         ],
                       )),
-            ),
-        viewModelBuilder: () => BinDetailsPageViewModel());
+            );
+          },
+        ));
   }
 }
 

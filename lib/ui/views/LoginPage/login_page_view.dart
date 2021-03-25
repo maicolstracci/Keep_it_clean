@@ -12,7 +12,7 @@ class LoginPageView extends StatelessWidget {
     return ViewModelBuilder<LoginPageViewModel>.reactive(
         builder: (context, model, child) => Scaffold(
               backgroundColor: Color(0xff06442d),
-              resizeToAvoidBottomPadding: false,
+              resizeToAvoidBottomInset: true,
               body: SafeArea(
                 bottom: false,
                 child: Builder(builder: (context) {
