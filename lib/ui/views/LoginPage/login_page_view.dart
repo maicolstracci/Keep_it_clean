@@ -57,7 +57,7 @@ class LoginPageView extends StatelessWidget {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
+                                        horizontal: 32.0),
                                     child: Text(
                                       tr("login_desc_string"),
                                       textAlign: TextAlign.center,
@@ -66,9 +66,11 @@ class LoginPageView extends StatelessWidget {
                                     ),
                                   ),
                                   LoginButton(
-                                    buttonTypeName: "facebook",
+                                    buttonType: LoginButtonType.FACEBOOK,
                                   ),
-                                  LoginButton(buttonTypeName: "google"),
+                                  LoginButton(
+                                    buttonType: LoginButtonType.GOOGLE,
+                                  ),
                                   if (model.appleSignInAvailable)
                                     SizedBox(
                                       width: 240,
@@ -76,9 +78,12 @@ class LoginPageView extends StatelessWidget {
                                       child: AppleSignInButton(
                                           cornerRadius: 20,
                                           onPressed: () async =>
-                                              model.appleSignIn()),
+                                              model.performLogin(context,
+                                                  LoginButtonType.APPLE)),
                                     ),
-                                  LoginButton(buttonTypeName: "guest"),
+                                  LoginButton(
+                                    buttonType: LoginButtonType.GUEST,
+                                  ),
                                 ],
                               ),
                             ),

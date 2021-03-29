@@ -139,7 +139,8 @@ class _AddBinPageViewState extends State<AddBinPageView>
                                             model.getTypesSelectedLength != 0
                                                 ? () async {
                                                     model
-                                                        .navigateToPictureSelection();
+                                                        .navigateToPictureSelection(
+                                                            context);
                                                   }
                                                 : null,
                                         disabledColor: Colors.blueGrey,

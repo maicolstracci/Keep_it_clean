@@ -23,11 +23,11 @@ class Bin {
       this.dislikes});
 
   factory Bin.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data;
-    Map review = doc.data['review'];
+    Map data = doc.data();
+    Map review = doc.data()['review'];
 
     return Bin(
-      id: doc.documentID,
+      id: doc.id,
       position: data['position']['geopoint'],
       photoUrl: data['photoUrl'],
       reportDate: data['reportDate'],

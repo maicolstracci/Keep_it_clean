@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
@@ -28,12 +30,11 @@ class SelectBinPositionViewModel extends BaseViewModel {
   TakePictureService _takePictureService = locator<TakePictureService>();
   AddBinTypesListService _addBinTypesListService =
       locator<AddBinTypesListService>();
-  NavigationService _navigationService = locator<NavigationService>();
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
   TypeOfReportService _typeOfReportService = locator<TypeOfReportService>();
 
-  Future moveCameraToUserLocation() async {
+  Future moveCameraToUserLocation(BuildContext context) async {
     setBusy(true);
     if (await _locationService.getLocationPermissionStatus()) {
       LocationData location = await _locationService.getUserLocation();
@@ -73,7 +74,8 @@ class SelectBinPositionViewModel extends BaseViewModel {
         if (_takePictureService.pic != null)
           await _takePictureService.pic.delete();
         _addBinTypesListService.typesSelected.clear();
-        _navigationService.clearStackAndShow(Routes.mapsPage);
+        AutoRouter.of(context)
+            .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
       }
     }
     setBusy(false);
@@ -91,18 +93,18 @@ class SelectBinPositionViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  uploadReport() {
+  uploadReport(BuildContext context) {
     if (_typeOfReportService.typeOfReport == Report.Bin) {
-      createBinReport();
+      createBinReport(context);
     } else if (_typeOfReportService.typeOfReport == Report.IllegalWaste) {
-      createIllegalWasteDisposalReport();
+      createIllegalWasteDisposalReport(context);
     } else {
       //TODO: show error message
       _takePictureService.pic.delete();
     }
   }
 
-  createBinReport() async {
+  createBinReport(BuildContext context) async {
     uploading = true;
     notifyListeners();
 
@@ -123,10 +125,11 @@ class SelectBinPositionViewModel extends BaseViewModel {
     _addBinTypesListService.typesSelected.clear();
     uploading = false;
 
-    _navigationService.clearStackAndShow(Routes.mapsPage);
+    AutoRouter.of(context)
+        .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
   }
 
-  createIllegalWasteDisposalReport() async {
+  createIllegalWasteDisposalReport(BuildContext context) async {
     uploading = true;
     notifyListeners();
 
@@ -139,6 +142,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
 
     uploading = false;
 
-    _navigationService.clearStackAndShow(Routes.mapsPage);
+    AutoRouter.of(context)
+        .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
   }
 }

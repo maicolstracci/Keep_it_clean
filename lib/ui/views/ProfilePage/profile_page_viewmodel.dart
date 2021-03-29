@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/models/user_model.dart';
@@ -8,9 +10,8 @@ import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class ProfilePageViewModel extends FutureViewModel<User> {
+class ProfilePageViewModel extends FutureViewModel<KeepItCleanUser> {
   AuthService _authService = locator<AuthService>();
-  NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
   DatabaseService _databaseService = locator<DatabaseService>();
 
@@ -22,7 +23,7 @@ class ProfilePageViewModel extends FutureViewModel<User> {
         : tr("Utente ospite");
   }
 
-  changeCurrentIndex(int index){
+  changeCurrentIndex(int index) {
     currentIndex = index;
     notifyListeners();
   }
@@ -42,11 +43,7 @@ class ProfilePageViewModel extends FutureViewModel<User> {
     return map[typesOfBin[index]] ?? 0;
   }
 
-  navigateToLoginPage() {
-    _navigationService.clearStackAndShow(Routes.loginPage);
-  }
-
-  signOut() async {
+  signOut(BuildContext context) async {
     DialogResponse response = await _dialogService.showDialog(
         title: tr('SIGN OUT'),
         description: tr("Vuoi davvero disconnetterti?"),
@@ -55,12 +52,13 @@ class ProfilePageViewModel extends FutureViewModel<User> {
 
     if (response.confirmed) {
       _authService.signOut();
-      _navigationService.clearStackAndShow(Routes.loginPage);
+      AutoRouter.of(context)
+          .pushAndRemoveUntil(LoginPageViewRoute(), predicate: (r) => false);
     }
   }
 
   @override
-  Future<User> futureToRun() {
+  Future<KeepItCleanUser> futureToRun() {
     if (_authService.currentUser != null)
       return _databaseService.retrieveUserInfo(
           reporterUid: _authService.currentUser.uid);

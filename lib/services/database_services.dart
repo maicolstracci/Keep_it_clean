@@ -14,7 +14,7 @@ import 'package:keep_it_clean/utils/constants.dart';
 
 @lazySingleton
 class DatabaseService {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   Geoflutterfire _geoflutterfire = Geoflutterfire();
   String typeOfBinToFilter;
 
@@ -72,7 +72,7 @@ class DatabaseService {
       {@required String type,
       @required String imgName,
       @required LatLng binPos,
-      @required User user}) async {
+      @required KeepItCleanUser user}) async {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
@@ -96,30 +96,28 @@ class DatabaseService {
     var querySnap = await _db
         .collection("cestini")
         .where("photoUrl", isEqualTo: bin.photoUrl)
-        .getDocuments();
+        .get();
 
-    for (DocumentSnapshot doc in querySnap.documents) {
-      doc.reference.updateData({'photoUrl': photoUrl});
+    for (DocumentSnapshot doc in querySnap.docs) {
+      doc.reference.update({'photoUrl': photoUrl});
     }
   }
 
   Future<String> uploadImage(
       {@required File imgFile, @required String imgName}) async {
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(imgName);
+    Reference storageReference = FirebaseStorage.instance.ref().child(imgName);
 
     //TODO: check for other results
-    StorageUploadTask uploadTask = storageReference.putFile(imgFile);
-    await uploadTask.onComplete;
+    storageReference.putFile(imgFile);
 
     imgFile.delete();
     return imgName;
   }
 
   Stream<Map<String, int>> streamLikesFromBin(String binID) {
-    return _db.collection("cestini").document(binID).snapshots().map((doc) {
+    return _db.collection("cestini").doc(binID).snapshots().map((doc) {
       Map<String, int> map = Map();
-      Map review = doc.data['review'];
+      Map review = doc.data()['review'];
       if (review != null) {
         map["likes"] = review['like'];
         map["dislikes"] = review['dislike'];
@@ -133,26 +131,26 @@ class DatabaseService {
 
   Future<Bin> getBinInfo(String binID) async {
     DocumentSnapshot ds =
-        await Firestore.instance.collection('cestini').document(binID).get();
+        await FirebaseFirestore.instance.collection('cestini').doc(binID).get();
     return Bin.fromFirestore(ds);
   }
 
   Future<String> getDownloadUrlImageFromName(String imageName) async {
-    final StorageReference storageReference =
-        FirebaseStorage().ref().child(imageName);
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child(imageName);
 
     return await storageReference.getDownloadURL().catchError((e) {
       return null;
     });
   }
 
-  Future<User> retrieveUserInfo({String reporterUid}) async {
-    DocumentSnapshot ds = await Firestore.instance
+  Future<KeepItCleanUser> retrieveUserInfo({String reporterUid}) async {
+    DocumentSnapshot ds = await FirebaseFirestore.instance
         .collection('users')
-        .document(reporterUid)
+        .doc(reporterUid)
         .get();
 
-    return User.fromFirestore(ds);
+    return KeepItCleanUser.fromFirestore(ds);
   }
 
   Future<List<DocumentSnapshot>> retrieveRankings() async {
@@ -162,39 +160,39 @@ class DatabaseService {
         .orderBy("totalNumberOfReports", descending: true)
         .limit(50);
 
-    QuerySnapshot snapshot = await query.getDocuments();
+    QuerySnapshot snapshot = await query.get();
 
-    return snapshot.documents;
+    return snapshot.docs;
   }
 
-  Future<DocumentSnapshot> setupUser(FirebaseUser user, {String fbPic}) async {
+  Future<DocumentSnapshot> setupUser(User user, {String fbPic}) async {
     // Check if user already in firestore db, if not create an entry
     DocumentReference ref =
-        Firestore.instance.collection('users').document(user.uid);
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
 
     DocumentSnapshot documentSnapshot = await ref.get();
 
     if (!documentSnapshot.exists) {
-      await ref.setData({
+      await ref.set({
         'name': user.displayName,
-        'profilePic': fbPic != null ? fbPic : user.photoUrl
+        'profilePic': fbPic != null ? fbPic : user.photoURL
       });
       return await ref.get();
     } else
       return documentSnapshot;
   }
 
-  Future addPoints(User user, List<int> types) async {
+  Future addPoints(KeepItCleanUser user, List<int> types) async {
     final DocumentReference documentReference =
-        _db.collection("users").document(user.uid);
+        _db.collection("users").doc(user.uid);
 
     DocumentSnapshot doc = await documentReference.get();
 
     // Map is equal to the map retrieved from Firebase if that exist or a new map if it does not exist
-    Map<String, int> map = doc.data['reports'] != null
-        ? Map<String, int>.from(doc.data['reports'])
+    Map<String, int> map = doc.data()['reports'] != null
+        ? Map<String, int>.from(doc.data()['reports'])
         : Map<String, int>();
-    int totalReports = doc.data['totalNumberOfReports'] ?? 0;
+    int totalReports = doc.data()['totalNumberOfReports'] ?? 0;
 
     for (int type in types) {
       map.update(typesOfBin[type], (value) => value + 1, ifAbsent: () => 1);
@@ -202,18 +200,18 @@ class DatabaseService {
     }
 
     documentReference
-        .updateData({'reports': map, 'totalNumberOfReports': totalReports});
+        .update({'reports': map, 'totalNumberOfReports': totalReports});
   }
 
-  Future<bool> addLikeBin(String documentId, User user) async {
+  Future<bool> addLikeBin(String documentId, KeepItCleanUser user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+        _db.collection("cestini").doc(documentId);
     bool result = true;
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data['review'] != null
-        ? Map<String, dynamic>.from(doc.data['review'])
+    Map<String, dynamic> map = doc.data()['review'] != null
+        ? Map<String, dynamic>.from(doc.data()['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -239,21 +237,21 @@ class DatabaseService {
       map.putIfAbsent("userThatDisliked", () => []);
     }
 
-    documentReference.updateData({'review': map});
+    documentReference.update({'review': map});
 
     return result;
   }
 
-  Future<bool> addDislikeBin(String documentId, User user) async {
+  Future<bool> addDislikeBin(String documentId, KeepItCleanUser user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+        _db.collection("cestini").doc(documentId);
 
     bool result = true;
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data['review'] != null
-        ? Map<String, dynamic>.from(doc.data['review'])
+    Map<String, dynamic> map = doc.data()['review'] != null
+        ? Map<String, dynamic>.from(doc.data()['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -278,19 +276,19 @@ class DatabaseService {
       map.putIfAbsent("userThatDisliked", () => [user.uid]);
     }
 
-    documentReference.updateData({'review': map});
+    documentReference.update({'review': map});
 
     return result;
   }
 
-  void reportBinProblem(String documentId, User user) async {
+  void reportBinProblem(String documentId, KeepItCleanUser user) async {
     DocumentReference documentReference =
-        _db.collection("cestini").document(documentId);
+        _db.collection("cestini").doc(documentId);
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data['reports'] != null
-        ? Map<String, dynamic>.from(doc.data['reports'])
+    Map<String, dynamic> map = doc.data()['reports'] != null
+        ? Map<String, dynamic>.from(doc.data()['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -313,17 +311,18 @@ class DatabaseService {
       map.putIfAbsent("userThatReportedThisBin", () => [user.uid]);
     }
 
-    documentReference.updateData({'reports': map});
+    documentReference.update({'reports': map});
   }
 
-  void reportSolvedWasteDisposal(String documentId, User user) async {
+  void reportSolvedWasteDisposal(
+      String documentId, KeepItCleanUser user) async {
     DocumentReference documentReference =
-        _db.collection("segnalazioniAbbandonoRifiuti").document(documentId);
+        _db.collection("segnalazioniAbbandonoRifiuti").doc(documentId);
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data['reports'] != null
-        ? Map<String, dynamic>.from(doc.data['reports'])
+    Map<String, dynamic> map = doc.data()['reports'] != null
+        ? Map<String, dynamic>.from(doc.data()['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -345,13 +344,13 @@ class DatabaseService {
       map.putIfAbsent("userThatReportedThis", () => [user.uid]);
     }
 
-    documentReference.updateData({'reports': map});
+    documentReference.update({'reports': map});
   }
 
   void createIllegalWasteDisposalReport(
       {@required String imgName,
       @required LatLng binPos,
-      @required User user}) async {
+      @required KeepItCleanUser user}) async {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
@@ -365,9 +364,9 @@ class DatabaseService {
   }
 
   Future<IllegalWasteDisposal> getIllegalWasteDisposalInfo(String binID) async {
-    DocumentSnapshot ds = await Firestore.instance
+    DocumentSnapshot ds = await FirebaseFirestore.instance
         .collection('segnalazioniAbbandonoRifiuti')
-        .document(binID)
+        .doc(binID)
         .get();
     return IllegalWasteDisposal.fromFirestore(ds);
   }

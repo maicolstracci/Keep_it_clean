@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/leaderboard_circular_container.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
@@ -102,7 +104,8 @@ class RankingProfileContainer
       child: Padding(
         padding: EdgeInsets.all(8),
         child: GestureDetector(
-          onTap: () => viewModel.navigateToUserPage(user.documentID),
+          onTap: () => AutoRouter.of(context)
+              .push(ReporterProfileViewRoute(reporterUid: user.reference.id)),
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.7),
@@ -131,19 +134,19 @@ class RankingProfileContainer
                     flex: 1,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: user.data['profilePic'] == null
+                        child: user.data()['profilePic'] == null
                             ? Image.asset("assets/no-avatar.jpg")
                             : FadeInImage.assetNetwork(
                                 fit: BoxFit.cover,
                                 placeholder: "assets/no-avatar.jpg",
-                                image: user.data['profilePic'],
+                                image: user.data()['profilePic'],
                               ))),
                 Expanded(
                     flex: 3,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        user.data['name'],
+                        user.data()['name'],
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -152,7 +155,7 @@ class RankingProfileContainer
                 Expanded(
                     flex: 1,
                     child: Text(
-                      user.data['totalNumberOfReports'].toString(),
+                      user.data()['totalNumberOfReports'].toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w600),
                     )),

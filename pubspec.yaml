@@ -24,20 +24,19 @@ dependencies:
 
   intl:
   cupertino_icons: ^0.1.2
-  google_maps_flutter: 1.2.0
-  permission_handler: 5.0.1
-  shared_preferences: ">=0.5.0+1 <2.0.0"
-  simple_animations:
-  firebase_core: ^0.4.3+1
-  cloud_firestore: ^0.13.7
-  firebase_storage: ^3.1.0
-  firebase_auth: ^0.16.1
-  google_sign_in:
+  google_maps_flutter: ^2.0.1
+  permission_handler: ^6.1.1
+  shared_preferences: 2.0.5
+  firebase_core: ^1.0.2
+  cloud_firestore: ^1.0.3
+  firebase_storage: ^8.0.1
+  firebase_auth: ^1.0.1
+  google_sign_in: ^5.0.1
   flutter_facebook_login: ^3.0.0
   location: ^2.3.5
-  url_launcher: ^5.4.1
+  url_launcher: ^6.0.3
   flutter_swiper:
-  path_provider:
+  path_provider: 2.0.1
   http:
   image_picker:
   auto_size_text: ^2.1.0
@@ -48,15 +47,15 @@ dependencies:
 
   ### REFACTORING ###
   stacked: 1.7.7
-  auto_route: 0.5.0
-  stacked_services:
-  get_it: 5.0.6
-  injectable:
-  geoflutterfire: ^2.1.0
+  auto_route: 1.0.2
+  stacked_services: 0.7.3
+  get_it: 6.0.0
+  injectable: 1.2.2
+  geoflutterfire: 3.0.0-nullsafety.2
   flutter_hooks:
   stacked_hooks:
   observable_ish:
-  easy_localization: ^2.3.2
+  easy_localization: ^3.0.0
   tutorial_coach_mark: ^0.3.0
   apple_sign_in: ^0.1.0
   device_info: ^0.4.1+4
@@ -76,9 +75,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
-  mockito:
-  auto_route_generator: 0.5.0
-  injectable_generator:
+  auto_route_generator: 1.0.2
+  injectable_generator: 1.2.2
 
 # The following section is specific to Flutter.
 flutter:

@@ -4,7 +4,7 @@ import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 
-class ReporterProfilePageViewModel extends FutureViewModel<User> {
+class ReporterProfilePageViewModel extends FutureViewModel<KeepItCleanUser> {
   DatabaseService _databaseService = locator<DatabaseService>();
 
   String reporterUid;
@@ -17,7 +17,8 @@ class ReporterProfilePageViewModel extends FutureViewModel<User> {
   }
 
   @override
-  Future<User> futureToRun() {
-    if (reporterUid != null) return _databaseService.retrieveUserInfo(reporterUid: reporterUid);
+  Future<KeepItCleanUser> futureToRun() {
+    if (reporterUid != null)
+      return _databaseService.retrieveUserInfo(reporterUid: reporterUid);
   }
 }

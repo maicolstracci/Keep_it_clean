@@ -1,14 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-import 'app/router.gr.dart' as r;
 
 //TODO: Test Sign in with Apple
 //TODO: Check Device preview package
@@ -16,18 +17,16 @@ import 'app/router.gr.dart' as r;
 void main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  locator<NavigationService>().config(
-      defaultTransition: NavigationTransition.RightToLeft,
-      defaultDurationTransition: Duration(milliseconds: 200));
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp();
+//  await SystemChrome.setPreferredOrientations([
+//    DeviceOrientation.portraitUp,
+//  ]);
 
   runApp(EasyLocalization(
       supportedLocales: [Locale('it', 'IT'), Locale('en', 'US')],
       path: 'assets/translations',
       fallbackLocale: Locale('en', 'US'),
-      preloaderColor: Color(0xff06442d),
       child: KeepItClean()));
 }
 
@@ -51,7 +50,12 @@ class _KeepItCleanState extends State<KeepItClean> {
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light));
 
-    return MaterialApp(
+    final _appRouter = AppRouter();
+
+    return MaterialApp.router(
+      routerDelegate: _appRouter.delegate(
+        navigatorKey: StackedService.navigatorKey,
+      ),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -69,10 +73,7 @@ class _KeepItCleanState extends State<KeepItClean> {
               color: Colors.black87),
         ),
       ),
-      onGenerateRoute: r.Router().onGenerateRoute,
-      navigatorKey: locator<NavigationService>().navigatorKey,
-      home: StartUpView(),
-//      initialRoute: Routes.onboardingPage,
+      routeInformationParser: _appRouter.defaultRouteParser(),
     );
   }
 }
@@ -150,8 +151,8 @@ class _StartUpViewState extends State<StartUpView>
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartUpViewModel>.reactive(
-        onModelReady: (model) => model.handleStartUpLogic(
-            controller, controllerContAnimation, controllerTextOpacity),
+        onModelReady: (model) => model.handleStartUpLogic(context, controller,
+            controllerContAnimation, controllerTextOpacity),
         builder: (context, model, child) => Scaffold(
               backgroundColor: Color(0xff06442d),
               body: SizedBox.expand(
@@ -246,13 +247,13 @@ class _StartUpViewState extends State<StartUpView>
 
 class StartUpViewModel extends BaseViewModel {
   final AuthService _authenticationService = locator<AuthService>();
-  final NavigationService _navigationService = locator<NavigationService>();
 
   Future<void> minimumTimeWait(Duration duration) async {
     await Future.delayed(duration, () {});
   }
 
   Future handleStartUpLogic(
+      BuildContext context,
       AnimationController controller,
       AnimationController animationContController,
       AnimationController opacityController) async {
@@ -269,9 +270,9 @@ class StartUpViewModel extends BaseViewModel {
     controller.reverse();
     opacityController.reverse().then((value) async {
       if (await hasLoggedInUser) {
-        _navigationService.replaceWith(r.Routes.mapsPage);
+        AutoRouter.of(context).replace(MapsPageViewRoute());
       } else {
-        _navigationService.replaceWith(r.Routes.loginPage);
+        AutoRouter.of(context).replace(LoginPageViewRoute());
       }
     });
   }

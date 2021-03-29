@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
 import 'classifica_page_viewmodel.dart';
@@ -24,7 +26,8 @@ class LeaderboardCircularContainer
         child: child,
       ),
       child: GestureDetector(
-        onTap: () => viewModel.navigateToUserPage(user.documentID),
+        onTap: () => AutoRouter.of(context)
+            .push(ReporterProfileViewRoute(reporterUid: user.reference.id)),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -54,12 +57,12 @@ class LeaderboardCircularContainer
                     ]),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(300.0),
-                    child: user.data['profilePic'] == null
+                    child: user.data()['profilePic'] == null
                         ? Image.asset("assets/no-avatar.jpg")
                         : FadeInImage.assetNetwork(
                             fit: BoxFit.cover,
                             placeholder: "assets/no-avatar.jpg",
-                            image: user.data['profilePic'],
+                            image: user.data()['profilePic'],
                           )),
               ),
               SizedBox(
@@ -68,7 +71,7 @@ class LeaderboardCircularContainer
               Container(
                 width: 100,
                 child: Text(
-                  user.data['name'],
+                  user.data()['name'],
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   textAlign: TextAlign.center,
@@ -82,7 +85,7 @@ class LeaderboardCircularContainer
                 height: 6,
               ),
               Text(
-                user.data['totalNumberOfReports'].toString(),
+                user.data()['totalNumberOfReports'].toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: Color(0xff98FB98)),

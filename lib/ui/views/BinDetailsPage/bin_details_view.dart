@@ -125,7 +125,8 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                                 onPressed: () => BlocProvider
                                                         .of<BinDetailsBloc>(
                                                             context)
-                                                    .navigateToReporterProfile(),
+                                                    .navigateToReporterProfile(
+                                                        context),
                                                 icon: Icon(
                                                   Icons.launch,
                                                   color: Colors.blue,

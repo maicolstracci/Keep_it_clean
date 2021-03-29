@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
@@ -39,7 +41,8 @@ class MoveToUserPosition extends HookViewModelWidget<MapsPageViewModel> {
               child: IconButton(
                 key: reportIllegalWasteDisposalKey,
                 onPressed: viewModel.isUserLoggedIn()
-                    ? () => viewModel.navigateToReportIllegalWasteDisposal()
+                    ? () => AutoRouter.of(context)
+                        .push(IllegalWasteDisposalViewRoute())
                     : () => viewModel.showUserNoLoggedInDialog(),
                 icon: Icon(
                   Icons.warning,

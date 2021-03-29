@@ -6,18 +6,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:injectable/injectable.dart';
-import 'package:keep_it_clean/models/user_model.dart';
-import 'package:keep_it_clean/app/locator.dart';
 import 'package:http/http.dart' as http;
+import 'package:injectable/injectable.dart';
+import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 
 import 'database_services.dart';
 
 @lazySingleton
 class AuthService {
-  User _currentUser;
+  KeepItCleanUser _currentUser;
 
-  User get currentUser => _currentUser;
+  KeepItCleanUser get currentUser => _currentUser;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -45,32 +45,30 @@ class AuthService {
 
       final AppleIdCredential appleIdCredential = appleResult.credential;
 
-      OAuthProvider oAuthProvider = new OAuthProvider(providerId: "apple.com");
-      final AuthCredential credential = oAuthProvider.getCredential(
+      OAuthProvider oAuthProvider = new OAuthProvider("apple.com");
+      final AuthCredential credential = oAuthProvider.credential(
         idToken: String.fromCharCodes(appleIdCredential.identityToken),
         accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
       );
 
-      final AuthResult _res =
+      final UserCredential _res =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
-      FirebaseUser user = _res.user;
+      User user = _res.user;
 
-      UserUpdateInfo updateUser = UserUpdateInfo();
-      updateUser.displayName =
-          "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
-      updateUser.photoUrl =
-          "https://firebasestorage.googleapis.com/v0/b/trova-cestino.appspot.com/o/A-img.png?alt=media&token=61e89908-435b-4b4e-8963-088bd8e784e7";
-      await user.updateProfile(updateUser);
+      await user.updateProfile(
+          displayName:
+              "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}",
+          photoURL:
+              "https://firebasestorage.googleapis.com/v0/b/trova-cestino.appspot.com/o/A-img.png?alt=media&token=61e89908-435b-4b4e-8963-088bd8e784e7");
 
       await user.reload();
 
-      user = await _auth.currentUser();
+      user = _auth.currentUser;
 
       DocumentSnapshot documentSnapshot =
           await _databaseService.setupUser(user);
-      _currentUser = User.fromFirestore(documentSnapshot);
-
+      _currentUser = KeepItCleanUser.fromFirestore(documentSnapshot);
     } catch (error) {
       print(error);
       return null;
@@ -82,16 +80,15 @@ class AuthService {
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    final User user = (await _auth.signInWithCredential(credential)).user;
 
     DocumentSnapshot documentSnapshot = await _databaseService.setupUser(user);
-    _currentUser = User.fromFirestore(documentSnapshot);
+    _currentUser = KeepItCleanUser.fromFirestore(documentSnapshot);
   }
 
   Future facebookLogin() async {
@@ -104,18 +101,17 @@ class AuthService {
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
 
-        final AuthCredential cred =
-            FacebookAuthProvider.getCredential(accessToken: token);
+        final AuthCredential cred = FacebookAuthProvider.credential(token);
 
-        final FirebaseUser user = (await _auth.signInWithCredential(cred)).user;
+        final User user = (await _auth.signInWithCredential(cred)).user;
 
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=$token');
+        final graphResponse = await http.get(Uri.parse(
+            'https://graph.facebook.com/v2.12/me?fields=picture.width(500).height(500)&access_token=$token'));
         Map<String, dynamic> facebookData = jsonDecode(graphResponse.body);
 
         DocumentSnapshot documentSnapshot = await _databaseService
             .setupUser(user, fbPic: facebookData['picture']['data']['url']);
-        _currentUser = User.fromFirestore(documentSnapshot);
+        _currentUser = KeepItCleanUser.fromFirestore(documentSnapshot);
 
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -136,12 +132,12 @@ class AuthService {
   }
 
   Future<bool> isUserLoggedIn() async {
-    var user = await _auth.currentUser();
+    var user = _auth.currentUser;
 
     if (user != null) {
       DocumentSnapshot documentSnapshot =
           await _databaseService.setupUser(user);
-      _currentUser = User.fromFirestore(documentSnapshot);
+      _currentUser = KeepItCleanUser.fromFirestore(documentSnapshot);
     }
 
     return user != null;

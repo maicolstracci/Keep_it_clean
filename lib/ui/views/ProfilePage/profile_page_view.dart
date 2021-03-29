@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_bin_report_container.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
@@ -120,7 +122,7 @@ class ProfilePageView extends StatelessWidget {
                                                       color: Colors.red,
                                                     ),
                                                     onPressed: () =>
-                                                        model.signOut(),
+                                                        model.signOut(context),
                                                   )
                                                 : Container()
                                           ],
@@ -196,7 +198,8 @@ class ProfilePageView extends StatelessWidget {
                                             ),
                                             FlatButton.icon(
                                                 onPressed: () =>
-                                                    model.navigateToLoginPage(),
+                                                    AutoRouter.of(context).push(
+                                                        LoginPageViewRoute()),
                                                 icon: Icon(
                                                   Icons.perm_identity,
                                                   color: Colors.green,

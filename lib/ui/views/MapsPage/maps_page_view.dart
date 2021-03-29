@@ -37,7 +37,7 @@ class MapsPageView extends StatelessWidget {
                         onCameraMove: (cameraPosition) {
                           model.setCameraPosition(cameraPosition);
                         },
-                        markers: model.getMarkersSetWithFiltering(),
+                        markers: model.getMarkersSetWithFiltering(context),
                         initialCameraPosition: initialCameraPosition,
                         onMapCreated: (GoogleMapController controller) {
                           model.mapsController = controller;

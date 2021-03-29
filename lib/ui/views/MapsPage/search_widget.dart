@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_it_clean/Utils/utils.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/ui/views/MapsPage/maps_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
@@ -10,10 +12,8 @@ class FilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-
       alignment: Alignment.bottomCenter,
       child: Column(
-
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -28,9 +28,8 @@ class FilterBar extends StatelessWidget {
                     bottomLeft: Radius.circular(20))),
             child: Center(
                 child: AutoSizeText(
-                
-                  tr("Cosa stai cercando?") ,
-                  maxLines: 1,
+              tr("Cosa stai cercando?"),
+              maxLines: 1,
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             )),
@@ -83,7 +82,6 @@ class FilterButton extends HookViewModelWidget<MapsPageViewModel> {
   Widget buildViewModelWidget(
       BuildContext context, MapsPageViewModel viewModel) {
     return Container(
-
       width: 120,
       decoration: BoxDecoration(
           border: Border.all(
@@ -172,7 +170,7 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
       key: addNewBinKey,
       color: Colors.blue[800].withOpacity(.98),
       onPressed: viewModel.isUserLoggedIn()
-          ? () => viewModel.navigateToAddBinPage()
+          ? () => AutoRouter.of(context).push(AddBinPageViewRoute())
           : () => viewModel.showUserNoLoggedInDialog(),
       padding: EdgeInsets.symmetric(vertical: 14),
       shape: CircleBorder(),
