@@ -77,3 +77,11 @@ ios/Runner/ApiKeys.swift
 ios/Flutter/.last_build_id
 ios/Podfile.lock
 ios/Flutter/GoogleService-Info.plist
+lib/utils/appconfig.dart
+pubspec.lock
+ios/Flutter/Flutter.podspec
+lib/app/locator.config.dart
+ios/Flutter/Flutter.podspec
+lib/app/locator.iconfig.dart
+lib/app/router.gr.dart
+

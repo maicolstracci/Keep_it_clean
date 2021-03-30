@@ -31,6 +31,7 @@ const String abbandonoRifiuto = "Abbandono rifiuto";
 
 enum Report { Bin, IllegalWaste }
 
+enum HeroTag {KEEP_IT_CLEAN_LOGO_LOADER,KEEP_IT_CLEAN_TEXT_LOADER}
 
 // Global keys used in the starting tutorial
 GlobalKey moveToUserLocationKey = GlobalKey();

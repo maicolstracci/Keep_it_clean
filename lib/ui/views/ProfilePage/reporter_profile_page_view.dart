@@ -14,7 +14,10 @@ class ReporterProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ReporterProfilePageViewModel>.reactive(
-        onModelReady: (model){model.reporterUid = this.reporterUid; model.runFuture(); },
+        onModelReady: (model) {
+          model.reporterUid = this.reporterUid;
+          model.futureToRun();
+        },
         builder: (context, model, child) => Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               appBar: AppBar(
@@ -50,9 +53,8 @@ class ReporterProfileView extends StatelessWidget {
                                       children: [
                                         CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                                  model.data.profilePic,
-                                                  scale: 1)
-                                              ,
+                                              model.data.profilePic,
+                                              scale: 1),
                                           maxRadius: 50,
                                         ),
                                         SizedBox(
@@ -78,22 +80,21 @@ class ReporterProfileView extends StatelessWidget {
                           Flexible(
                             flex: 3,
                             child: Container(
-                              color: Theme.of(context).backgroundColor,
-                              child: Swiper(
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        int nOfReports = model
-                                            .getNumberOfReportsForType(index);
-                                        return ProfileBinReportContainer(
-                                          index: index,
-                                          numberOfReports: nOfReports,
-                                        );
-                                      },
-                                      itemCount: typesOfBin.length,
-                                      viewportFraction: 0.8,
-                                      scale: 0.8,
-                                    )
-                            ),
+                                color: Theme.of(context).backgroundColor,
+                                child: Swiper(
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    int nOfReports =
+                                        model.getNumberOfReportsForType(index);
+                                    return ProfileBinReportContainer(
+                                      index: index,
+                                      numberOfReports: nOfReports,
+                                    );
+                                  },
+                                  itemCount: typesOfBin.length,
+                                  viewportFraction: 0.8,
+                                  scale: 0.8,
+                                )),
                           )
                         ],
                       ),

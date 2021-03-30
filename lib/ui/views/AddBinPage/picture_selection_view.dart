@@ -67,7 +67,8 @@ class PictureSelectionView extends StatelessWidget {
                               flex: 1,
                               child: RaisedButton(
                                 color: Theme.of(context).accentColor,
-                                onPressed: () => model.takePicture("galleria"),
+                                onPressed: () =>
+                                    model.takePicture(context, "galleria"),
                                 child: Text(tr("galleria")),
                               ),
                             ),
@@ -78,7 +79,8 @@ class PictureSelectionView extends StatelessWidget {
                               flex: 1,
                               child: RaisedButton(
                                 color: Theme.of(context).accentColor,
-                                onPressed: () => model.takePicture("camera"),
+                                onPressed: () =>
+                                    model.takePicture(context, "camera"),
                                 child: Text(tr("camera")),
                               ),
                             ),

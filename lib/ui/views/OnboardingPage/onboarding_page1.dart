@@ -1,8 +1,6 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 
 class OnboardingPage1 extends StatelessWidget {
   @override
@@ -11,14 +9,19 @@ class OnboardingPage1 extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: <Widget>[
-          Center(child: SizedBox.expand(child: Image.asset("assets/illustrations/background.png",fit: BoxFit.cover,))),
+          Center(
+              child: SizedBox.expand(
+                  child: Image.asset(
+            "assets/illustrations/background.png",
+            fit: BoxFit.cover,
+          ))),
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(
               clipper: CurveClipper(),
               child: Container(
                 color: Color(0xff06442d).withOpacity(.90),
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height / 2.2,
               ),
             ),
           ),
@@ -26,7 +29,7 @@ class OnboardingPage1 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,10 +51,16 @@ class OnboardingPage1 extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
-                flex: 8,
-                child: Image.asset("assets/illustrations/page1.png",fit: BoxFit.fitWidth,),
-              ),
+//              Expanded(
+//                flex: 8,
+//                child: Container(
+//                    height: 270,
+//                    width: 270,
+//                    child: Image.asset(
+//                      "assets/illustrations/page1.png",
+//                      fit: BoxFit.fitWidth,
+//                    )),
+//              ),
               Expanded(
                 flex: 4,
                 child: Column(
@@ -67,7 +76,7 @@ class OnboardingPage1 extends StatelessWidget {
                         maxLines: 1,
                         maxFontSize: 100,
                         style: TextStyle(
-                          fontSize: 100,
+                            fontSize: 100,
                             color: Color(0xfff4f8f9),
                             fontWeight: FontWeight.w600),
                       ),
@@ -79,15 +88,15 @@ class OnboardingPage1 extends StatelessWidget {
                       flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: AutoSizeText(
-                          tr("search_string"),
-                          maxLines: 3,
-                          minFontSize: 1,
-                          maxFontSize: 50,
-
-                          textAlign: TextAlign.center,
-                          style:
-                          TextStyle(color: Color(0xfff4f8f9)),
+                        child: Center(
+                          child: AutoSizeText(
+                            tr("search_string"),
+                            maxLines: 3,
+                            minFontSize: 1,
+                            maxFontSize: 50,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Color(0xfff4f8f9)),
+                          ),
                         ),
                       ),
                     ),
@@ -96,7 +105,6 @@ class OnboardingPage1 extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );
@@ -108,7 +116,7 @@ class CurveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     var path = new Path();
 
-    var controlPoint = Offset(size.width / 2, 70);
+    var controlPoint = Offset(size.width / 2.0, 70);
 
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);

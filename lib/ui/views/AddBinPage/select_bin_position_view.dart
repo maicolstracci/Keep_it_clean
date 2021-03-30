@@ -30,7 +30,7 @@ class SelectBinPositionView extends StatelessWidget {
                             initialCameraPosition: initialCameraPosition,
                             onMapCreated: (GoogleMapController controller) {
                               model.mapsController = controller;
-                              model.moveCameraToUserLocation();
+                              model.moveCameraToUserLocation(context);
                             },
                           ),
                         ),
@@ -40,7 +40,12 @@ class SelectBinPositionView extends StatelessWidget {
                             children: [
                               Container(
                                 child: FlatButton.icon(
-                                    onPressed: !model.uploading ? () {model.moveCameraToUserLocation();} : null,
+                                    onPressed: !model.uploading
+                                        ? () {
+                                            model.moveCameraToUserLocation(
+                                                context);
+                                          }
+                                        : null,
                                     color: Colors.white.withOpacity(0.3),
                                     icon: Icon(Icons.refresh),
                                     label: Text(tr("Ricalcola posizione"))),
@@ -50,21 +55,23 @@ class SelectBinPositionView extends StatelessWidget {
                                   child: Center(
                                     child: Text(
                                       model.isBusy
-                                          ? tr("Sto ricercando la tua posizione")
+                                          ? tr(
+                                              "Sto ricercando la tua posizione")
                                           : model.errorLoadingLocation
-                                              ? tr("ERRORE NEL CALCOLARE POSIZIONE")
-                                              : tr("Sembra che questa sia la tua posizione attuale"),
+                                              ? tr(
+                                                  "ERRORE NEL CALCOLARE POSIZIONE")
+                                              : tr(
+                                                  "Sembra che questa sia la tua posizione attuale"),
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white
-                                      ),
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ),
                                 ),
                               ),
                               MaterialButton(
-                                onPressed: model.currentLatLng != null && !model.uploading
-                                    ? () => model.uploadReport()
+                                onPressed: model.currentLatLng != null &&
+                                        !model.uploading
+                                    ? () => model.uploadReport(context)
                                     : null,
                                 color: Colors.blue,
                                 disabledColor: Colors.blueGrey,
@@ -89,7 +96,7 @@ class SelectBinPositionView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Container(
-                                padding: EdgeInsets.only(right: 8,left: 8),
+                                padding: EdgeInsets.only(right: 8, left: 8),
                                 child: Text(
                                   tr("Stiamo caricando la tua segnalazione online"),
                                   style: TextStyle(

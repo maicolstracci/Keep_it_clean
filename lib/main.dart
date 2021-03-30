@@ -1,13 +1,18 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/bloc/bloc_utils.dart';
+import 'package:keep_it_clean/bloc/login_bloc.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
+import 'package:keep_it_clean/utils/constants.dart';
+import 'package:keep_it_clean/utils/theme.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-
-import 'app/router.gr.dart';
 
 //TODO: Test Sign in with Apple
 //TODO: Check Device preview package
@@ -15,18 +20,16 @@ import 'app/router.gr.dart';
 void main() async {
   setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
-  locator<NavigationService>().config(
-      defaultTransition: NavigationTransition.RightToLeft,
-      defaultDurationTransition: Duration(milliseconds: 200));
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await EasyLocalization.ensureInitialized();
+  await Firebase.initializeApp();
+//  await SystemChrome.setPreferredOrientations([
+//    DeviceOrientation.portraitUp,
+//  ]);
 
   runApp(EasyLocalization(
       supportedLocales: [Locale('it', 'IT'), Locale('en', 'US')],
       path: 'assets/translations',
       fallbackLocale: Locale('en', 'US'),
-      preloaderColor: Color(0xff06442d),
       child: KeepItClean()));
 }
 
@@ -50,28 +53,24 @@ class _KeepItCleanState extends State<KeepItClean> {
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light));
 
-    return MaterialApp(
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      title: 'Keep it clean',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        backgroundColor: Color(0xff1e5540),
-        accentColor: Color(0xfff4f8f9),
-        fontFamily: 'Montserrat',
-        textTheme: TextTheme(
-          bodyText2: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w100,
-              color: Colors.black87),
-        ),
+    final _appRouter = AppRouter();
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (BuildContext context) =>
+                LoginBloc(BlocState(state: BlocStateEnum.INITIAL)))
+      ],
+      child: MaterialApp.router(
+        routerDelegate: _appRouter.delegate(),
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        title: 'Keep it clean',
+        debugShowCheckedModeBanner: false,
+        theme: KeepItCleanTheme().theme,
+        routeInformationParser: _appRouter.defaultRouteParser(),
       ),
-      onGenerateRoute: Router().onGenerateRoute,
-      navigatorKey: locator<NavigationService>().navigatorKey,
-      home: StartUpView(),
-//      initialRoute: Routes.onboardingPage,
     );
   }
 }
@@ -149,8 +148,8 @@ class _StartUpViewState extends State<StartUpView>
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartUpViewModel>.reactive(
-        onModelReady: (model) => model.handleStartUpLogic(
-            controller, controllerContAnimation, controllerTextOpacity),
+        onModelReady: (model) => model.handleStartUpLogic(context, controller,
+            controllerContAnimation, controllerTextOpacity),
         builder: (context, model, child) => Scaffold(
               backgroundColor: Color(0xff06442d),
               body: SizedBox.expand(
@@ -177,26 +176,64 @@ class _StartUpViewState extends State<StartUpView>
                       height: 36,
                     ),
                     Expanded(
-                      flex: 2,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: AnimatedBuilder(
-                          animation: textOpacityAnimation,
-                          builder: (_, child) => Opacity(
-                            opacity: textOpacityAnimation.value,
-                            child: child,
-                          ),
-                          child: Text(
-                            tr("Caricamento in corso"),
-                            style: TextStyle(
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.1,
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedBuilder(
+                              animation: textOpacityAnimation,
+                              builder: (_, child) => Opacity(
+                                opacity: textOpacityAnimation.value,
+                                child: child,
+                              ),
+                              child: Text(
+                                tr("Caricamento in corso"),
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.1,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 24.0),
+                              child: AnimatedBuilder(
+                                animation: textOpacityAnimation,
+                                builder: (_, child) => Opacity(
+                                  opacity: textOpacityAnimation.value,
+                                  child: child,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 70,
+                                      width: 70,
+                                      child: Hero(
+                                        tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
+                                        child: Image.asset(
+                                            "assets/keep_it_clean_only_logo.png",
+                                            fit: BoxFit.contain),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 24,
+                                    ),
+                                    Text(
+                                      "Keep it clean",
+                                      style: TextStyle(
+                                          textBaseline: TextBaseline.alphabetic,
+                                          color: Theme.of(context).accentColor,
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        )),
                   ],
                 ),
               ),
@@ -207,23 +244,32 @@ class _StartUpViewState extends State<StartUpView>
 
 class StartUpViewModel extends BaseViewModel {
   final AuthService _authenticationService = locator<AuthService>();
-  final NavigationService _navigationService = locator<NavigationService>();
+
+  Future<void> minimumTimeWait(Duration duration) async {
+    await Future.delayed(duration, () {});
+  }
 
   Future handleStartUpLogic(
+      BuildContext context,
       AnimationController controller,
       AnimationController animationContController,
       AnimationController opacityController) async {
-    await locator<AuthService>().retriveAppleSignInAvailable();
-    await setCustomMapPin();
-    var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
+    var hasLoggedInUser;
+
+    await Future.wait([
+      locator<AuthService>().retriveAppleSignInAvailable(),
+      setCustomMapPin(),
+      hasLoggedInUser = _authenticationService.isUserLoggedIn(),
+      minimumTimeWait(Duration(seconds: 3)),
+    ]);
 
     animationContController.stop();
     controller.reverse();
-    opacityController.reverse().then((value) {
-      if (hasLoggedInUser) {
-        _navigationService.replaceWith(Routes.mapsPage);
+    opacityController.reverse().then((value) async {
+      if (await hasLoggedInUser) {
+        AutoRouter.of(context).replace(MapsPageViewRoute());
       } else {
-        _navigationService.replaceWith(Routes.loginPage);
+        AutoRouter.of(context).replace(LoginPageViewRoute());
       }
     });
   }

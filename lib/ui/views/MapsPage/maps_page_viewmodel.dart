@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
@@ -8,10 +11,6 @@ import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/location_service.dart';
 import 'package:keep_it_clean/services/search_here_button_service.dart';
-import 'package:keep_it_clean/ui/views/AddBinPage/add_bin_page_view.dart';
-import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_view.dart';
-import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_details_view.dart';
-import 'package:keep_it_clean/ui/views/IllegalWasteDisposalPage/illegal_waste_disposal_view.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:location/location.dart';
@@ -24,7 +23,6 @@ const String _illegalWasteDisposalKey = 'illegal-waste-disposal-stream';
 class MapsPageViewModel extends MultipleStreamViewModel {
   LocationService _locationService = locator<LocationService>();
   DatabaseService _databaseService = locator<DatabaseService>();
-  NavigationService _navigationService = locator<NavigationService>();
   BinDetailsService _binDetailsService = locator<BinDetailsService>();
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
@@ -34,9 +32,8 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
   Set<Marker> markers = Set.from([]);
 
-  List<Bin> currentListOfBin = List<Bin>();
-  List<IllegalWasteDisposal> currentListOfWasteDisposalReports =
-      List<IllegalWasteDisposal>();
+  List<Bin> currentListOfBin = [];
+  List<IllegalWasteDisposal> currentListOfWasteDisposalReports = [];
 
   String filterBinsForType;
 
@@ -60,7 +57,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     return _authService.currentUser != null;
   }
 
-  void _addMarker(String id, LatLng latLng, String type) {
+  void _addMarker(BuildContext context, String id, LatLng latLng, String type) {
     final MarkerId markerId = MarkerId(id);
     // creating a new MARKER
     final Marker marker = Marker(
@@ -68,30 +65,23 @@ class MapsPageViewModel extends MultipleStreamViewModel {
         position: latLng,
         icon: pinMap[type],
         onTap: type != abbandonoRifiuto
-            ? (() => navigateToBinDetailsPage(id))
-            : () => navigateToIllegalWasteDetailsPage(id));
+            ? (() => navigateToBinDetailsPage(context, id))
+            : () => navigateToIllegalWasteDetailsPage(context, id));
 
     // adding a new marker to map
     markers.add(marker);
   }
 
-  void navigateToBinDetailsPage(String binID) {
+  void navigateToBinDetailsPage(BuildContext context, String binID) {
     _binDetailsService.setBinID(binID);
 
-    _navigationService.navigateWithTransition(BinDetailsPageView(),
-        transition: NavigationTransition.RightToLeft);
+    AutoRouter.of(context).push(BinDetailsPageViewRoute());
   }
 
-  void navigateToIllegalWasteDetailsPage(String reportID) {
+  void navigateToIllegalWasteDetailsPage(
+      BuildContext context, String reportID) {
     _binDetailsService.setReportID(reportID);
-
-    _navigationService.navigateWithTransition(IllegalWasteDetailsView(),
-        transition: NavigationTransition.RightToLeft);
-  }
-
-  void navigateToAddBinPage() {
-    _navigationService.navigateWithTransition(AddBinPageView(),
-        transition: NavigationTransition.RightToLeft);
+    AutoRouter.of(context).push(IllegalWasteDetailsViewRoute());
   }
 
   void setBinFilterType({String filterBinsForType}) {
@@ -99,20 +89,34 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     notifyListeners();
   }
 
-  Set<Marker> getMarkersSetWithFiltering() {
+  bool markerAlreadyPresentInSameLocation(LatLng binLatLng) {
+    for (Marker marker in markers) {
+      if (marker.position == binLatLng) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Set<Marker> getMarkersSetWithFiltering(BuildContext context) {
     markers.clear();
     for (Bin bin in currentListOfBin) {
       if (filterBinsForType == null || bin.type == filterBinsForType) {
-        _addMarker(
-            bin.id,
-            new LatLng(bin.position.latitude, bin.position.longitude),
-            bin.type);
+        if (!markerAlreadyPresentInSameLocation(
+            LatLng(bin.position.latitude, bin.position.longitude))) {
+          _addMarker(
+              context,
+              bin.id,
+              new LatLng(bin.position.latitude, bin.position.longitude),
+              bin.type);
+        }
       }
     }
     if (dataReady(_illegalWasteDisposalKey) && filterBinsForType == null) {
       for (IllegalWasteDisposal illegalWasteDisposal
           in currentListOfWasteDisposalReports) {
         _addMarker(
+            context,
             illegalWasteDisposal.id,
             LatLng(illegalWasteDisposal.position.latitude,
                 illegalWasteDisposal.position.longitude),
@@ -196,11 +200,6 @@ class MapsPageViewModel extends MultipleStreamViewModel {
         description: tr(
             "A breve introdurremo la possibilita' di segnalare rifiuti abbandonati"),
         buttonTitle: tr("Ho capito"));
-  }
-
-  navigateToReportIllegalWasteDisposal() {
-    _navigationService.navigateWithTransition(IllegalWasteDisposalView(),
-        transition: NavigationTransition.RightToLeft);
   }
 
   setCameraPosition(CameraPosition cameraPosition) {

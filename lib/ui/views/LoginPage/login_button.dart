@@ -1,50 +1,76 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_it_clean/ui/views/LoginPage/login_page_viewmodel.dart';
-import 'package:stacked_hooks/stacked_hooks.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_it_clean/bloc/login_bloc.dart';
 
-class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
-  final String buttonTypeName;
+enum LoginButtonType {
+  FACEBOOK,
+  GOOGLE,
+  APPLE,
+  GUEST,
+}
 
-  LoginButton({Key key, this.buttonTypeName})
-      : super(key: key, reactive: false);
+class LoginButton extends StatelessWidget {
+  final LoginButtonType buttonType;
+  final IconData icon;
+  final Color color;
+
+  LoginButton.facebook({this.icon, this.color, this.buttonType});
+
+  LoginButton.google({this.icon, this.color, this.buttonType});
+
+  LoginButton.guest({this.icon, this.color, this.buttonType});
+
+  factory LoginButton({LoginButtonType buttonType}) {
+    switch (buttonType) {
+      case LoginButtonType.FACEBOOK:
+        return LoginButton.facebook(
+          icon: IconData(0xe901, fontFamily: "CustomIcons"),
+          color: Colors.lightBlue,
+          buttonType: LoginButtonType.FACEBOOK,
+        );
+
+      case LoginButtonType.GOOGLE:
+        return LoginButton.facebook(
+          icon: IconData(0xe902, fontFamily: "CustomIcons"),
+          color: Colors.red,
+          buttonType: LoginButtonType.GOOGLE,
+        );
+      case LoginButtonType.GUEST:
+        return LoginButton.guest(
+          icon: Icons.arrow_forward,
+          color: Colors.green,
+          buttonType: LoginButtonType.GUEST,
+        );
+      case LoginButtonType.APPLE:
+      default:
+        return LoginButton.guest(
+          icon: Icons.arrow_forward,
+          color: Colors.green,
+          buttonType: LoginButtonType.GUEST,
+        );
+    }
+  }
+
+  String fromEnumToString(LoginButtonType buttonType) {
+    switch (buttonType) {
+      case LoginButtonType.FACEBOOK:
+        return "facebook";
+      case LoginButtonType.GOOGLE:
+        return "google";
+      case LoginButtonType.GUEST:
+        return "guest";
+      case LoginButtonType.APPLE:
+      default:
+        return "";
+    }
+  }
 
   @override
-  Widget buildViewModelWidget(
-    BuildContext context,
-    LoginPageViewModel model,
-  ) {
-    IconData _icon;
-    MaterialColor _color;
-    switch (buttonTypeName) {
-      case 'facebook':
-        _icon = const IconData(0xe901, fontFamily: "CustomIcons");
-        _color = Colors.lightBlue;
-        break;
-      case 'google':
-        _icon = const IconData(0xe902, fontFamily: "CustomIcons");
-        _color = Colors.red;
-        break;
-      case 'guest':
-        _icon = Icons.arrow_forward;
-        _color = Colors.green;
-        break;
-    }
-
+  Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () {
-        switch (buttonTypeName) {
-          case 'facebook':
-            model.facebookLogin();
-            break;
-          case 'google':
-            model.googleLogin();
-            break;
-          case 'guest':
-            model.guestLogin();
-            break;
-        }
-      },
+      onPressed: () =>
+          BlocProvider.of<LoginBloc>(context).performLogin(context, buttonType),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
@@ -57,15 +83,15 @@ class LoginButton extends HookViewModelWidget<LoginPageViewModel> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Icon(
-            _icon,
-            color: _color,
+            icon,
+            color: color,
           ),
           SizedBox(
             width: 28,
           ),
           Text(
-            tr("${buttonTypeName}_login_string"),
-            style: TextStyle(color: _color),
+            tr("${fromEnumToString(buttonType)}_login_string"),
+            style: TextStyle(color: color),
           ),
         ],
       ),

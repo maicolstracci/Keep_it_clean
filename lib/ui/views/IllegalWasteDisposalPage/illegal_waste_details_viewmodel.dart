@@ -1,10 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/models/illegal_waste_disposal_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
-import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,7 +15,6 @@ class IllegalWasteDetailsViewModel
     extends FutureViewModel<IllegalWasteDisposal> {
   DatabaseService _databaseService = locator<DatabaseService>();
   BinDetailsService _binDetailsService = locator<BinDetailsService>();
-  NavigationService _navigationService = locator<NavigationService>();
   DialogService _dialogService = locator<DialogService>();
   AuthService _authService = locator<AuthService>();
 
@@ -81,11 +82,9 @@ class IllegalWasteDetailsViewModel
     }
   }
 
-  navigateToReporterProfile() {
-    _navigationService.navigateWithTransition(
-        ReporterProfileView(
-          reporterUid: data.uidUser,
-        ),
-        transition: NavigationTransition.RightToLeft);
+  navigateToReporterProfile(BuildContext context) {
+    AutoRouter.of(context).push(ReporterProfileViewRoute(
+      reporterUid: data.uidUser,
+    ));
   }
 }

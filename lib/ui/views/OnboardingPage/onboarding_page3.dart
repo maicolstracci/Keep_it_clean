@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage3 extends StatelessWidget {
-  final FirebaseUser user;
+  final User user;
 
   const OnboardingPage3({Key key, this.user}) : super(key: key);
 
@@ -25,7 +25,7 @@ class OnboardingPage3 extends StatelessWidget {
               clipper: CurveClipper(),
               child: Container(
                 color: Color(0xff06442d).withOpacity(.90),
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height / 2.2,
               ),
             ),
           ),
@@ -33,7 +33,7 @@ class OnboardingPage3 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,9 +57,13 @@ class OnboardingPage3 extends StatelessWidget {
               ),
               Expanded(
                 flex: 8,
-                child: Image.asset(
-                  "assets/illustrations/page3.png",
-                  fit: BoxFit.fitWidth,
+                child: Container(
+                  height: 240,
+                  width: 240,
+                  child: Image.asset(
+                    "assets/illustrations/page3.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               Expanded(
