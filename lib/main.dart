@@ -9,9 +9,9 @@ import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/bloc/login_bloc.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
-import 'package:keep_it_clean/utils/constants.dart';
 import 'package:keep_it_clean/utils/theme.dart';
 import 'package:keep_it_clean/utils/utils.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 //TODO: Test Sign in with Apple
@@ -177,62 +177,28 @@ class _StartUpViewState extends State<StartUpView>
                     ),
                     Expanded(
                         flex: 2,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AnimatedBuilder(
-                              animation: textOpacityAnimation,
-                              builder: (_, child) => Opacity(
-                                opacity: textOpacityAnimation.value,
-                                child: child,
-                              ),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: AnimatedBuilder(
+                            animation: textOpacityAnimation,
+                            builder: (_, child) => Opacity(
+                              opacity: textOpacityAnimation.value,
+                              child: child,
+                            ),
+                            child: Shimmer.fromColors(
+                              baseColor: Theme.of(context).accentColor,
+                              period: const Duration(milliseconds: 2000),
+                              highlightColor:
+                                  Theme.of(context).accentColor.withOpacity(.6),
                               child: Text(
-                                tr("Caricamento in corso"),
+                                tr("Caricamento in corso..."),
                                 style: TextStyle(
-                                  color: Theme.of(context).accentColor,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 1.1,
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 24.0),
-                              child: AnimatedBuilder(
-                                animation: textOpacityAnimation,
-                                builder: (_, child) => Opacity(
-                                  opacity: textOpacityAnimation.value,
-                                  child: child,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 70,
-                                      width: 70,
-                                      child: Hero(
-                                        tag: HeroTag.KEEP_IT_CLEAN_LOGO_LOADER,
-                                        child: Image.asset(
-                                            "assets/keep_it_clean_only_logo.png",
-                                            fit: BoxFit.contain),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 24,
-                                    ),
-                                    Text(
-                                      "Keep it clean",
-                                      style: TextStyle(
-                                          textBaseline: TextBaseline.alphabetic,
-                                          color: Theme.of(context).accentColor,
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w600),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
+                          ),
                         )),
                   ],
                 ),
@@ -260,7 +226,7 @@ class StartUpViewModel extends BaseViewModel {
       locator<AuthService>().retriveAppleSignInAvailable(),
       setCustomMapPin(),
       hasLoggedInUser = _authenticationService.isUserLoggedIn(),
-      minimumTimeWait(Duration(seconds: 3)),
+      minimumTimeWait(Duration(seconds: 10)),
     ]);
 
     animationContController.stop();
