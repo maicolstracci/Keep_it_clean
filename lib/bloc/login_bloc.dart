@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/bloc/bloc_utils.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_button.dart';
 import 'package:keep_it_clean/utils/appconfig.dart';
@@ -19,6 +20,8 @@ class LoginBloc extends Cubit<BlocState> {
   LoginBloc(BlocState state) : super(state);
 
   bool get appleSignInAvailable => _authService.appleSignInAvailable;
+
+  KeepItCleanUser get currentUser => _authService.currentUser;
 
   Future performLogin(
     BuildContext context,

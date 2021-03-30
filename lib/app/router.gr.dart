@@ -6,7 +6,6 @@
 
 import 'package:auto_route/auto_route.dart' as _i1;
 
-import '../main.dart' as _i2;
 import '../ui/views/AddBinPage/add_bin_page_view.dart' as _i8;
 import '../ui/views/AddBinPage/picture_selection_view.dart' as _i9;
 import '../ui/views/AddBinPage/select_bin_position_view.dart' as _i10;
@@ -20,6 +19,7 @@ import '../ui/views/MapsPage/maps_page_view.dart' as _i5;
 import '../ui/views/OnboardingPage/onboarding_view.dart' as _i4;
 import '../ui/views/ProfilePage/profile_page_view.dart' as _i6;
 import '../ui/views/ProfilePage/reporter_profile_page_view.dart' as _i11;
+import '../ui/views/startup_view.dart' as _i2;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter();
