@@ -36,7 +36,7 @@ class LoginBloc extends Cubit<BlocState> {
         await _authService.googleLogin();
         break;
       case LoginButtonType.APPLE:
-        await _authService.appleSignIn();
+        await _authService.appleLogin();
         break;
       case LoginButtonType.GUEST:
         _navigateToNextPage(context);

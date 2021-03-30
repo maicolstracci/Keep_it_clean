@@ -2,33 +2,62 @@ import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/bloc/bloc_utils.dart';
+import 'package:keep_it_clean/models/user_model.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_bin_report_container.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/constants.dart';
-import 'package:stacked/stacked.dart';
 
 import 'classifica_page_view.dart';
 
-class ProfilePageView extends StatelessWidget {
+class ProfilePageView extends StatefulWidget {
+  @override
+  _ProfilePageViewState createState() => _ProfilePageViewState();
+}
+
+class _ProfilePageViewState extends State<ProfilePageView> {
+  ProfilePageBloc _bloc;
+
+  @override
+  void initState() {
+    _bloc = BlocProvider.of<ProfilePageBloc>(context, listen: false);
+    _bloc.initProfilePageBloc();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<ProfilePageViewModel>.reactive(
-        builder: (context, model, child) => Scaffold(
+    return BlocBuilder<ProfilePageBloc, BlocState<KeepItCleanUser>>(
+        builder: (context, state) {
+      return StreamBuilder<int>(
+          stream: context
+              .watch<ProfilePageBloc>()
+              .currentIndexStreamController
+              .stream,
+          builder: (context, snapshot) {
+            return Scaffold(
               backgroundColor: Theme.of(context).backgroundColor,
               appBar: AppBar(
                 title: Text(
-                  model.currentIndex == 0
+                  (snapshot?.data ?? 0) == 0
                       ? tr("Profilo personale")
                       : tr("Classifica"),
                   style: TextStyle(
-                      color: model.currentIndex == 0
+                      color: (snapshot?.data ?? 0) == 0
                           ? Colors.black
                           : Colors.white),
                 ),
 //                actions: [
-//                  model.currentIndex == 0
+//                  context.read<ProfilePageBloc>().currentIndex == 0
 //                      ? PopupMenuButton<String>(
 //                          onSelected:(string)=> choiceAction(string),
 //                          itemBuilder: (BuildContext context) {
@@ -47,23 +76,25 @@ class ProfilePageView extends StatelessWidget {
 //                ],
                 centerTitle: true,
                 elevation: 0,
-                backgroundColor: model.currentIndex == 0
+                backgroundColor: (snapshot?.data ?? 0) == 0
                     ? Theme.of(context).accentColor
                     : Theme.of(context).backgroundColor,
 
                 iconTheme: IconThemeData(
-                    color:
-                        model.currentIndex == 0 ? Colors.black : Colors.white),
+                    color: (snapshot?.data ?? 0) == 0
+                        ? Colors.black
+                        : Colors.white),
               ),
               bottomNavigationBar: BottomNavigationBar(
                 backgroundColor: Theme.of(context).backgroundColor,
                 elevation: 0,
                 selectedItemColor: Colors.blue[400],
                 unselectedItemColor: Colors.white,
-                currentIndex: model.currentIndex,
+                currentIndex: (snapshot?.data ?? 0),
                 selectedFontSize: 16,
                 unselectedFontSize: 16,
-                onTap: (index) => model.changeCurrentIndex(index),
+                onTap: (index) =>
+                    _bloc.currentIndexStreamController.sink.add(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person), label: tr("Profilo personale")),
@@ -71,7 +102,7 @@ class ProfilePageView extends StatelessWidget {
                       icon: Icon(Icons.grade), label: tr("Classifica"))
                 ],
               ),
-              body: model.currentIndex == 0
+              body: (snapshot?.data ?? 0) == 0
                   ? SizedBox.expand(
                       child: Column(
                         children: [
@@ -91,10 +122,14 @@ class ProfilePageView extends StatelessWidget {
                                         Hero(
                                           tag: "profilePic",
                                           child: CircleAvatar(
-                                            backgroundImage: model
+                                            backgroundImage: context
+                                                    .watch<ProfilePageBloc>()
                                                     .isUserLoggedIn()
                                                 ? NetworkImage(
-                                                    model.getProfilePhotoUrl(),
+                                                    context
+                                                        .watch<
+                                                            ProfilePageBloc>()
+                                                        .getProfilePhotoUrl(),
                                                     scale: 1)
                                                 : ExactAssetImage(
                                                     'assets/no-avatar.jpg'),
@@ -110,18 +145,22 @@ class ProfilePageView extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              model.getUsername(),
+                                              _bloc.getUsername(),
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w600),
                                             ),
-                                            model.isUserLoggedIn()
+                                            context
+                                                    .watch<ProfilePageBloc>()
+                                                    .isUserLoggedIn()
                                                 ? IconButton(
                                                     icon: Icon(
                                                       Icons.exit_to_app,
                                                       color: Colors.red,
                                                     ),
-                                                    onPressed: () =>
-                                                        model.signOut(context),
+                                                    onPressed: () => context
+                                                        .watch<
+                                                            ProfilePageBloc>()
+                                                        .signOut(context),
                                                   )
                                                 : Container()
                                           ],
@@ -135,14 +174,17 @@ class ProfilePageView extends StatelessWidget {
                             flex: 4,
                             child: Container(
                               color: Theme.of(context).backgroundColor,
-                              child: model.isUserLoggedIn()
-                                  ? model.isBusy
+                              child: context
+                                      .watch<ProfilePageBloc>()
+                                      .isUserLoggedIn()
+                                  ? state.state == BlocStateEnum.LOADING
                                       ? CircularProgressIndicator()
                                       : Swiper(
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            int nOfReports =
-                                                model.getNumberOfReportsForType(
+                                            int nOfReports = context
+                                                .watch<ProfilePageBloc>()
+                                                .getNumberOfReportsForType(
                                                     index);
                                             return ProfileBinReportContainer(
                                               index: index,
@@ -220,8 +262,9 @@ class ProfilePageView extends StatelessWidget {
                       ),
                     )
                   : ClassificaPageView(),
-            ),
-        viewModelBuilder: () => ProfilePageViewModel());
+            );
+          });
+    });
   }
 }
 

@@ -8,6 +8,8 @@ import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/bloc/login_bloc.dart';
 import 'package:keep_it_clean/bloc/startup_bloc.dart';
+import 'package:keep_it_clean/models/user_model.dart';
+import 'package:keep_it_clean/ui/views/ProfilePage/profile_page_viewmodel.dart';
 import 'package:keep_it_clean/utils/theme.dart';
 
 //TODO: Test Sign in with Apple
@@ -60,6 +62,10 @@ class _KeepItCleanState extends State<KeepItClean> {
         ),
         BlocProvider(
           create: (BuildContext context) => StartupBloc(null),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => ProfilePageBloc(
+              BlocState<KeepItCleanUser>(state: BlocStateEnum.INITIAL)),
         )
       ],
       child: MaterialApp.router(

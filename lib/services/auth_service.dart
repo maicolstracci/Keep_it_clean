@@ -21,6 +21,7 @@ class AuthService {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  DatabaseService _databaseService = locator<DatabaseService>();
 
   bool appleSignInAvailable = false;
 
@@ -30,9 +31,7 @@ class AuthService {
         (await AppleSignIn.isAvailable()) && (Platform.isIOS);
   }
 
-  DatabaseService _databaseService = locator<DatabaseService>();
-
-  Future appleSignIn() async {
+  Future appleLogin() async {
     try {
       final AuthorizationResult appleResult =
           await AppleSignIn.performRequests([
@@ -126,7 +125,7 @@ class AuthService {
     return null;
   }
 
-  signOut() {
+  logOut() {
     _auth.signOut();
     _currentUser = null;
   }
