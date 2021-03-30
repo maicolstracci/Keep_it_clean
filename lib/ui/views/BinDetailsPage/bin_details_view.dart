@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/models/bin_model.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_details_viewmodel.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/bin_image.dart';
 import 'package:keep_it_clean/ui/views/BinDetailsPage/like_bar.dart';
-import 'package:keep_it_clean/utils/bloc_utils.dart';
 
 class BinDetailsPageView extends StatefulWidget {
   @override
@@ -17,7 +17,8 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (BuildContext context) =>
-            BinDetailsBloc(BlocState(state: BlocStateEnum.IDLE))..getBinInfo(),
+            BinDetailsBloc(BlocState(state: BlocStateEnum.INITIAL))
+              ..getBinInfo(),
         child: BlocBuilder<BinDetailsBloc, BlocState<Bin>>(
           builder: (context, state) {
             return Scaffold(

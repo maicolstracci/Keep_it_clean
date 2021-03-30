@@ -66,10 +66,9 @@ class ProfilePageView extends StatelessWidget {
                 onTap: (index) => model.changeCurrentIndex(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      title: Text(tr("Profilo personale"))),
+                      icon: Icon(Icons.person), label: tr("Profilo personale")),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.grade), title: Text(tr("Classifica")))
+                      icon: Icon(Icons.grade), label: tr("Classifica"))
                 ],
               ),
               body: model.currentIndex == 0

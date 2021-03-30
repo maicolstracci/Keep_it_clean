@@ -1,4 +1,4 @@
-enum BlocStateEnum { IDLE, LOADING, DONE, ERROR }
+enum BlocStateEnum { INITIAL, LOADING, DONE, ERROR }
 
 class BlocState<T> {
   T data;

@@ -22,7 +22,7 @@ class FilterBar extends StatelessWidget {
             height: 50,
             width: 260,
             decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     bottomLeft: Radius.circular(20))),
@@ -166,18 +166,23 @@ class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
   @override
   Widget buildViewModelWidget(
       BuildContext context, MapsPageViewModel viewModel) {
-    return FlatButton(
-      key: addNewBinKey,
-      color: Colors.blue[800].withOpacity(.98),
-      onPressed: viewModel.isUserLoggedIn()
-          ? () => AutoRouter.of(context).push(AddBinPageViewRoute())
-          : () => viewModel.showUserNoLoggedInDialog(),
-      padding: EdgeInsets.symmetric(vertical: 14),
-      shape: CircleBorder(),
-      child: Icon(
-        Icons.add,
-        size: 36,
-        color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0),
+      child: TextButton(
+        key: addNewBinKey,
+        style: TextButton.styleFrom(
+          backgroundColor: Theme.of(context).buttonColor,
+          padding: EdgeInsets.symmetric(vertical: 14),
+          shape: CircleBorder(),
+        ),
+        onPressed: viewModel.isUserLoggedIn()
+            ? () => AutoRouter.of(context).push(AddBinPageViewRoute())
+            : () => viewModel.showUserNoLoggedInDialog(),
+        child: Icon(
+          Icons.add,
+          size: 36,
+          color: Colors.white,
+        ),
       ),
     );
   }

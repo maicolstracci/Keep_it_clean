@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/app/locator.dart';
+import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/services/bin_details_service.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:keep_it_clean/services/take_picture_service.dart';
-import 'package:keep_it_clean/utils/bloc_utils.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class BinImageView extends StatelessWidget {
@@ -21,7 +21,7 @@ class BinImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) =>
-          BinImageBloc(BlocState(state: BlocStateEnum.IDLE), imgName),
+          BinImageBloc(BlocState(state: BlocStateEnum.INITIAL), imgName),
       child: BlocBuilder<BinImageBloc, BlocState<String>>(
           builder: (context, state) {
         switch (state.state) {
@@ -31,7 +31,7 @@ class BinImageView extends StatelessWidget {
               height: double.infinity,
               decoration: BoxDecoration(color: Colors.white),
             );
-          case BlocStateEnum.IDLE:
+          case BlocStateEnum.INITIAL:
             context.watch<BinImageBloc>().loadImage();
             return Container(
               width: MediaQuery.of(context).size.width,

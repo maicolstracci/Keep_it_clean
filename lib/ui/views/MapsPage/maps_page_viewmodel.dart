@@ -32,9 +32,8 @@ class MapsPageViewModel extends MultipleStreamViewModel {
 
   Set<Marker> markers = Set.from([]);
 
-  List<Bin> currentListOfBin = List<Bin>();
-  List<IllegalWasteDisposal> currentListOfWasteDisposalReports =
-      List<IllegalWasteDisposal>();
+  List<Bin> currentListOfBin = [];
+  List<IllegalWasteDisposal> currentListOfWasteDisposalReports = [];
 
   String filterBinsForType;
 

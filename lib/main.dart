@@ -3,13 +3,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
+import 'package:keep_it_clean/bloc/bloc_utils.dart';
+import 'package:keep_it_clean/bloc/login_bloc.dart';
 import 'package:keep_it_clean/services/auth_service.dart';
 import 'package:keep_it_clean/utils/constants.dart';
+import 'package:keep_it_clean/utils/theme.dart';
 import 'package:keep_it_clean/utils/utils.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 //TODO: Test Sign in with Apple
 //TODO: Check Device preview package
@@ -52,28 +55,22 @@ class _KeepItCleanState extends State<KeepItClean> {
 
     final _appRouter = AppRouter();
 
-    return MaterialApp.router(
-      routerDelegate: _appRouter.delegate(
-        navigatorKey: StackedService.navigatorKey,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (BuildContext context) =>
+                LoginBloc(BlocState(state: BlocStateEnum.INITIAL)))
+      ],
+      child: MaterialApp.router(
+        routerDelegate: _appRouter.delegate(),
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        title: 'Keep it clean',
+        debugShowCheckedModeBanner: false,
+        theme: KeepItCleanTheme().theme,
+        routeInformationParser: _appRouter.defaultRouteParser(),
       ),
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      title: 'Keep it clean',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        backgroundColor: Color(0xff1e5540),
-        accentColor: Color(0xfff4f8f9),
-        fontFamily: 'Montserrat',
-        textTheme: TextTheme(
-          bodyText2: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w100,
-              color: Colors.black87),
-        ),
-      ),
-      routeInformationParser: _appRouter.defaultRouteParser(),
     );
   }
 }

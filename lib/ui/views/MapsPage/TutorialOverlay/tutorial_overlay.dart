@@ -4,7 +4,7 @@ import 'package:keep_it_clean/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-List<TargetFocus> targets = List();
+List<TargetFocus> targets = [];
 
 showTutorial(BuildContext context) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -22,21 +22,27 @@ showTutorial(BuildContext context) async {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[Text(
-                  tr("tutorial_starter"),
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 26.0),
-                ),
-                  SizedBox(height: 24,),
+                children: <Widget>[
+                  Text(
+                    tr("tutorial_starter"),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 26.0),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
                   Text(
                     tr("tutorial_title_filterBar"),
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 20.0),
-                  ),SizedBox(height: 8,),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Text(
                     tr("tutorial_filterBar"),
                     style: TextStyle(color: Colors.white, fontSize: 16),
@@ -175,8 +181,8 @@ showTutorial(BuildContext context) async {
         targets: targets,
         opacityShadow: 0.9,
         colorShadow: Theme.of(context).backgroundColor,
-        textStyleSkip: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
-
+        textStyleSkip:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         textSkip: tr("SALTA"), finish: () {
       return;
     })

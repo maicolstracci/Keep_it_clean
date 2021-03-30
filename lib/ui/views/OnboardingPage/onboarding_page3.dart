@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage3 extends StatelessWidget {
-  final FirebaseUser user;
+  final User user;
 
   const OnboardingPage3({Key key, this.user}) : super(key: key);
 
