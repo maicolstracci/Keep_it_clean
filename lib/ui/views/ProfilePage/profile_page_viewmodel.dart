@@ -65,7 +65,7 @@ class ProfilePageBloc extends Cubit<BlocState<KeepItCleanUser>> {
     if (response.confirmed) {
       _authService.logOut();
       AutoRouter.of(context)
-          .pushAndRemoveUntil(LoginPageViewRoute(), predicate: (r) => false);
+          .pushAndPopUntil(LoginPageViewRoute(), predicate: (r) => false);
     }
   }
 

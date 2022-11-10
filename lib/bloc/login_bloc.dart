@@ -21,7 +21,7 @@ class LoginBloc extends Cubit<BlocState> {
 
   bool get appleSignInAvailable => _authService.appleSignInAvailable;
 
-  KeepItCleanUser get currentUser => _authService.currentUser;
+  KeepItCleanUser? get currentUser => _authService.currentUser;
 
   Future performLogin(
     BuildContext context,
@@ -29,15 +29,12 @@ class LoginBloc extends Cubit<BlocState> {
   ) async {
     emit(BlocState<bool>(state: BlocStateEnum.LOADING));
     switch (buttonType) {
-      case LoginButtonType.FACEBOOK:
-        await _authService.facebookLogin();
-        break;
       case LoginButtonType.GOOGLE:
         await _authService.googleLogin();
         break;
-      case LoginButtonType.APPLE:
-        await _authService.appleLogin();
-        break;
+      // case LoginButtonType.APPLE:
+      //   await _authService.appleLogin();
+      //   break;
       case LoginButtonType.GUEST:
         _navigateToNextPage(context);
         break;

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/bloc/login_bloc.dart';
 
 enum LoginButtonType {
-  FACEBOOK,
   GOOGLE,
   APPLE,
   GUEST,

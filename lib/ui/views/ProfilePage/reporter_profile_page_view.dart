@@ -7,7 +7,7 @@ import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 
 class ReporterProfileView extends StatelessWidget {
-  final String reporterUid;
+  final String? reporterUid;
 
   ReporterProfileView({this.reporterUid});
 

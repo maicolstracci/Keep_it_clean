@@ -89,21 +89,23 @@ class ProseguiButton extends HookViewModelWidget<OnboardingPageViewModel> {
   @override
   Widget buildViewModelWidget(
           BuildContext context, OnboardingPageViewModel viewModel) =>
-      RaisedButton(
-        splashColor: Colors.green,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).accentColor,
+          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        ),
         onPressed: () async {
           await Future.delayed(Duration(milliseconds: 200));
           if (viewModel.currentPage == 2.0) {
             await requestPermission();
-            AutoRouter.of(context).pushAndRemoveUntil(MapsPageViewRoute(),
-                predicate: (r) => false);
+            AutoRouter.of(context)
+                .pushAndPopUntil(MapsPageViewRoute(), predicate: (r) => false);
           } else {
             viewModel.navigateNextPage();
           }
         },
-        color: Theme.of(context).accentColor,
-        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 14),
         child: Text(
           viewModel.currentPage != 2.0 ? tr("PROSEGUI") : tr("COMINCIAMO"),
           style:

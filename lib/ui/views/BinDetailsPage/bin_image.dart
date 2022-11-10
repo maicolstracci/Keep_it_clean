@@ -57,7 +57,7 @@ class BinImageView extends StatelessWidget {
                             SizedBox(
                               height: 8,
                             ),
-                            RaisedButton.icon(
+                            ElevatedButton.icon(
                                 onPressed: () => context
                                     .watch<BinImageBloc>()
                                     .showActionSheetIfAuthed(context),

@@ -197,65 +197,72 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                         )
                                   : Center(
                                       child: SizedBox.expand(
-                                          child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 4),
-                                      margin: EdgeInsets.all(24),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Text(
-                                              tr("Benvenuto nel tuo profilo personale!"),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            AutoSizeText(
-                                              tr("In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!"),
-                                              textAlign: TextAlign.center,
-                                              maxLines: 3,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            AutoSizeText(
-                                              tr("Per poter cominciare pero', devi tornare alla pagina principale e accedere"),
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            FlatButton.icon(
-                                                onPressed: () =>
-                                                    AutoRouter.of(context).push(
-                                                        LoginPageViewRoute()),
-                                                icon: Icon(
-                                                  Icons.perm_identity,
-                                                  color: Colors.green,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          margin: EdgeInsets.all(24),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).accentColor,
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                          ),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: 8,
                                                 ),
-                                                label: Text(
-                                                  tr("Accedi"),
+                                                Text(
+                                                  tr("Benvenuto nel tuo profilo personale!"),
+                                                  textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 20,
                                                       fontWeight:
                                                           FontWeight.w600),
-                                                )),
-                                          ],
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                AutoSizeText(
+                                                  tr("In questa pagina potrai tenere traccia di tutte le segnalazioni che effettui!"),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 3,
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                AutoSizeText(
+                                                  tr("Per poter cominciare pero', devi tornare alla pagina principale e accedere"),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                TextButton.icon(
+                                                  onPressed: () => AutoRouter
+                                                          .of(context)
+                                                      .push(
+                                                          LoginPageViewRoute()),
+                                                  icon: Icon(
+                                                    Icons.perm_identity,
+                                                    color: Colors.green,
+                                                  ),
+                                                  label: Text(
+                                                    tr("Accedi"),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ))),
+                                    ),
                             ),
                           )
                         ],

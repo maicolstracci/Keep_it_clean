@@ -17,13 +17,13 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SelectBinPositionViewModel extends BaseViewModel {
-  GoogleMapController mapsController;
+  late GoogleMapController mapsController;
   Set<Marker> markers = Set.from([]);
 
   bool errorLoadingLocation = false;
   bool uploading = false;
 
-  LatLng currentLatLng;
+  late LatLng currentLatLng;
 
   DatabaseService _databaseService = locator<DatabaseService>();
   LocationService _locationService = locator<LocationService>();
@@ -37,7 +37,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
   Future moveCameraToUserLocation(BuildContext context) async {
     setBusy(true);
     if (await _locationService.getLocationPermissionStatus()) {
-      LocationData location = await _locationService.getUserLocation();
+      LocationData? location = await _locationService.getUserLocation();
 
       if (location == null) {
         errorLoadingLocation = true;
@@ -46,7 +46,7 @@ class SelectBinPositionViewModel extends BaseViewModel {
       } else {
         errorLoadingLocation = false;
 
-        currentLatLng = LatLng(location.latitude, location.longitude);
+        currentLatLng = LatLng(location.latitude!, location.longitude!);
 
         CameraPosition _userCameraPosition = CameraPosition(
           target: currentLatLng,
@@ -62,20 +62,21 @@ class SelectBinPositionViewModel extends BaseViewModel {
             .animateCamera(CameraUpdate.newCameraPosition(_userCameraPosition));
       }
     } else {
-      DialogResponse dialogResponse = await _dialogService.showConfirmationDialog(
+      DialogResponse? dialogResponse = await _dialogService.showConfirmationDialog(
           title: tr("Permessi di localizzazione disattivati"),
           description: tr(
               "E' necessario fornire i permessi di localizzazione per completare l'operazione"),
           cancelTitle: tr("Non voglio"),
           confirmationTitle: tr("Portami alle impostazioni"));
-      if (dialogResponse.confirmed) {
+      if (dialogResponse!.confirmed) {
         await openAppSettings();
       } else {
         if (_takePictureService.pic != null)
-          await _takePictureService.pic.delete();
-        _addBinTypesListService.typesSelected.clear();
+          //TODO: da capire per xfile anziche' File
+          // await _takePictureService.pic.delete();
+          _addBinTypesListService.typesSelected.clear();
         AutoRouter.of(context)
-            .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
+            .pushAndPopUntil(MapsPageViewRoute(), predicate: (r) => false);
       }
     }
     setBusy(false);
@@ -99,50 +100,51 @@ class SelectBinPositionViewModel extends BaseViewModel {
     } else if (_typeOfReportService.typeOfReport == Report.IllegalWaste) {
       createIllegalWasteDisposalReport(context);
     } else {
-      //TODO: show error message
-      _takePictureService.pic.delete();
+      //TODO: show error message + xfile
+      // _takePictureService.pic.delete();
     }
   }
 
   createBinReport(BuildContext context) async {
-    uploading = true;
-    notifyListeners();
-
-    String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
-    String img = await _databaseService.uploadImage(
-        imgFile: _takePictureService.pic, imgName: _imgName);
-
-    for (int type in _addBinTypesListService.typesSelected) {
-      await _databaseService.createBin(
-          type: typesOfBin[type],
-          imgName: img,
-          binPos: currentLatLng,
-          user: _authService.currentUser);
-    }
-    await _databaseService.addPoints(
-        _authService.currentUser, _addBinTypesListService.typesSelected);
-
-    _addBinTypesListService.typesSelected.clear();
-    uploading = false;
-
-    AutoRouter.of(context)
-        .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
+    // uploading = true;
+    // notifyListeners();
+    //
+    // String _imgName = '${_authService.currentUser?.uid}-${DateTime.now()}';
+    // //Todo: image
+    // // String img = await _databaseService.uploadImage(
+    // //     imgFile: _takePictureService.pic, imgName: _imgName);
+    //
+    // for (int type in _addBinTypesListService.typesSelected) {
+    //   await _databaseService.createBin(
+    //       type: typesOfBin[type],
+    //       imgName: img,
+    //       binPos: currentLatLng,
+    //       user: _authService.currentUser);
+    // }
+    // await _databaseService.addPoints(
+    //     _authService.currentUser, _addBinTypesListService.typesSelected);
+    //
+    // _addBinTypesListService.typesSelected.clear();
+    // uploading = false;
+    //
+    // AutoRouter.of(context)
+    //     .pushAndPopUntil(MapsPageViewRoute(), predicate: (r) => false);
   }
 
   createIllegalWasteDisposalReport(BuildContext context) async {
-    uploading = true;
-    notifyListeners();
-
-    String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
-    String img = await _databaseService.uploadImage(
-        imgFile: _takePictureService.pic, imgName: _imgName);
-
-    _databaseService.createIllegalWasteDisposalReport(
-        imgName: img, binPos: currentLatLng, user: _authService.currentUser);
-
-    uploading = false;
-
-    AutoRouter.of(context)
-        .pushAndRemoveUntil(MapsPageViewRoute(), predicate: (r) => false);
+    //   uploading = true;
+    //   notifyListeners();
+    //
+    //   String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
+    //   String img = await _databaseService.uploadImage(
+    //       imgFile: _takePictureService.pic, imgName: _imgName);
+    //
+    //   _databaseService.createIllegalWasteDisposalReport(
+    //       imgName: img, binPos: currentLatLng, user: _authService.currentUser);
+    //
+    //   uploading = false;
+    //
+    //   AutoRouter.of(context)
+    //       .pushAndPopUntil(MapsPageViewRoute(), predicate: (r) => false);
   }
 }

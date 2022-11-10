@@ -5,9 +5,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 @lazySingleton
 class LocationService {
-  GeoFirePoint currentUserGeoFirePoint;
+  GeoFirePoint? currentUserGeoFirePoint;
 
-  void setCurrentUserGeoFirePoint({double latitude, double longitude}) {
+  void setCurrentUserGeoFirePoint(
+      {required double latitude, required double longitude}) {
     currentUserGeoFirePoint =
         Geoflutterfire().point(latitude: latitude, longitude: longitude);
   }
@@ -22,17 +23,11 @@ class LocationService {
     return permission == PermissionStatus.granted;
   }
 
-  Future<perm.LocationData> getUserLocation() async {
-    perm.LocationData userPosition = await perm.Location()
-        .getLocation()
-        .timeout(Duration(seconds: 15), onTimeout: () {
-      return null;
-    });
+  Future<perm.LocationData?> getUserLocation() async {
+    perm.LocationData userPosition = await perm.getLocation();
 
-    if (userPosition != null) {
-      setCurrentUserGeoFirePoint(
-          latitude: userPosition.latitude, longitude: userPosition.longitude);
-    }
+    setCurrentUserGeoFirePoint(
+        latitude: userPosition.latitude!, longitude: userPosition.longitude!);
 
     return userPosition;
   }

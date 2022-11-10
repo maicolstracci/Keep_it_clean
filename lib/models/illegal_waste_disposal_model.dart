@@ -9,23 +9,23 @@ class IllegalWasteDisposal {
   final String uidUser;
 
   IllegalWasteDisposal(
-      {this.id,
-      this.position,
-      this.photoUrl,
-      this.reportDate,
-      this.username,
-      this.uidUser});
+      {required this.id,
+      required this.position,
+      required this.photoUrl,
+      required this.reportDate,
+      required this.username,
+      required this.uidUser});
 
   factory IllegalWasteDisposal.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data();
+    Map? data = doc.data();
 
     return IllegalWasteDisposal(
       id: doc.id,
-      position: data['position']['geopoint'],
-      photoUrl: data['photoUrl'],
-      reportDate: data['reportDate'],
-      username: data['username'],
-      uidUser: data['uidUser'],
+      position: data?['position']['geopoint'],
+      photoUrl: data?['photoUrl'],
+      reportDate: data?['reportDate'],
+      username: data?['username'],
+      uidUser: data?['uidUser'],
     );
   }
 }

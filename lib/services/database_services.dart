@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -16,7 +15,7 @@ import 'package:keep_it_clean/utils/constants.dart';
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   Geoflutterfire _geoflutterfire = Geoflutterfire();
-  String typeOfBinToFilter;
+  String? typeOfBinToFilter;
 
   // Default geoFirePoint
   GeoFirePoint defaultPoint =
@@ -35,7 +34,7 @@ class DatabaseService {
     }).toList();
   }
 
-  Stream<List<Bin>> binStreamFromPosition({GeoFirePoint currentUserPoint}) {
+  Stream<List<Bin>> binStreamFromPosition({GeoFirePoint? currentUserPoint}) {
     // get the collection reference or query
     var collectionReference = _db.collection('cestini');
 
@@ -52,7 +51,7 @@ class DatabaseService {
   }
 
   Stream<List<IllegalWasteDisposal>> illegalWasteDisposalStreamFromPosition(
-      {GeoFirePoint currentUserPoint}) {
+      {GeoFirePoint? currentUserPoint}) {
     // get the collection reference or query
     var collectionReference = _db.collection('segnalazioniAbbandonoRifiuti');
 
@@ -69,10 +68,10 @@ class DatabaseService {
   }
 
   Future createBin(
-      {@required String type,
-      @required String imgName,
-      @required LatLng binPos,
-      @required KeepItCleanUser user}) async {
+      {required String type,
+      required String imgName,
+      required LatLng binPos,
+      required KeepItCleanUser user}) async {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 
@@ -104,7 +103,7 @@ class DatabaseService {
   }
 
   Future<String> uploadImage(
-      {@required File imgFile, @required String imgName}) async {
+      {required File imgFile, required String imgName}) async {
     Reference storageReference = FirebaseStorage.instance.ref().child(imgName);
 
     //TODO: check for other results
@@ -117,7 +116,7 @@ class DatabaseService {
   Stream<Map<String, int>> streamLikesFromBin(String binID) {
     return _db.collection("cestini").doc(binID).snapshots().map((doc) {
       Map<String, int> map = Map();
-      Map review = doc.data()['review'];
+      Map review = doc.data()?['review'];
       if (review != null) {
         map["likes"] = review['like'];
         map["dislikes"] = review['dislike'];
@@ -144,7 +143,7 @@ class DatabaseService {
     });
   }
 
-  Future<KeepItCleanUser> retrieveUserInfo({String reporterUid}) async {
+  Future<KeepItCleanUser> retrieveUserInfo({String? reporterUid}) async {
     DocumentSnapshot ds = await FirebaseFirestore.instance
         .collection('users')
         .doc(reporterUid)
@@ -165,7 +164,7 @@ class DatabaseService {
     return snapshot.docs;
   }
 
-  Future<DocumentSnapshot> setupUser(User user, {String fbPic}) async {
+  Future<DocumentSnapshot> setupUser(User user) async {
     // Check if user already in firestore db, if not create an entry
     DocumentReference ref =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
@@ -173,10 +172,7 @@ class DatabaseService {
     DocumentSnapshot documentSnapshot = await ref.get();
 
     if (!documentSnapshot.exists) {
-      await ref.set({
-        'name': user.displayName,
-        'profilePic': fbPic != null ? fbPic : user.photoURL
-      });
+      await ref.set({'name': user.displayName, 'profilePic': user.photoURL});
       return await ref.get();
     } else
       return documentSnapshot;
@@ -189,10 +185,10 @@ class DatabaseService {
     DocumentSnapshot doc = await documentReference.get();
 
     // Map is equal to the map retrieved from Firebase if that exist or a new map if it does not exist
-    Map<String, int> map = doc.data()['reports'] != null
-        ? Map<String, int>.from(doc.data()['reports'])
+    Map<String, int> map = doc.data()?['reports'] != null
+        ? Map<String, int>.from(doc.data()?['reports'])
         : Map<String, int>();
-    int totalReports = doc.data()['totalNumberOfReports'] ?? 0;
+    int totalReports = doc.data()?['totalNumberOfReports'] ?? 0;
 
     for (int type in types) {
       map.update(typesOfBin[type], (value) => value + 1, ifAbsent: () => 1);
@@ -210,8 +206,8 @@ class DatabaseService {
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data()['review'] != null
-        ? Map<String, dynamic>.from(doc.data()['review'])
+    Map<String, dynamic> map = doc.data()?['review'] != null
+        ? Map<String, dynamic>.from(doc.data()?['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -250,8 +246,8 @@ class DatabaseService {
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data()['review'] != null
-        ? Map<String, dynamic>.from(doc.data()['review'])
+    Map<String, dynamic> map = doc.data()?['review'] != null
+        ? Map<String, dynamic>.from(doc.data()?['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -287,8 +283,8 @@ class DatabaseService {
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data()['reports'] != null
-        ? Map<String, dynamic>.from(doc.data()['reports'])
+    Map<String, dynamic> map = doc.data()?['reports'] != null
+        ? Map<String, dynamic>.from(doc.data()?['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -321,8 +317,8 @@ class DatabaseService {
 
     DocumentSnapshot doc = await documentReference.get();
 
-    Map<String, dynamic> map = doc.data()['reports'] != null
-        ? Map<String, dynamic>.from(doc.data()['reports'])
+    Map<String, dynamic> map = doc.data()?['reports'] != null
+        ? Map<String, dynamic>.from(doc.data()?['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -348,9 +344,9 @@ class DatabaseService {
   }
 
   void createIllegalWasteDisposalReport(
-      {@required String imgName,
-      @required LatLng binPos,
-      @required KeepItCleanUser user}) async {
+      {required String imgName,
+      required LatLng binPos,
+      required KeepItCleanUser user}) async {
     GeoFirePoint binLocation = _geoflutterfire.point(
         latitude: binPos.latitude, longitude: binPos.longitude);
 

@@ -7,39 +7,39 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_hooks/stacked_hooks.dart';
 
 class SearchHereButton extends HookViewModelWidget<MapsPageViewModel> {
-
   SearchHereButton({Key key}) : super(key: key, reactive: false);
 
   @override
-  Widget buildViewModelWidget(BuildContext context,
-      MapsPageViewModel viewModel) {
+  Widget buildViewModelWidget(
+      BuildContext context, MapsPageViewModel viewModel) {
     return ViewModelBuilder<SearchHereButtonViewModel>.reactive(
-        builder: (context, model, child) =>
-            Align(
+        builder: (context, model, child) => Align(
               alignment: Alignment.topCenter,
               child: TweenAnimationBuilder(
-                tween: Tween<double>(begin: 0, end: model.visibility ? 0 : -200),
+                tween:
+                    Tween<double>(begin: 0, end: model.visibility ? 0 : -200),
                 curve: Curves.fastOutSlowIn,
                 duration: Duration(milliseconds: 1000),
                 builder: (BuildContext context, double value, Widget child) {
-                  return Transform.translate(offset: Offset(0, value), child: AnimatedOpacity(
-                    opacity: model.visibility ? 1 : 0,
-                    duration: Duration(milliseconds: 1000),
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    child: RaisedButton(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      onPressed: () => viewModel.searchHereButtonAction(),
-                      splashColor: Colors.grey[50],
-                      color: Theme
-                          .of(context)
-                          .accentColor,
-                      child: Text(tr("Cerca qui")),
+                  return Transform.translate(
+                    offset: Offset(0, value),
+                    child: AnimatedOpacity(
+                      opacity: model.visibility ? 1 : 0,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).accentColor,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onPressed: () => viewModel.searchHereButtonAction(),
+                        child: Text(tr("Cerca qui")),
+                      ),
                     ),
-                  ),);
+                  );
                 },
-
               ),
             ),
         viewModelBuilder: () => SearchHereButtonViewModel());
@@ -47,8 +47,8 @@ class SearchHereButton extends HookViewModelWidget<MapsPageViewModel> {
 }
 
 class SearchHereButtonViewModel extends ReactiveViewModel {
-  SearchHereButtonService _searchButtonService = locator<
-      SearchHereButtonService>();
+  SearchHereButtonService _searchButtonService =
+      locator<SearchHereButtonService>();
 
   bool get visibility => _searchButtonService.visibility;
 

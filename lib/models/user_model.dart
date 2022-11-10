@@ -4,24 +4,24 @@ class KeepItCleanUser {
   final String uid;
   final String name;
   final String profilePic;
-  Map<String, int> reports;
+  Map<String?, int?>? reports;
 
   KeepItCleanUser({
-    this.uid,
-    this.name,
-    this.profilePic,
+    required this.uid,
+    required this.name,
+    required this.profilePic,
     this.reports,
   });
 
   factory KeepItCleanUser.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data();
+    Map? data = doc.data();
 
     return KeepItCleanUser(
       uid: doc.id,
-      name: data['name'],
-      profilePic: data['profilePic'],
-      reports: data['reports'] != null
-          ? Map<String, int>.from(data['reports'])
+      name: data?['name'],
+      profilePic: data?['profilePic'],
+      reports: data?['reports'] != null
+          ? Map<String, int>.from(data?['reports'])
           : null,
     );
   }

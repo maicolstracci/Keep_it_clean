@@ -16,7 +16,7 @@ import 'package:keep_it_clean/services/third_party_services_module.dart';
 import 'package:keep_it_clean/services/type_of_report_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-void $initGetIt(GetIt g, {String environment}) {
+void $initGetIt(GetIt g, {String? environment}) {
   final thirdPartyServicesModule = _$ThirdPartyServicesModule();
   g.registerLazySingleton<AddBinTypesListService>(
       () => AddBinTypesListService());

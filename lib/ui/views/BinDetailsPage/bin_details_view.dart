@@ -27,7 +27,7 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                 elevation: 0,
                 title: state.state != BlocStateEnum.DONE
                     ? Text("")
-                    : Text(tr(state.data.type)),
+                    : Text(tr(state.data!.type)),
                 centerTitle: true,
                 actions: [
                   IconButton(
@@ -179,18 +179,21 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                     ],
                                   ),
                                   Center(
-                                    child: FlatButton.icon(
-                                      padding: const EdgeInsets.all(10),
+                                    child: TextButton.icon(
                                       onPressed:
                                           BlocProvider.of<BinDetailsBloc>(
                                                   context)
                                               .launchMaps,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(6.0),
+                                      style: TextButton.styleFrom(
+                                        backgroundColor: Colors.blue[400],
+                                        foregroundColor:
+                                            Theme.of(context).accentColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(6.0),
+                                        ),
+                                        padding: const EdgeInsets.all(10),
                                       ),
-                                      color: Colors.blue[400],
-                                      textColor: Theme.of(context).accentColor,
                                       icon: Icon(Icons.public),
                                       label: Text(
                                         tr("Mostra su maps"),

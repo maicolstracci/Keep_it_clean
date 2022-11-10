@@ -14,7 +14,7 @@ class AddBinPageView extends StatefulWidget {
 
 class _AddBinPageViewState extends State<AddBinPageView>
     with SingleTickerProviderStateMixin {
-  AnimationController animationController;
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -133,8 +133,22 @@ class _AddBinPageViewState extends State<AddBinPageView>
                                                   curve: Curves
                                                       .fastLinearToSlowEaseIn),
                                               parent: animationController)),
-                                      child: RaisedButton.icon(
-                                        color: Colors.blue,
+                                      child: ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.blue,
+                                          disabledBackgroundColor:
+                                              Colors.blueGrey,
+                                          elevation: 4,
+                                          padding: EdgeInsets.only(
+                                              top: 8,
+                                              bottom: 8,
+                                              left: 10,
+                                              right: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                        ),
                                         onPressed:
                                             model.getTypesSelectedLength != 0
                                                 ? () async {
@@ -143,18 +157,6 @@ class _AddBinPageViewState extends State<AddBinPageView>
                                                             context);
                                                   }
                                                 : null,
-                                        disabledColor: Colors.blueGrey,
-                                        disabledElevation: 4,
-                                        elevation: 4,
-                                        padding: EdgeInsets.only(
-                                            top: 8,
-                                            bottom: 8,
-                                            left: 10,
-                                            right: 12),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30.0),
-                                        ),
                                         icon: Icon(
                                           Icons.arrow_forward,
                                           color: Colors.white,
@@ -189,7 +191,7 @@ class _BuildButton extends HookViewModelWidget<AddBinPageViewModel> {
   final int index;
   final AnimationController controller;
 
-  _BuildButton(this.index, {this.controller});
+  _BuildButton(this.index, {required this.controller});
 
   @override
   Widget buildViewModelWidget(

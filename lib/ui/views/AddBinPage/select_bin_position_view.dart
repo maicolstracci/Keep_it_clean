@@ -39,16 +39,22 @@ class SelectBinPositionView extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                child: FlatButton.icon(
-                                    onPressed: !model.uploading
-                                        ? () {
-                                            model.moveCameraToUserLocation(
-                                                context);
-                                          }
-                                        : null,
-                                    color: Colors.white.withOpacity(0.3),
-                                    icon: Icon(Icons.refresh),
-                                    label: Text(tr("Ricalcola posizione"))),
+                                child: TextButton.icon(
+                                  onPressed: !model.uploading
+                                      ? () {
+                                          model.moveCameraToUserLocation(
+                                              context);
+                                        }
+                                      : null,
+                                  style: TextButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.white.withOpacity(0.3),
+                                  ),
+                                  icon: Icon(Icons.refresh),
+                                  label: Text(
+                                    tr("Ricalcola posizione"),
+                                  ),
+                                ),
                               ),
                               Expanded(
                                 child: Container(

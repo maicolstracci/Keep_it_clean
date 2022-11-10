@@ -1,20 +1,10 @@
 name: keep_it_clean
 description: Keep it clean. Trova il cestino per la raccolta differenziata più vicino a te.
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.2.1+13
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -23,8 +13,8 @@ dependencies:
     sdk: flutter
 
   intl:
-  cupertino_icons: ^0.1.2
-  google_maps_flutter: ^2.0.1
+  cupertino_icons: 1.0.5
+  google_maps_flutter: ^2.0.3
   permission_handler: ^6.1.1
   shared_preferences: 2.0.5
   firebase_core: ^1.0.2
@@ -32,35 +22,34 @@ dependencies:
   firebase_storage: ^8.0.1
   firebase_auth: ^1.0.1
   google_sign_in: ^5.0.1
-  flutter_facebook_login: ^3.0.0
-  location: ^2.3.5
+  location: 5.0.0-dev.8
   url_launcher: ^6.0.3
-  flutter_swiper:
   path_provider: 2.0.1
   http:
-  image_picker:
-  auto_size_text: ^2.1.0
+  image_picker: 0.8.6
+  auto_size_text: 3.0.0
   path:
   flutter_launcher_icons:
-  smooth_page_indicator: ^0.1.3
-  flutter_device_type: ^0.2.0
+  smooth_page_indicator: 1.0.0+2
+  flutter_device_type: ^0.4.0
 
   ### REFACTORING ###
-  stacked: 1.7.7
-  auto_route: 1.0.2
-  stacked_services: 0.7.3
-  get_it: 6.0.0
-  injectable: 1.2.2
+  stacked: 3.0.0
+  auto_route: 5.0.2
+  stacked_services: 0.9.8
+  get_it: 7.2.0
+  injectable: 1.5.4
   geoflutterfire: 3.0.0-nullsafety.2
-  flutter_hooks:
+  flutter_hooks: 0.18.5+1
   stacked_hooks:
   observable_ish:
   easy_localization: ^3.0.0
-  tutorial_coach_mark: ^0.3.0
-  apple_sign_in: ^0.1.0
-  device_info: ^0.4.1+4
-  flutter_bloc: ^6.1.2
-  shimmer: ^1.1.2
+  tutorial_coach_mark: 1.2.4
+  device_info: 2.0.3
+  flutter_bloc: 8.1.1
+  shimmer: 2.0.0
+  rive: ^0.7.1
+  the_apple_sign_in:
 
 
 flutter_icons:
@@ -77,8 +66,8 @@ dev_dependencies:
     sdk: flutter
   pedantic:
   build_runner:
-  auto_route_generator: 1.0.2
-  injectable_generator: 1.2.2
+  auto_route_generator: 5.0.3
+  injectable_generator: 1.5.5
 
 # The following section is specific to Flutter.
 flutter:
@@ -93,15 +82,12 @@ flutter:
     - assets/keep_it_clean_logo_adaptive.png
     - assets/keep_it_clean_only_logo.png
     - assets/no-avatar.jpg
+    - assets/button_animation.riv
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
-
-
-
 
   fonts:
     - family: CustomIcons

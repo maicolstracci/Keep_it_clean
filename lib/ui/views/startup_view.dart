@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/bloc/startup_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -67,8 +69,25 @@ class _StartUpViewState extends State<StartUpView>
 
     _bloc = BlocProvider.of<StartupBloc>(context, listen: false);
 
-    _bloc.handleStartUpLogic(
-        context, controller, controllerContAnimation, controllerTextOpacity);
+    _startupLogic();
+  }
+
+  void _startupLogic() async {
+    await _bloc.handleStartUpLogic();
+
+    if (mounted) controllerContAnimation.stop();
+    if (mounted) controller.reverse();
+
+    if (mounted)
+      controllerTextOpacity.reverse().then(
+        (value) async {
+          if (await _bloc.hasLoggedInUser) {
+            AutoRouter.of(context).replace(MapsPageViewRoute());
+          } else {
+            AutoRouter.of(context).replace(LoginPageViewRoute());
+          }
+        },
+      );
   }
 
   @override

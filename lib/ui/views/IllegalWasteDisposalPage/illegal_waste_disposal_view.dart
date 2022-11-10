@@ -69,17 +69,23 @@ class IllegalWasteDisposalView extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                RaisedButton(
+                                ElevatedButton(
                                   child: Text("Camera"),
                                   onPressed: () =>
                                       model.takePicture(context, "camera"),
-                                  color: Theme.of(context).accentColor,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).accentColor,
+                                  ),
                                 ),
-                                RaisedButton(
+                                ElevatedButton(
                                   child: Text("Galleria"),
                                   onPressed: () =>
                                       model.takePicture(context, "galleria"),
-                                  color: Theme.of(context).accentColor,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).accentColor,
+                                  ),
                                 ),
                               ],
                             ),

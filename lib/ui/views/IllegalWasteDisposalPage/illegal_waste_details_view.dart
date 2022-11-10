@@ -152,15 +152,19 @@ class IllegalWasteDetailsView extends StatelessWidget {
                                       ],
                                     ),
                                     Center(
-                                      child: FlatButton(
-                                        padding: const EdgeInsets.all(10),
-                                        onPressed: model.showReportSolvedDialog,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(6.0),
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.all(10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(6.0),
+                                          ),
+                                          backgroundColor: Colors.red[400],
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                        color: Colors.red[400],
-                                        textColor: Colors.white,
+                                        onPressed: model.showReportSolvedDialog,
                                         child: Text(
                                           tr("Segnala come risolto"),
                                           style: TextStyle(
