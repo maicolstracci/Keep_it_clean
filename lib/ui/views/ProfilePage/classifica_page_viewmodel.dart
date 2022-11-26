@@ -4,17 +4,18 @@ import 'package:keep_it_clean/app/locator.dart';
 import 'package:keep_it_clean/services/database_services.dart';
 import 'package:stacked/stacked.dart';
 
-class ClassificaPageViewModel extends FutureViewModel<List<DocumentSnapshot>> {
+class ClassificaPageViewModel
+    extends FutureViewModel<List<DocumentSnapshot<Map>>> {
   DatabaseService _databaseService = locator<DatabaseService>();
 
   GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
 
-  AnimationController animationController;
+  late AnimationController animationController;
 
   @override
-  void onData(List data) async {
-    for (int index = 0; index < data.length - 3; index++) {
-      listKey.currentState
+  void onData(List<DocumentSnapshot<Map?>>? data) async {
+    for (int index = 0; index < data!.length - 3; index++) {
+      listKey.currentState!
           .insertItem(index, duration: Duration(milliseconds: 500));
 
       await Future.delayed(
@@ -24,6 +25,6 @@ class ClassificaPageViewModel extends FutureViewModel<List<DocumentSnapshot>> {
   }
 
   @override
-  Future<List<DocumentSnapshot>> futureToRun() =>
+  Future<List<DocumentSnapshot<Map>>> futureToRun() =>
       _databaseService.retrieveRankings();
 }

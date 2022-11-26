@@ -11,7 +11,7 @@ class ProfilePicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    KeepItCleanUser currentUser = _authService.currentUser;
+    KeepItCleanUser? currentUser = _authService.currentUser;
     return Align(
       alignment: Alignment.topLeft,
       child: Padding(
@@ -36,7 +36,7 @@ class ProfilePicture extends StatelessWidget {
                 backgroundImage:
                     (currentUser != null && currentUser.profilePic != null)
                         ? NetworkImage(currentUser.profilePic, scale: 1)
-                        : ExactAssetImage('assets/no-avatar.jpg'),
+                        : Image.asset('assets/no-avatar.jpg').image,
                 maxRadius: 40,
               ),
             ),

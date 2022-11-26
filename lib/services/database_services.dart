@@ -152,7 +152,7 @@ class DatabaseService {
     return KeepItCleanUser.fromFirestore(ds);
   }
 
-  Future<List<DocumentSnapshot>> retrieveRankings() async {
+  Future<List<DocumentSnapshot<Map>>> retrieveRankings() async {
     Query query = _db
         .collection("users")
         .where("totalNumberOfReports", isGreaterThan: 0)
@@ -161,7 +161,8 @@ class DatabaseService {
 
     QuerySnapshot snapshot = await query.get();
 
-    return snapshot.docs;
+    return [];
+    // return snapshot.docs;
   }
 
   Future<DocumentSnapshot> setupUser(User user) async {
@@ -182,13 +183,13 @@ class DatabaseService {
     final DocumentReference documentReference =
         _db.collection("users").doc(user.uid);
 
-    DocumentSnapshot doc = await documentReference.get();
+    Map doc = (await documentReference.get()) as Map;
 
     // Map is equal to the map retrieved from Firebase if that exist or a new map if it does not exist
-    Map<String, int> map = doc.data()?['reports'] != null
-        ? Map<String, int>.from(doc.data()?['reports'])
+    Map<String, int> map = doc['reports'] != null
+        ? Map<String, int>.from(doc['reports'])
         : Map<String, int>();
-    int totalReports = doc.data()?['totalNumberOfReports'] ?? 0;
+    int totalReports = doc['totalNumberOfReports'] ?? 0;
 
     for (int type in types) {
       map.update(typesOfBin[type], (value) => value + 1, ifAbsent: () => 1);
@@ -204,10 +205,10 @@ class DatabaseService {
         _db.collection("cestini").doc(documentId);
     bool result = true;
 
-    DocumentSnapshot doc = await documentReference.get();
+    Map doc = (await documentReference.get()) as Map;
 
-    Map<String, dynamic> map = doc.data()?['review'] != null
-        ? Map<String, dynamic>.from(doc.data()?['review'])
+    Map<String, dynamic> map = doc['review'] != null
+        ? Map<String, dynamic>.from(doc['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -244,10 +245,10 @@ class DatabaseService {
 
     bool result = true;
 
-    DocumentSnapshot doc = await documentReference.get();
+    Map doc = (await documentReference.get()) as Map;
 
-    Map<String, dynamic> map = doc.data()?['review'] != null
-        ? Map<String, dynamic>.from(doc.data()?['review'])
+    Map<String, dynamic> map = doc['review'] != null
+        ? Map<String, dynamic>.from(doc['review'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -281,10 +282,10 @@ class DatabaseService {
     DocumentReference documentReference =
         _db.collection("cestini").doc(documentId);
 
-    DocumentSnapshot doc = await documentReference.get();
+    Map doc = (await documentReference.get()) as Map;
 
-    Map<String, dynamic> map = doc.data()?['reports'] != null
-        ? Map<String, dynamic>.from(doc.data()?['reports'])
+    Map<String, dynamic> map = doc['reports'] != null
+        ? Map<String, dynamic>.from(doc['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {
@@ -315,10 +316,10 @@ class DatabaseService {
     DocumentReference documentReference =
         _db.collection("segnalazioniAbbandonoRifiuti").doc(documentId);
 
-    DocumentSnapshot doc = await documentReference.get();
+    Map doc = (await documentReference.get()) as Map;
 
-    Map<String, dynamic> map = doc.data()?['reports'] != null
-        ? Map<String, dynamic>.from(doc.data()?['reports'])
+    Map<String, dynamic> map = doc['reports'] != null
+        ? Map<String, dynamic>.from(doc['reports'])
         : Map<String, dynamic>();
 
     if (map.isNotEmpty) {

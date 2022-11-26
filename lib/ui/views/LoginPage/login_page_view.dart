@@ -1,10 +1,10 @@
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/bloc/login_bloc.dart';
 import 'package:keep_it_clean/ui/views/LoginPage/login_button.dart';
+import 'package:the_apple_sign_in/apple_sign_in_button.dart';
 
 class LoginPageView extends StatelessWidget {
   @override
@@ -61,9 +61,6 @@ class LoginPageView extends StatelessWidget {
                                 style: TextStyle(
                                     color: Theme.of(context).accentColor),
                               ),
-                            ),
-                            LoginButton(
-                              buttonType: LoginButtonType.FACEBOOK,
                             ),
                             LoginButton(
                               buttonType: LoginButtonType.GOOGLE,

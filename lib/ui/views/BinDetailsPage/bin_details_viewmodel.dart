@@ -17,20 +17,20 @@ class BinDetailsBloc extends Cubit<BlocState<Bin>> {
   DialogService _dialogService = locator<DialogService>();
   AuthService _authService = locator<AuthService>();
 
-  Bin _currentBin;
+  late Bin _currentBin;
 
   BinDetailsBloc(BlocState<Bin> state) : super(state);
 
   showReportDialog() async {
     if (_authService.currentUser != null) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse? response = await _dialogService.showConfirmationDialog(
           title: "C'e' qualche problema?",
           description: "Invia una segnalazione se qualcosa non va",
           cancelTitle: "No, non inviare",
           confirmationTitle: "Si, voglio segnalare");
-      if (response.confirmed) {
+      if (response?.confirmed ?? false) {
         _databaseService.reportBinProblem(
-            _currentBin.id, _authService.currentUser);
+            _currentBin.id, _authService.currentUser!);
       }
       return;
     } else {

@@ -23,8 +23,8 @@ class Bin {
       required this.dislikes});
 
   factory Bin.fromFirestore(DocumentSnapshot doc) {
-    Map? data = doc.data();
-    Map? review = doc.data()?['review'];
+    Map? data = doc.data() as Map?;
+    Map? review = data!['review'];
 
     return Bin(
       id: doc.id,

@@ -176,9 +176,9 @@ class TestRiveAnimation extends StatefulWidget {
 }
 
 class _TestRiveAnimationState extends State<TestRiveAnimation> {
-  Artboard _artboard;
-  RiveAnimationController _selectedAnimationController;
-  RiveAnimationController _reversedSelectedAnimationController;
+  late Artboard _artboard;
+  late RiveAnimationController _selectedAnimationController;
+  late RiveAnimationController _reversedSelectedAnimationController;
 
   bool _selected = false;
 
@@ -245,7 +245,7 @@ class _TestRiveAnimationState extends State<TestRiveAnimation> {
 }
 
 class AddBinButton extends HookViewModelWidget<MapsPageViewModel> {
-  AddBinButton({Key key}) : super(key: key, reactive: false);
+  AddBinButton({Key? key}) : super(key: key, reactive: false);
 
   @override
   Widget buildViewModelWidget(

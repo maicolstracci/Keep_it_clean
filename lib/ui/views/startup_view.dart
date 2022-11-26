@@ -13,15 +13,15 @@ class StartUpView extends StatefulWidget {
 
 class _StartUpViewState extends State<StartUpView>
     with TickerProviderStateMixin {
-  AnimationController controller;
-  AnimationController controllerContAnimation;
-  AnimationController controllerTextOpacity;
+  late AnimationController controller;
+  late AnimationController controllerContAnimation;
+  late AnimationController controllerTextOpacity;
 
-  Animation<Offset> offsetAnimation;
-  Animation<Offset> offsetContAnimation;
-  Animation<double> textOpacityAnimation;
+  late Animation<Offset> offsetAnimation;
+  late Animation<Offset> offsetContAnimation;
+  late Animation<double> textOpacityAnimation;
 
-  StartupBloc _bloc;
+  late StartupBloc _bloc;
 
   void _onFinishInitAnim(AnimationStatus status) async {
     if (status == AnimationStatus.completed) {

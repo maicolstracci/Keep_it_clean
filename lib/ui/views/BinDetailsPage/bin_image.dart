@@ -15,7 +15,7 @@ import 'package:stacked_services/stacked_services.dart';
 class BinImageView extends StatelessWidget {
   final String imgName;
 
-  BinImageView({this.imgName});
+  BinImageView({required this.imgName});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class BinImageView extends StatelessWidget {
                   ? state.data != 'NO IMAGE'
                       ? FadeInImage.assetNetwork(
                           placeholder: 'assets/loading.gif',
-                          image: state.data,
+                          image: state.data!,
                           fit: BoxFit.fitWidth,
                         )
                       : Column(
@@ -108,9 +108,9 @@ class BinImageBloc extends Cubit<BlocState<String>> {
     if (value == null) return;
 
     if (value == "Camera") {
-      File pic = await _takePictureService.takePicture("camera");
+      File pic = (await _takePictureService.takePicture("camera")) as File;
       if (pic != null) {
-        String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
+        String _imgName = '${_authService.currentUser!.uid}-${DateTime.now()}';
 
         //Show feedback
         _dialogService.showDialog(
@@ -123,10 +123,10 @@ class BinImageBloc extends Cubit<BlocState<String>> {
         _databaseService.modifyPhotoUrl(_binDetailsService.binID, photoUrl);
       }
     } else if (value == "Galleria") {
-      File pic = await _takePictureService.takePicture("galleria");
+      File pic = (await _takePictureService.takePicture("galleria")) as File;
 
       if (pic != null) {
-        String _imgName = '${_authService.currentUser.uid}-${DateTime.now()}';
+        String _imgName = '${_authService.currentUser!.uid}-${DateTime.now()}';
         //Show feedback
         _dialogService.showDialog(
             title: tr("Grazie"),

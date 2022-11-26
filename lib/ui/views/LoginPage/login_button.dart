@@ -14,21 +14,17 @@ class LoginButton extends StatelessWidget {
   final IconData icon;
   final Color color;
 
-  LoginButton.facebook({this.icon, this.color, this.buttonType});
+  LoginButton.facebook(
+      {required this.icon, required this.color, required this.buttonType});
 
-  LoginButton.google({this.icon, this.color, this.buttonType});
+  LoginButton.google(
+      {required this.icon, required this.color, required this.buttonType});
 
-  LoginButton.guest({this.icon, this.color, this.buttonType});
+  LoginButton.guest(
+      {required this.icon, required this.color, required this.buttonType});
 
-  factory LoginButton({LoginButtonType buttonType}) {
+  factory LoginButton({required LoginButtonType buttonType}) {
     switch (buttonType) {
-      case LoginButtonType.FACEBOOK:
-        return LoginButton.facebook(
-          icon: IconData(0xe901, fontFamily: "CustomIcons"),
-          color: Colors.lightBlue,
-          buttonType: LoginButtonType.FACEBOOK,
-        );
-
       case LoginButtonType.GOOGLE:
         return LoginButton.facebook(
           icon: IconData(0xe902, fontFamily: "CustomIcons"),
@@ -53,8 +49,6 @@ class LoginButton extends StatelessWidget {
 
   String fromEnumToString(LoginButtonType buttonType) {
     switch (buttonType) {
-      case LoginButtonType.FACEBOOK:
-        return "facebook";
       case LoginButtonType.GOOGLE:
         return "google";
       case LoginButtonType.GUEST:

@@ -1,9 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:keep_it_clean/ui/views/ProfilePage/profile_bin_report_container.dart';
 import 'package:keep_it_clean/ui/views/ProfilePage/reporter_profile_page_viewmodel.dart';
-import 'package:keep_it_clean/utils/constants.dart';
 import 'package:stacked/stacked.dart';
 
 class ReporterProfileView extends StatelessWidget {
@@ -15,7 +12,7 @@ class ReporterProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ReporterProfilePageViewModel>.reactive(
         onModelReady: (model) {
-          model.reporterUid = this.reporterUid;
+          model.reporterUid = this.reporterUid!;
           model.futureToRun();
         },
         builder: (context, model, child) => Scaffold(
@@ -53,7 +50,7 @@ class ReporterProfileView extends StatelessWidget {
                                       children: [
                                         CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              model.data.profilePic,
+                                              model.data!.profilePic,
                                               scale: 1),
                                           maxRadius: 50,
                                         ),
@@ -66,7 +63,7 @@ class ReporterProfileView extends StatelessWidget {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              model.data.name,
+                                              model.data!.name,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w600),
                                             ),
@@ -80,21 +77,21 @@ class ReporterProfileView extends StatelessWidget {
                           Flexible(
                             flex: 3,
                             child: Container(
-                                color: Theme.of(context).backgroundColor,
-                                child: Swiper(
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    int nOfReports =
-                                        model.getNumberOfReportsForType(index);
-                                    return ProfileBinReportContainer(
-                                      index: index,
-                                      numberOfReports: nOfReports,
-                                    );
-                                  },
-                                  itemCount: typesOfBin.length,
-                                  viewportFraction: 0.8,
-                                  scale: 0.8,
-                                )),
+                              color: Theme.of(context).backgroundColor,
+                              // child: Swiper(
+                              //   itemBuilder: (BuildContext context, int index) {
+                              //     int nOfReports =
+                              //         model.getNumberOfReportsForType(index);
+                              //     return ProfileBinReportContainer(
+                              //       index: index,
+                              //       numberOfReports: nOfReports,
+                              //     );
+                              //   },
+                              //   itemCount: typesOfBin.length,
+                              //   viewportFraction: 0.8,
+                              //   scale: 0.8,
+                              // ),
+                            ),
                           )
                         ],
                       ),

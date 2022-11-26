@@ -3,7 +3,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:keep_it_clean/app/router.gr.dart';
 import 'package:keep_it_clean/bloc/bloc_utils.dart';
 import 'package:keep_it_clean/models/user_model.dart';
@@ -19,7 +18,7 @@ class ProfilePageView extends StatefulWidget {
 }
 
 class _ProfilePageViewState extends State<ProfilePageView> {
-  ProfilePageBloc _bloc;
+  late ProfilePageBloc _bloc;
 
   @override
   void initState() {
@@ -131,8 +130,9 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                                             ProfilePageBloc>()
                                                         .getProfilePhotoUrl(),
                                                     scale: 1)
-                                                : ExactAssetImage(
-                                                    'assets/no-avatar.jpg'),
+                                                : Image.asset(
+                                                        'assets/no-avatar.jpg')
+                                                    .image,
                                             maxRadius: 50,
                                           ),
                                         ),
@@ -179,7 +179,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                       .isUserLoggedIn()
                                   ? state.state == BlocStateEnum.LOADING
                                       ? CircularProgressIndicator()
-                                      : Swiper(
+                                      : ListView.builder(
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             int nOfReports = context
@@ -192,8 +192,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                             );
                                           },
                                           itemCount: typesOfBin.length,
-                                          viewportFraction: 0.8,
-                                          scale: 0.8,
                                         )
                                   : Center(
                                       child: SizedBox.expand(

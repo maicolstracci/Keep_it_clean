@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:keep_it_clean/utils/constants.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:ui' as ui;
 
 Map<String, BitmapDescriptor> pinMap = Map();
 
@@ -15,37 +15,32 @@ Future<Uint8List> getBytesFromAsset(String path, int width) async {
   ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
       targetWidth: width);
   ui.FrameInfo fi = await codec.getNextFrame();
-  return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+  return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
       .buffer
       .asUint8List();
 }
 
-
 Future<bool> setCustomMapPin() async {
-
-
-  int pinSize = (55*Device.devicePixelRatio).floor();
+  int pinSize = (55 * Device.devicePixelRatio).floor();
   //To avoid ultra small pins bug
-  if(pinSize < 150) pinSize = 150;
+  if (pinSize < 150) pinSize = 150;
 
   for (int i = 1; i <= typesOfBin.length; i++) {
-
     Uint8List val =
-    await getBytesFromAsset('assets/maps_markers/marker_$i.png', pinSize);
+        await getBytesFromAsset('assets/maps_markers/marker_$i.png', pinSize);
     BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
-    pinMap[typesOfBin[i-1]] = pinLocationIcon;
+    pinMap[typesOfBin[i - 1]] = pinLocationIcon;
   }
 
-  Uint8List val =
-  await getBytesFromAsset('assets/maps_markers/marker_abbandono_rifiuto.png', pinSize);
+  Uint8List val = await getBytesFromAsset(
+      'assets/maps_markers/marker_abbandono_rifiuto.png', pinSize);
   BitmapDescriptor pinLocationIcon = BitmapDescriptor.fromBytes(val);
 
   pinMap[abbandonoRifiuto] = pinLocationIcon;
 
   return true;
 }
-
 
 // Request permission method from permissions_handlers plugin
 Future requestPermission() async {
@@ -57,7 +52,6 @@ Future<bool> getLocationPermissionStatus() async {
   return permission == PermissionStatus.granted;
 }
 
-
 class FilterListBehavior extends ScrollBehavior {
   @override
   Widget buildViewportChrome(
@@ -65,5 +59,3 @@ class FilterListBehavior extends ScrollBehavior {
     return child;
   }
 }
-
-

@@ -14,8 +14,8 @@ showTutorial(BuildContext context) async {
 
     targets.add(
       TargetFocus(identify: "Filter bar", keyTarget: filterBarKey, contents: [
-        ContentTarget(
-            align: AlignContent.top,
+        TargetContent(
+            align: ContentAlign.top,
             child: Container(
               padding: EdgeInsets.only(bottom: 180),
               child: Column(
@@ -57,8 +57,8 @@ showTutorial(BuildContext context) async {
           identify: "Move to user location target",
           keyTarget: moveToUserLocationKey,
           contents: [
-            ContentTarget(
-                align: AlignContent.bottom,
+            TargetContent(
+                align: ContentAlign.bottom,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -88,8 +88,8 @@ showTutorial(BuildContext context) async {
           identify: "Report illegal waste disposal",
           keyTarget: reportIllegalWasteDisposalKey,
           contents: [
-            ContentTarget(
-                align: AlignContent.bottom,
+            TargetContent(
+                align: ContentAlign.bottom,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -116,8 +116,8 @@ showTutorial(BuildContext context) async {
     );
     targets.add(
       TargetFocus(identify: "Add new bin", keyTarget: addNewBinKey, contents: [
-        ContentTarget(
-            align: AlignContent.top,
+        TargetContent(
+            align: ContentAlign.top,
             child: Container(
               padding: EdgeInsets.only(bottom: 16),
               child: Column(
@@ -148,8 +148,8 @@ showTutorial(BuildContext context) async {
           identify: "Personal profile",
           keyTarget: personalProfileKey,
           contents: [
-            ContentTarget(
-                align: AlignContent.bottom,
+            TargetContent(
+                align: ContentAlign.bottom,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -177,16 +177,17 @@ showTutorial(BuildContext context) async {
 
     await Future.delayed(Duration(seconds: 2));
 
-    TutorialCoachMark(context,
+    TutorialCoachMark(
         targets: targets,
         opacityShadow: 0.9,
         colorShadow: Theme.of(context).backgroundColor,
         textStyleSkip:
             const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        textSkip: tr("SALTA"), finish: () {
-      return;
-    })
-      ..show();
+        textSkip: tr("SALTA"),
+        onFinish: () {
+          return;
+        })
+      ..show(context: context);
   } else {
     return;
   }

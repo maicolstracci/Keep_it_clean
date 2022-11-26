@@ -27,15 +27,15 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   AuthService _authService = locator<AuthService>();
   DialogService _dialogService = locator<DialogService>();
 
-  GoogleMapController mapsController;
-  CameraPosition currentCameraPosition;
+  late GoogleMapController mapsController;
+  late CameraPosition currentCameraPosition;
 
   Set<Marker> markers = Set.from([]);
 
   List<Bin> currentListOfBin = [];
   List<IllegalWasteDisposal> currentListOfWasteDisposalReports = [];
 
-  String filterBinsForType;
+  String? filterBinsForType;
 
   @override
   void onData(key, data) {
@@ -63,7 +63,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     final Marker marker = Marker(
         markerId: markerId,
         position: latLng,
-        icon: pinMap[type],
+        icon: pinMap[type]!,
         onTap: type != abbandonoRifiuto
             ? (() => navigateToBinDetailsPage(context, id))
             : () => navigateToIllegalWasteDetailsPage(context, id));
@@ -84,7 +84,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
     AutoRouter.of(context).push(IllegalWasteDetailsViewRoute());
   }
 
-  void setBinFilterType({String filterBinsForType}) {
+  void setBinFilterType({required String filterBinsForType}) {
     this.filterBinsForType = filterBinsForType;
     notifyListeners();
   }
@@ -129,7 +129,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
   Future moveCameraToUserLocation() async {
     setBusy(true);
     if (await _locationService.getLocationPermissionStatus()) {
-      LocationData location = await _locationService.getUserLocation();
+      LocationData? location = await _locationService.getUserLocation();
 
       if (location == null) {
         //TODO: cant find user location, show error...
@@ -145,7 +145,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
         return;
       } else {
         CameraPosition _userCameraPosition = CameraPosition(
-          target: LatLng(location.latitude, location.longitude),
+          target: LatLng(location.latitude!, location.longitude!),
           zoom: 14.4746,
         );
         setBusy(false);
@@ -217,7 +217,7 @@ class MapsPageViewModel extends MultipleStreamViewModel {
       return;
     }
     if (currentCameraPosition != null &&
-        _locationService.currentUserGeoFirePoint.distance(
+        _locationService.currentUserGeoFirePoint!.kmDistance(
                 lat: currentCameraPosition.target.latitude,
                 lng: currentCameraPosition.target.longitude) >
             6) {

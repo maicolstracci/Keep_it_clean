@@ -18,25 +18,25 @@ class IllegalWasteDetailsViewModel
   DialogService _dialogService = locator<DialogService>();
   AuthService _authService = locator<AuthService>();
 
-  String imageUrl;
+  String? imageUrl;
 
   @override
-  void onData(IllegalWasteDisposal data) async {
+  void onData(IllegalWasteDisposal? data) async {
     super.onData(data);
     imageUrl =
-        await _databaseService.getDownloadUrlImageFromName(data.photoUrl);
+        await _databaseService.getDownloadUrlImageFromName(data!.photoUrl);
     notifyListeners();
   }
 
   showReportDialog() async {
     if (_authService.currentUser != null) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse? response = await _dialogService.showConfirmationDialog(
           title: tr("C'e' qualche problema?"),
           description: tr("Invia una segnalazione se qualcosa non va"),
           cancelTitle: tr("No, non inviare"),
           confirmationTitle: tr("Si, voglio segnalare"));
-      if (response.confirmed) {
-        _databaseService.reportBinProblem(data.id, _authService.currentUser);
+      if (response?.confirmed ?? false) {
+        _databaseService.reportBinProblem(data!.id, _authService.currentUser!);
       }
       return;
     } else {
@@ -50,7 +50,7 @@ class IllegalWasteDetailsViewModel
 
   launchMaps() async {
     final url =
-        'https://www.google.com/maps/search/?api=1&query=${data.position.latitude},${data.position.longitude}';
+        'https://www.google.com/maps/search/?api=1&query=${data!.position.latitude},${data!.position.longitude}';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -64,14 +64,14 @@ class IllegalWasteDetailsViewModel
 
   showReportSolvedDialog() async {
     if (_authService.currentUser != null) {
-      DialogResponse response = await _dialogService.showConfirmationDialog(
+      DialogResponse? response = await _dialogService.showConfirmationDialog(
           title: tr("E' tutto pulito?"),
           description: tr("Facci sapere se qualcuno ha ripulito!"),
           cancelTitle: tr("No, non inviare"),
           confirmationTitle: tr("Si, e' tutto pulito"));
-      if (response.confirmed) {
+      if (response?.confirmed ?? false) {
         _databaseService.reportSolvedWasteDisposal(
-            data.id, _authService.currentUser);
+            data!.id, _authService.currentUser!);
       }
       return;
     } else {
@@ -84,7 +84,7 @@ class IllegalWasteDetailsViewModel
 
   navigateToReporterProfile(BuildContext context) {
     AutoRouter.of(context).push(ReporterProfileViewRoute(
-      reporterUid: data.uidUser,
+      reporterUid: data!.uidUser,
     ));
   }
 }

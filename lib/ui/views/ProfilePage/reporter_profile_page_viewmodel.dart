@@ -7,10 +7,10 @@ import 'package:stacked/stacked.dart';
 class ReporterProfilePageViewModel extends FutureViewModel<KeepItCleanUser> {
   DatabaseService _databaseService = locator<DatabaseService>();
 
-  String reporterUid;
+  late String reporterUid;
 
   int getNumberOfReportsForType(int index) {
-    Map<String, int> map = data.reports;
+    Map<String?, int?>? map = data?.reports;
     if (map == null) return 0;
 
     return map[typesOfBin[index]] ?? 0;
@@ -18,7 +18,6 @@ class ReporterProfilePageViewModel extends FutureViewModel<KeepItCleanUser> {
 
   @override
   Future<KeepItCleanUser> futureToRun() {
-    if (reporterUid != null)
-      return _databaseService.retrieveUserInfo(reporterUid: reporterUid);
+    return _databaseService.retrieveUserInfo(reporterUid: reporterUid);
   }
 }

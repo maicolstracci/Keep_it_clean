@@ -11,7 +11,7 @@ class LeaderboardCircularContainer
   final int ranking;
   final DocumentSnapshot user;
 
-  LeaderboardCircularContainer({this.ranking, this.user});
+  LeaderboardCircularContainer({required this.ranking, required this.user});
 
   @override
   Widget buildViewModelWidget(
@@ -57,12 +57,12 @@ class LeaderboardCircularContainer
                     ]),
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(300.0),
-                    child: user.data()['profilePic'] == null
+                    child: user['profilePic'] == null
                         ? Image.asset("assets/no-avatar.jpg")
                         : FadeInImage.assetNetwork(
                             fit: BoxFit.cover,
                             placeholder: "assets/no-avatar.jpg",
-                            image: user.data()['profilePic'],
+                            image: user['profilePic'],
                           )),
               ),
               SizedBox(
@@ -71,7 +71,7 @@ class LeaderboardCircularContainer
               Container(
                 width: 100,
                 child: Text(
-                  user.data()['name'],
+                  user['name'],
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   textAlign: TextAlign.center,
@@ -85,7 +85,7 @@ class LeaderboardCircularContainer
                 height: 6,
               ),
               Text(
-                user.data()['totalNumberOfReports'].toString(),
+                user['totalNumberOfReports'].toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: Color(0xff98FB98)),

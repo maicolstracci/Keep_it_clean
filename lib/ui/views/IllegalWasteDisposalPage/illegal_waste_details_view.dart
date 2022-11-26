@@ -33,7 +33,7 @@ class IllegalWasteDetailsView extends StatelessWidget {
                                   ClipPath(
                                     clipper: BottomCurveClipper(),
                                     child: BinImageView(
-                                      imgName: model.data.photoUrl,
+                                      imgName: model.data!.photoUrl,
                                     ),
                                   ),
                                   Align(
@@ -85,7 +85,7 @@ class IllegalWasteDetailsView extends StatelessWidget {
                                                 Flexible(
                                                   child: Container(
                                                     child: Text(
-                                                      model.data.username,
+                                                      model.data!.username,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       style: TextStyle(
@@ -139,7 +139,7 @@ class IllegalWasteDetailsView extends StatelessWidget {
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
                                               Text(
-                                                model.data.reportDate
+                                                model.data!.reportDate
                                                     .substring(0, 10),
                                                 style: TextStyle(
                                                     color: Colors.black87,

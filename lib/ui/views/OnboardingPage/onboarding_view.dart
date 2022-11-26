@@ -64,7 +64,7 @@ class OnboardingView extends StatelessWidget {
                                         spacing: 16.0,
                                         dotWidth: 12.0,
                                         dotHeight: 12.0,
-                                        activeDotColor: Colors.green[600],
+                                        activeDotColor: Colors.green[600]!,
                                         dotColor: Color(
                                             0xfff4f8f9)), // your preferred effect
                                   )),

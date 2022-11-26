@@ -14,7 +14,7 @@ class KeepItCleanUser {
   });
 
   factory KeepItCleanUser.fromFirestore(DocumentSnapshot doc) {
-    Map? data = doc.data();
+    Map? data = doc.data() as Map?;
 
     return KeepItCleanUser(
       uid: doc.id,

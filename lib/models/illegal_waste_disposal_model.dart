@@ -17,7 +17,7 @@ class IllegalWasteDisposal {
       required this.uidUser});
 
   factory IllegalWasteDisposal.fromFirestore(DocumentSnapshot doc) {
-    Map? data = doc.data();
+    Map? data = doc.data() as Map?;
 
     return IllegalWasteDisposal(
       id: doc.id,

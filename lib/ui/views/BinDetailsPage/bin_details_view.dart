@@ -56,7 +56,7 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                 ClipPath(
                                   clipper: BottomCurveClipper(),
                                   child: BinImageView(
-                                    imgName: state.data.photoUrl,
+                                    imgName: state.data!.photoUrl,
                                   ),
                                 ),
                                 Align(
@@ -64,7 +64,7 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                   child: Container(
                                     height: 60,
                                     child: LikeBar(
-                                      binID: state.data.id,
+                                      binID: state.data!.id,
                                     ),
                                   ),
                                 ),
@@ -111,7 +111,7 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                               Flexible(
                                                 child: Container(
                                                   child: Text(
-                                                    state.data.username,
+                                                    state.data!.username,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: TextStyle(
@@ -167,7 +167,7 @@ class _BinDetailsPageViewState extends State<BinDetailsPageView> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text(
-                                              state.data.reportDate
+                                              state.data!.reportDate
                                                   .substring(0, 10),
                                               style: TextStyle(
                                                   color: Colors.black87,

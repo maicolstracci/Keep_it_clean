@@ -1,21 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:stacked/stacked.dart';
 
-class OnboardingPageViewModel extends BaseViewModel{
-  double currentPage;
+class OnboardingPageViewModel extends BaseViewModel {
+  late double currentPage;
   PageController pageController = PageController(initialPage: 0);
 
-  changeCurrentPage(double page){
+  changeCurrentPage(double page) {
     currentPage = page;
     notifyListeners();
   }
 
-  navigateNextPage(){
+  navigateNextPage() {
     pageController.nextPage(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut);
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
     notifyListeners();
   }
-
-
 }

@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,8 @@ class ProfileBinReportContainer extends StatelessWidget {
   final int index;
   final int numberOfReports;
 
-  ProfileBinReportContainer({this.index, this.numberOfReports});
+  ProfileBinReportContainer(
+      {required this.index, required this.numberOfReports});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ProfileBinReportContainer extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Image.asset(
-                "assets/icons/icon_type_${index+1}.png",
+                "assets/icons/icon_type_${index + 1}.png",
                 height: 120,
               ),
             ),

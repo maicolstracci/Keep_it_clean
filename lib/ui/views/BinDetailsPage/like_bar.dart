@@ -8,7 +8,7 @@ import 'like_button.dart';
 class LikeBar extends StatelessWidget {
   final String binID;
 
-  LikeBar({this.binID});
+  LikeBar({required this.binID});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class LikeBar extends StatelessWidget {
                         ),
                       ],
                       shape: BoxShape.circle,
-                      color: Colors.green[700].withOpacity(.98)),
+                      color: Colors.green[700]?.withOpacity(.98)),
                   child: LikeButton(
                     type: 1,
                     binID: binID,
@@ -58,9 +58,11 @@ class LikeBar extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            model.dataReady ? model.data['likes'].toString() : "",
+                            model.dataReady
+                                ? model.data['likes'].toString()
+                                : "",
                             style: TextStyle(fontSize: 32, color: Colors.green),
-                              textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         Expanded(
@@ -68,7 +70,6 @@ class LikeBar extends StatelessWidget {
                           child: Text(
                             "-",
                             textAlign: TextAlign.center,
-
                             style: TextStyle(fontSize: 32),
                           ),
                         ),
@@ -79,7 +80,6 @@ class LikeBar extends StatelessWidget {
                                 ? model.data['dislikes'].toString()
                                 : "",
                             textAlign: TextAlign.center,
-
                             style: TextStyle(fontSize: 32, color: Colors.red),
                           ),
                         ),
@@ -98,7 +98,7 @@ class LikeBar extends StatelessWidget {
                         ),
                       ],
                       shape: BoxShape.circle,
-                      color: Colors.red[800].withOpacity(.98)),
+                      color: Colors.red[800]?.withOpacity(.98)),
                   child: LikeButton(
                     type: 2,
                     binID: binID,
@@ -114,7 +114,7 @@ class LikeBar extends StatelessWidget {
 class LikeBarModel extends StreamViewModel {
   DatabaseService _databaseService = locator<DatabaseService>();
 
-  String binID;
+  late String binID;
 
   @override
   Stream get stream => _databaseService.streamLikesFromBin(binID);

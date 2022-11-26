@@ -18,7 +18,7 @@ class ProfilePageBloc extends Cubit<BlocState<KeepItCleanUser>> {
   DialogService _dialogService = locator<DialogService>();
   DatabaseService _databaseService = locator<DatabaseService>();
 
-  KeepItCleanUser _currentUser;
+  KeepItCleanUser? _currentUser;
 
   int currentIndex = 0;
 
@@ -32,7 +32,7 @@ class ProfilePageBloc extends Cubit<BlocState<KeepItCleanUser>> {
 
   String getUsername() {
     return (_authService.currentUser != null)
-        ? _authService.currentUser.name
+        ? _authService.currentUser!.name
         : tr("Utente ospite");
   }
 
@@ -41,7 +41,7 @@ class ProfilePageBloc extends Cubit<BlocState<KeepItCleanUser>> {
   }
 
   String getProfilePhotoUrl() {
-    return _authService.currentUser.profilePic;
+    return _authService.currentUser!.profilePic;
   }
 
   bool isUserLoggedIn() {
@@ -49,30 +49,30 @@ class ProfilePageBloc extends Cubit<BlocState<KeepItCleanUser>> {
   }
 
   int getNumberOfReportsForType(int index) {
-    Map<String, int> map = _currentUser?.reports;
+    Map<String?, int?>? map = _currentUser?.reports;
     if (map == null) return 0;
 
     return map[typesOfBin[index]] ?? 0;
   }
 
   signOut(BuildContext context) async {
-    DialogResponse response = await _dialogService.showDialog(
+    DialogResponse? response = await _dialogService.showDialog(
         title: tr('SIGN OUT'),
         description: tr("Vuoi davvero disconnetterti?"),
         cancelTitle: tr("NO"),
         buttonTitle: tr("SI"));
 
-    if (response.confirmed) {
+    if (response?.confirmed ?? false) {
       _authService.logOut();
       AutoRouter.of(context)
           .pushAndPopUntil(LoginPageViewRoute(), predicate: (r) => false);
     }
   }
 
-  Future<KeepItCleanUser> retrieveUserInformation() {
+  Future<KeepItCleanUser>? retrieveUserInformation() {
     if (_authService.currentUser != null)
       return _databaseService.retrieveUserInfo(
-          reporterUid: _authService.currentUser.uid);
+          reporterUid: _authService.currentUser!.uid);
     //Gross, change later biatch
     return null;
   }

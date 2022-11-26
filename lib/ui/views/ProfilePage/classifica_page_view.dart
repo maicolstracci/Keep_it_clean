@@ -32,20 +32,20 @@ class ClassificaPageView extends StatelessWidget {
                                 right: 0,
                                 child: LeaderboardCircularContainer(
                                   ranking: 3,
-                                  user: model.data[2],
+                                  user: model.data![2],
                                 ),
                               ),
                               Positioned(
                                 left: 0,
                                 child: LeaderboardCircularContainer(
                                   ranking: 2,
-                                  user: model.data[1],
+                                  user: model.data![1],
                                 ),
                               ),
                               Center(
                                 child: LeaderboardCircularContainer(
                                   ranking: 1,
-                                  user: model.data[0],
+                                  user: model.data![0],
                                 ),
                               ),
                             ],
@@ -76,7 +76,7 @@ class ClassificaPageView extends StatelessWidget {
                         ),
                       ),
                       child: RankingProfileContainer(
-                          ranking: index + 4, user: model.data[index + 3]),
+                          ranking: index + 4, user: model.data![index + 3]),
                     );
                   },
                 ),
@@ -91,9 +91,9 @@ class ClassificaPageView extends StatelessWidget {
 class RankingProfileContainer
     extends HookViewModelWidget<ClassificaPageViewModel> {
   final int ranking;
-  final DocumentSnapshot user;
+  final DocumentSnapshot<Map> user;
 
-  RankingProfileContainer({this.ranking, this.user});
+  RankingProfileContainer({required this.ranking, required this.user});
 
   @override
   Widget buildViewModelWidget(
@@ -134,19 +134,19 @@ class RankingProfileContainer
                     flex: 1,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: user.data()['profilePic'] == null
+                        child: user.data()!['profilePic'] == null
                             ? Image.asset("assets/no-avatar.jpg")
                             : FadeInImage.assetNetwork(
                                 fit: BoxFit.cover,
                                 placeholder: "assets/no-avatar.jpg",
-                                image: user.data()['profilePic'],
+                                image: user.data()!['profilePic'],
                               ))),
                 Expanded(
                     flex: 3,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        user.data()['name'],
+                        user.data()!['name'],
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -155,7 +155,7 @@ class RankingProfileContainer
                 Expanded(
                     flex: 1,
                     child: Text(
-                      user.data()['totalNumberOfReports'].toString(),
+                      user.data()!['totalNumberOfReports'].toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w600),
                     )),
